@@ -37,7 +37,7 @@ DEFAULT_ADMIN_PASSWORD = "admin@localhost"
 ADMIN_NAME, ADMIN_EMAIL = ADMINS[0]
 
 # The default sender name on emails.
-DEFAULT_FROM_EMAIL = f"{ADMIN_NAME} <{ADMIN_EMAIL}>"
+DEFAULT_FROM_EMAIL = "360Med Support"
 
 # User score threshold to be considered low reputation.
 LOW_REP_THRESHOLD = 0
@@ -66,13 +66,15 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_EMAIL_SUBJECT_PREFIX = "[bioc] "
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "[360Med Network] "
 ACCOUNT_PASSWORD_MIN_LENGHT = 6
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USER_MODEL_EMAIL_FIELD = "email"
 
 LOGIN_REDIRECT_URL = "/"
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
+
+ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
 
 ACCOUNTS_APPS = [
 
@@ -83,6 +85,7 @@ ACCOUNTS_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'invitations', # invitations app to manage invites from members.
 ]
 
 # Should the server look up locations in a task.
