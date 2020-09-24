@@ -1,0 +1,74 @@
+{% load forum_tags %}
+{% load static %}
+
+<!-- Logo-->
+<div id="logo">
+    <a href="/"> <img src="{% static 'img/logo.png' %}" alt="360Med Logo"></a>
+</div>
+
+<!-- form search-->
+{% block search %}
+
+{% search_bar %}
+
+{% endblock %}
+
+{% if user.is_authenticated %}
+{% counts as counts %}
+<!-- user icons -->
+<div class="head_user">
+
+    <!-- <a class="opts_icon_link uk-visible@s {% activate tab "latest" %} " href="{% url 'post_list' %}">
+        <i class="list icon"></i> Latest
+    </a>
+
+    <a class="opts_icon_link uk-visible@s {% activate tab "community" %}" href="{% url 'community_list' %}">
+        <i class="world icon"></i> Community
+    </a>
+ -->
+    <a class="ui button teal small opts_icon_link uk-visible@s {% activate tab "invite" %}" href="#">
+        <i class="uil-plus"> </i> Invite Peers
+    </a>
+
+    <a class="ui button primary small opts_icon_link uk-visible@s {% activate tab "new" %}"
+        href="{% url 'post_create' %}">
+        <i class="uil-plus"> </i> New Post
+    </a>
+
+    <!-- Message  notificiation dropdown -->
+    <a href="{% url 'inbox' %}" class="opts_icon" uk-tooltip="title: Messages ; pos: bottom ;offset:7">
+        <img src="{% static 'img/chat.png' %}" alt="">
+        {% if counts.messages.count %}
+        <span>{{ counts.messages.count }}</span>
+        {% endif %}
+    </a>
+
+    <!-- profile -image -->
+    <a class="opts_account" href="#"> <img src="{% static 'img/user.png' %}" alt=""></a>
+
+    <!-- profile dropdown-->
+    <div uk-dropdown="mode:click ; animation: uk-animation-slide-bottom-small" class="dropdown-notifications rounded">
+
+        <!-- User Name / Avatar -->
+        <a href="{% url 'user_profile' user.profile.uid %}">
+
+            <div class="dropdown-user-details">
+                <div class="dropdown-user-avatar">
+                    <img src="{% static 'img/user.png' %}" alt="">
+                </div>
+                <div class="dropdown-user-name"> {{ user.profile.name }} <span>See your profile</span> </div>
+            </div>
+
+        </a>
+        <ul class="dropdown-user-menu">
+            <li><a class="item  {% activate tab "profile" %}" href="{% url 'edit_profile' %}"> <i class="uil-user"></i>
+                    Edit Profile </a> </li>
+            <li><a href="#"> <i class="uil-thumbs-up"></i> My Communities </a></li>
+            <li><a href="#"> <i class="uil-cog"></i> Notification Settings</a></li>
+            <li><a class="item  {% activate tab "logout" %}" href="{% url 'logout' %}"> <i
+                        class="uil-sign-out-alt"></i>Log Out</a>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endif %}

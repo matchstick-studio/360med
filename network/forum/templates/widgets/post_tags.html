@@ -1,0 +1,13 @@
+{% load forum_tags %}
+<div class="job-block-tags mb-2 {% if spaced %}spaced-tags{% else %}{% endif %}">
+    {% for tag in tags %}
+        {% if tag %}
+        <a class="button secondary small" role="button" href="{% url 'post_list' %}?tag={{ tag }}"> 
+            {{ tag }} 
+        </a>
+        {% endif %}
+    {% endfor %}
+        {% if show_views %}
+        &bull; {{ post.root.view_count|bignum }} views
+        {% endif %}
+</div>

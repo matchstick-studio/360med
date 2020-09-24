@@ -1,0 +1,149 @@
+{% load static %}
+{% load compress %}
+{% load recaptcha2 %}
+{% load forum_tags %}
+{% load accounts_tags %}
+
+<html>
+
+<head>
+
+    <title>
+        {% block title %}{{ site_name }}{% endblock %}
+    </title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {# Set the favicon #}
+    <link rel="icon" href="{% static 'forum_favicon.ico' %}" type="image/x-icon" />
+    {# Load JQuery. #}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+    {# Load recaptcha #}
+    {% recaptcha_init %}
+
+    {#  CSS compression. #}
+    {% compress css %}
+    <link href="{% static 'semantic.min.css' %}" rel="stylesheet">
+    <link href="{% static 'style.css' %}" rel="stylesheet">
+    <link href="{% static 'framework.css' %}" rel="stylesheet">
+    <link href="{% static 'prism.css' %}" rel="stylesheet">
+    <link href="{% static 'forum.css' %}{% randparam %}" rel="stylesheet">
+    <link href="{% static 'fonts/icons.css' %}" rel="stylesheet">
+    {% endcompress %}
+
+    {# Javascript compression. #}
+    {% compress js %}
+    <script src="{% static 'semantic.min.js' %}"></script>
+    <script src="{% static 'main.js' %}"></script>
+    <script src="{% static 'framework.js' %}"></script>
+    <script src="{% static 'prism.js' %}"></script>
+    <script src="{% static 'forum.js' %}{% randparam %}"></script>
+    <script src="{% static 'setup.js' %}{% randparam %}"></script>
+    {% endcompress %}
+
+    {# Optional block header content. #}
+    {% block head %}
+
+    {% endblock %}
+
+    {# Optional css header content. #}
+    {% block css %}
+    {% endblock %}
+
+    {# Optional javascaript header content. #}
+    {% block js %}
+
+    {% endblock %}
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Sidebar  -->
+        <div class="main_sidebar">
+            <div class="side-overlay" uk-toggle="target: #wrapper ; cls: collapse-sidebar mobile-visible"></div>
+
+            <!-- sidebar header -->
+            <div class="sidebar-header">
+                <h4> Navigation</h4>
+                <span class="btn-close" uk-toggle="target: #wrapper ; cls: collapse-sidebar mobile-visible"></span>
+            </div>
+
+            <!-- sidebar Menu -->
+            <div class="sidebar">
+                <div class="sidebar_innr" data-simplebar>
+                    <div class="sections">
+                        <div class="profile-details my-5">
+                            <div class="profile-image">
+                                <img src="" alt="{{ request.user.get_full_name }} picture">
+                            </div>
+                            <div class="profile-details-info mb-2">
+                                <i class="{{ user.location.flag_css }}"></i>
+                                <h2 class="mb-1"> {{ request.user.get_full_name }} </h2>
+                                {% if user.bio %}
+                                <p style="line-height:1.2;margin-bottom:20px"> {{ user.bio }} </p>
+                                {% else %}
+                                <small>Add bio on profile</small>
+                                {% endif %}
+                            </div>
+
+                            <a class="button small soft-primary" href="">View Profile</a>
+
+                        </div>
+
+                        <ul>
+                            {% include "banners/menu-topics.html" %}
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- Header  -->
+        <div id="main_header">
+            <header>
+                <div class="header-innr">
+                    {% include "banners/menu-header.html" %}
+                </div>
+            </header>
+
+        </div>
+
+
+        {% block container %}
+
+        <!-- contents -->
+        <div class="main_content">
+            <div class="main_content_inner">
+
+                {% show_messages messages %}
+
+                {% block content %}
+                MAIN CONTENT
+                {% endblock %}
+
+                <!-- Footer  -->
+                {% block footer %}
+                {% include 'widgets/footer.html' %}
+                {% endblock %}
+
+            </div>
+        </div>
+
+        {% endblock %}
+
+    </div>
+
+</body>
+
+</html>

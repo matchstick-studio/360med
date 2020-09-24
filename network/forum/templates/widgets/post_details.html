@@ -1,0 +1,61 @@
+{% load forum_tags %}
+
+<div class="quiz-block post {{ post.css }}" data-value="{{ post.uid }}">
+    <div class="quiz-block-content">
+
+        <div class="user-details-card pt-0 pb-2  uk-flex-top">
+            {% post_user_line post avatar=avatar %}
+        </div>
+
+        <a href="{% url 'post_view' post.uid %}">
+            <h3> 
+                {{ post.title|truncatechars:150 }}
+            </h3>
+        </a>
+
+        {{ post.html|safe|truncatechars:100 }}
+
+        {% if post.is_toplevel %}
+        {% post_tags post spaced=False %}
+        {% endif %}
+
+        <!-- quiz block buttons -->
+        <div class="btn-acts">
+            <div>
+                <a href="#" class="button small white">
+                    <span> {{ post.get_votecount|bignum }} like{{ post.get_votecount|pluralize }}</span>
+                </a>
+                <a href="#" class="button small white">
+                    <span> {{ post.reply_count }} repl{{ post.reply_count|pluralize:"y,ies" }}</span>
+                </a>
+                <a href="#" class="button small white">
+                    <span> {{ post.root.view_count|bignum }} view{{ post.root.view_count|pluralize }}</span>
+                </a>
+                {% if show_subs %}
+                {% subscription_label post.subs_count %}
+                {% endif %}
+            </div>
+            {% if post.high_spam_score and user.profile.is_moderator %}
+            <div>
+                <button href="#" class="button primary small circle uk-visible@s">
+                    Moderate
+                    <i class="icon-feather-chevron-down ml-2"></i>
+                </button>
+                <div uk-dropdown="mode: click">
+                    <ul class="uk-nav uk-dropdown-nav">
+                        <li class="mark item">
+                            <a>Mark as spam</a>
+                        </li>
+                        {% if post.suspect_spam %}
+                        <li class="release item">
+                            Release
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>

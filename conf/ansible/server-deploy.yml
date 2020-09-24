@@ -1,0 +1,33 @@
+---
+- hosts: all
+  user: www
+
+  tasks:
+    - include_vars: variables.yml
+
+    - name: Create data backup
+      shell: "./server-backup.sh"
+      args:
+        executable: /bin/bash
+        chdir: "{{ engine_dir }}"
+
+    - name: Update the biostar-engine
+      git:
+        repo: "{{ engine_git }}"
+        dest: "{{ engine_dir }}"
+        update: yes
+
+    - name: Install python requirements
+      shell: "source {{conda_dir}}/etc/profile.d/conda.sh &&
+      conda activate {{conda_env}} &&
+      pip install -r conf/requirements.txt"
+      args:
+        executable: /bin/bash
+        chdir: "{{ engine_dir }}"
+
+    - name: Migrate the server
+      shell: "./server-migrate.sh"
+      args:
+        executable: /bin/bash
+        chdir: "{{ engine_dir }}"
+

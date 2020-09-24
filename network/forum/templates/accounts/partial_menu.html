@@ -1,0 +1,19 @@
+<nav class="responsive-tab style-3 setting-menu"
+    uk-sticky="top:30 ; offset:100; media:@m ;bottom:true; animation: uk-animation-slide-top">
+    <ul>
+        <li class="{% if active == 'edit_profile' %} uk-active{% endif %}">
+            <a href="{% url 'edit_profile' %}" class="list-group-item"> <i class="uil-user"></i> Update Profile</a>
+        </li>
+        <li class="{% if active == 'picture' %} uk-active{% endif %}">
+            <a href="#" class="list-group-item"> <i class="uil-image"></i> Update Picture</a>
+        </li>
+        <li class="{% if active == 'password' %} uk-active{% endif %}">
+            <a href="#" class="list-group-item"> <i class="uil-padlock"></i>
+                Password</a>
+        </li>
+        <li class="{% if active == 'email' %} uk-active{% endif %}">
+            <a href="#" class="list-group-item"> <i class="uil-envelope"></i> Update Email</a>
+        </li>
+        <li><a href="#"> <i class="uil-bolt"></i> Memberships</a></li>
+    </ul>
+</nav>

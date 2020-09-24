@@ -1,0 +1,34 @@
+{% load forum_tags %}
+{% load humanize %}
+
+{% if objs.has_previous %}
+<li>
+    <a href="{{ url }}{% relative_url objs.previous_page_number 'page' request.GET.urlencode %}">
+    <span uk-pagination-previous></span>
+    </a>
+</li>
+{% else %}
+<li>
+    <span uk-pagination-previous></span>
+</li>
+{% endif %}
+
+
+<span>{{ objs.paginator.count|intcomma }}
+    result{{ objs.paginator.count|pluralize }}
+    &bull;
+        Page </span> {{ objs.number }} of {{ objs.paginator.num_pages }}
+
+
+{% if objs.has_next %}
+<li>
+    <a class="ui small basic button no-shadow"
+        href="{{ url }}{% relative_url objs.next_page_number 'page' request.GET.urlencode %}">
+    <span uk-pagination-next></span>
+    </a>
+</li>
+{% else %}
+<li>
+    <span uk-pagination-next></span>
+</li>
+{% endif %}

@@ -1,0 +1,59 @@
+{% load humanize %}
+{% load forum_tags %}
+
+{#  Post action bar. #}
+
+<div class="actions {% if post.is_toplevel %}top-level{% endif %} pt-2">
+
+    <a class="add-comment button small outline-primary">{{ label }}</a>
+
+    <!-- &bull; <a href="{% url 'post_view' post.root.uid %}#{{ post.uid }}">link</a> -->
+
+    {% if post.is_editable %}
+        &bull; <a class="edit-button button small" href="#">edit</a>
+    {% endif %}
+
+    {% if post.can_moderate %}
+        &bull; <a class="moderate button small danger" href="#">moderate</a>
+    {% endif %}
+   <!--  {% if not post.is_toplevel  and post.is_editable %}
+        &bull;
+        {# Draggable element #}
+        <a class="draggable"><i class="uil-crosshair-alt"></i></a>
+    {% endif %} -->
+
+    {#  Show title on top level posts #}
+    {% if post.is_toplevel and user.is_authenticated %}
+        &bull;
+        <a href="#" id="subscribe" class="button light small uk-visible@s">
+            {% follow_label post=post %}
+            <i class="icon-feather-chevron-down ml-2"></i>
+        </a>
+        <div uk-dropdown="mode: click">
+            <ul class="uk-nav uk-dropdown-nav">
+                <li>
+                    <a class="item" data-value="messages"><i class="envelope icon"></i>follow via messages</a>
+                </li>
+                <li>
+                    <a class="item" data-value="email"><i class="envelope outline icon"></i> follow via email</a>
+                </li>
+                <li>
+                    <a class="item" data-value="unfollow"><i class="close icon"></i> stop following</a>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+
+    <!-- <span class="status muted user-info">
+        {% post_user_line post=post avatar=avatar %}
+    </span> -->
+
+</div>
+
+
+
+
+
+
+
+

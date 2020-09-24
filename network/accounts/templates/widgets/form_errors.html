@@ -1,0 +1,10 @@
+{% if errorlist %}
+
+    {% for name, message in errorlist %}
+    <div class="uk-alert-danger" uk-alert>
+        <a class="uk-alert-close" uk-close></a>
+        <p>{{ name }} {{ message }}</p>
+    </div>
+    {% endfor %}
+
+{% endif %}
