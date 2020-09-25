@@ -6,23 +6,41 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('forum', '0007_remove_close'),
+        ("forum", "0007_remove_close"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='post',
-            name='spam_score',
+            model_name="post",
+            name="spam_score",
             field=models.FloatField(default=0),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='spam',
-            field=models.IntegerField(choices=[(0, 'Spam'), (1, 'Not spam'), (2, 'Quarantined'), (3, 'Default')], default=3),
+            model_name="post",
+            name="spam",
+            field=models.IntegerField(
+                choices=[
+                    (0, "Spam"),
+                    (1, "Not spam"),
+                    (2, "Quarantined"),
+                    (3, "Default"),
+                ],
+                default=3,
+            ),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='status',
-            field=models.IntegerField(choices=[(0, 'Pending'), (1, 'Open'), (2, 'Off topic'), (3, 'Closed'), (4, 'Deleted')], db_index=True, default=1),
+            model_name="post",
+            name="status",
+            field=models.IntegerField(
+                choices=[
+                    (0, "Pending"),
+                    (1, "Open"),
+                    (2, "Off topic"),
+                    (3, "Closed"),
+                    (4, "Deleted"),
+                ],
+                db_index=True,
+                default=1,
+            ),
         ),
     ]

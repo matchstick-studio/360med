@@ -3,29 +3,40 @@
 
 {% block body %}
 
-<h1>{% trans "Invite your peers in the medical profession to join 360Med" %}</h1>
+<h1>Invite your peers in the medical profession to join 360Med Network</h1>
+<p> Dear {{ user.profile.name }},</p> 
+<p>As you already know 360Med is a closed network of practicing individuals in
+  the medical profession on the Africa Continent...Please add their details below. They will receive an email with instructions.</p>
 
 <form class="ui form" id="invite-form" method="POST" action="{% url 'invitations:send-invite' %}">
   {% csrf_token %}
   <div class="field">
-    <label>Email</label>
-    <input type="text" name="email" id="id_email" value="{{ form.email.value }}" class="form-control validate-email"
-      placeholder="{% trans 'Email' %}">
+    <label>Full name</label>
+    <input type="text" name="full_name" id="id_full_name" value="" placeholder="Prospect's name">
   </div>
 
-  <button class="ui button generic-ajax-submit" type="submit">Submit</button>
+  <div class="field">
+    <label>Email</label>
+    <input type="text" name="email" id="id_email" value="{{ form.email.value }}" placeholder="Prospect's email address">
+  </div>
+
+  {% for error in form.errors %}
+  <div class="ui error message">
+    <i class="close icon"></i>
+    <div class="header">
+      <h2>Error</h2>
+    </div>
+    {{ error }}
+  </div>
+  {% endfor %}
+
+  <button class="ui button primary generic-ajax-submit" type="submit">Send Invite</button>
 </form>
 
-{% for error in form.email.errors %}
-<div class="ui info message">
-  <i class="close icon"></i>
-  <div class="header">
-    <h2>Error</h2>
-  </div>
-  {{ error }}
-</div>
-{% endfor %}
-
-{{ success_message }}
+<!-- {{ success_message }} -->
 
 {% endblock %}
+
+{% block sidebar %}
+
+{% endblock sidebar %}

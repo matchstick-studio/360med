@@ -3,7 +3,6 @@ from .models import User
 
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
-
     def pre_social_login(self, request, sociallogin):
         """
         Check to see is an account with given email exists in community, then logs in.

@@ -13,7 +13,7 @@ class SSLEmailBackend(smtp.EmailBackend):
     """
 
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('timeout', 5)
+        kwargs.setdefault("timeout", 5)
         super(SSLEmailBackend, self).__init__(*args, **kwargs)
 
     def open(self):
@@ -21,8 +21,9 @@ class SSLEmailBackend(smtp.EmailBackend):
             return False
         try:
             logger.info("sending email via %s" % self.host)
-            self.connection = smtplib.SMTP_SSL(self.host, self.port,
-                                               local_hostname=DNS_NAME.get_fqdn())
+            self.connection = smtplib.SMTP_SSL(
+                self.host, self.port, local_hostname=DNS_NAME.get_fqdn()
+            )
             if self.username and self.password:
                 self.connection.login(self.username, self.password)
             return True

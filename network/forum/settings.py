@@ -5,7 +5,7 @@ from network.accounts.settings import *
 # Django debug flag.
 DEBUG = True
 
-SITE_NAME = '360Med Network'
+SITE_NAME = "360Med Network"
 
 # Site settings.
 POSTS_PER_PAGE = 50
@@ -24,9 +24,7 @@ TIME_PERIOD = 24 * 3600
 MAX_VISITS = 50
 
 # Whitelist of Ip addresses.
-IP_WHITELIST = [
-
-]
+IP_WHITELIST = []
 
 
 PAGEDOWN_IMAGE_UPLOAD_ENABLED = True
@@ -36,23 +34,23 @@ PAGEDOWN_IMAGE_UPLOAD_PATH = "images"
 
 REQUIRED_TAGS_URL = "/"
 
-BANNED_IPS = os.path.join(BASE_DIR, 'export', 'logs', 'banned.txt')
+BANNED_IPS = os.path.join(BASE_DIR, "export", "logs", "banned.txt")
 
 # File containing list of tags, at least one being required
-#REQUIRED_TAGS = open()
+# REQUIRED_TAGS = open()
 
 # The gravatar image used for users, applied to all users.
-GRAVATAR_ICON = ''
+GRAVATAR_ICON = ""
 
-SPAM_THRESHOLD = .5
+SPAM_THRESHOLD = 0.5
 
 # Spam index used to classify new posts as spam or ham.
 SPAM_INDEX_NAME = os.getenv("SPAM_INDEX_NAME", "spam")
 
-SPAM_INDEX_DIR = 'spammers'
+SPAM_INDEX_DIR = "spammers"
 
 # Absolute path to spam index directory in export/
-SPAM_INDEX_DIR = os.path.abspath(os.path.join(MEDIA_ROOT, '..', SPAM_INDEX_DIR))
+SPAM_INDEX_DIR = os.path.abspath(os.path.join(MEDIA_ROOT, "..", SPAM_INDEX_DIR))
 
 # Classify posts and assign a spam score on creation.
 CLASSIFY_SPAM = True
@@ -80,9 +78,7 @@ SEARCH_RESULTS_PER_PAGE = 50
 BATCH_INDEXING_SIZE = 1000
 
 # Add another context processor to first template.
-TEMPLATES[0]['OPTIONS']['context_processors'] += [
-    'network.forum.context.forum'
-]
+TEMPLATES[0]["OPTIONS"]["context_processors"] += ["network.forum.context.forum"]
 
 VOTE_FEED_COUNT = 10
 LOCATION_FEED_COUNT = 5
@@ -98,36 +94,37 @@ INDEX_NAME = os.environ.setdefault("INDEX_NAME", "index")
 # Relative index directory
 INDEX_DIR = os.environ.setdefault("INDEX_DIR", "search")
 # Absolute path to index directory in export/
-INDEX_DIR = os.path.abspath(os.path.join(MEDIA_ROOT, '..', INDEX_DIR))
+INDEX_DIR = os.path.abspath(os.path.join(MEDIA_ROOT, "..", INDEX_DIR))
 
 
 LOGIN_REDIRECT_URL = "/"
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 
-PAGEDOWN_APP = ['pagedown.apps.PagedownConfig']
+PAGEDOWN_APP = ["pagedown.apps.PagedownConfig"]
 
 FORUM_APPS = [
-
-    'network.forum.apps.ForumConfig',
+    "network.forum.apps.ForumConfig",
 ]
 
 # Additional middleware.
 MIDDLEWARE += [
-    'network.forum.middleware.ban_ip',
-    'network.forum.middleware.user_tasks',
-    'network.forum.middleware.benchmark',
+    "network.forum.middleware.ban_ip",
+    "network.forum.middleware.user_tasks",
+    "network.forum.middleware.benchmark",
 ]
 
 # Remap the post type display to a more human friendly one.
 REMAP_TYPE_DISPLAY = False
 
 # Post types displayed when creating, empty list displays all types.
-ALLOWED_POST_TYPES = ["Forum",]
+ALLOWED_POST_TYPES = [
+    "Forum",
+]
 
 
 # Import the default pagedown css first, then our custom CSS sheet
 # to avoid having to specify all the default styles
-PAGEDOWN_WIDGET_CSS = ('pagedown/demo/browser/demo.css',)
+PAGEDOWN_WIDGET_CSS = ("pagedown/demo/browser/demo.css",)
 
 INSTALLED_APPS = DEFAULT_APPS + FORUM_APPS + PAGEDOWN_APP + ACCOUNTS_APPS + EMAILER_APP
 
@@ -137,9 +134,9 @@ FORUM_DOCS = os.path.join(DOCS_ROOT, "forum")
 STATICFILES_DIRS += [DOCS_ROOT]
 
 
-ROOT_URLCONF = 'network.forum.urls'
+ROOT_URLCONF = "network.forum.urls"
 
-WSGI_APPLICATION = 'network.wsgi.application'
+WSGI_APPLICATION = "network.wsgi.application"
 
 # Time between two accesses from the same IP to qualify as a different view.
 POST_VIEW_MINUTES = 7
@@ -154,14 +151,17 @@ DATA_MIGRATION = False
 # This is for convenience only!
 try:
     from conf.run.secrets import *
-    #print(f"Loaded secrets from: conf.run.secrets")
+
+    # print(f"Loaded secrets from: conf.run.secrets")
 except Exception as exc:
     print(f"Secrets module not imported: {exc}", file=sys.stderr)
     pass
 
 # Enable debug toolbar specific functions
 if DEBUG_TOOLBAR:
-    INSTALLED_APPS.extend([
-        'debug_toolbar',
-    ])
-    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+    INSTALLED_APPS.extend(
+        [
+            "debug_toolbar",
+        ]
+    )
+    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")

@@ -1,4 +1,3 @@
-
 import json
 import os
 import logging
@@ -18,24 +17,24 @@ logger = logging.getLogger("engine")
 
 
 def api_error(msg="Api Error"):
-    return {'error': msg}
+    return {"error": msg}
 
 
 def stat_file(date, data=None, load=False, dump=False):
 
     os.makedirs(settings.STATS_DIR, exist_ok=True)
-    file_name = f'{date.year}-{date.month}-{date.day}.json'
+    file_name = f"{date.year}-{date.month}-{date.day}.json"
     file_path = normpath(join(settings.STATS_DIR, file_name))
 
     def load_file():
         # This will be FileNotFoundError in Python3.
         if not os.path.isfile(file_path):
             raise IOError
-        with open(file_path, 'r') as fin:
+        with open(file_path, "r") as fin:
             return json.loads(fin.read())
 
     def dump_into_file():
-        with open(file_path, 'w') as fout:
+        with open(file_path, "w") as fout:
             fout.write(json.dumps(data))
 
     if load:
@@ -60,18 +59,24 @@ def compute_stats(date):
     try:
         return stat_file(date=start, load=True)
     except Exception as exc:  # This will be FileNotFoundError in Python3.
-        logger.info('No stats file for {}.'.format(start))
+        logger.info("No stats file for {}.".format(start))
 
     query = Post.objects.filter
 
     questions = query(type=Post.QUESTION, creation_date__lt=end).count()
     answers = query(type=Post.ANSWER, creation_date__lt=end).count()
-    toplevel = query(type__in=Post.TOP_LEVEL, creation_date__lt=end).exclude(type=Post.BLOG).count()
+    toplevel = (
+        query(type__in=Post.TOP_LEVEL, creation_date__lt=end)
+        .exclude(type=Post.BLOG)
+        .count()
+    )
     comments = query(type=Post.COMMENT, creation_date__lt=end).count()
     votes = Vote.objects.filter(date__lt=end).count()
     users = User.objects.filter(profile__date_joined__lt=end).count()
 
-    new_users = User.objects.filter(profile__date_joined__gte=start, profile__date_joined__lt=end)
+    new_users = User.objects.filter(
+        profile__date_joined__gte=start, profile__date_joined__lt=end
+    )
     new_users_ids = [user.id for user in new_users]
 
     new_posts = Post.objects.filter(creation_date__gte=start, creation_date__lt=end)
@@ -81,17 +86,17 @@ def compute_stats(date):
     new_votes_ids = [vote.id for vote in new_votes]
 
     data = {
-        'date': util.datetime_to_iso(start),
-        'timestamp': util.datetime_to_unix(start),
-        'questions': questions,
-        'answers': answers,
-        'toplevel': toplevel,
-        'comments': comments,
-        'votes': votes,
-        'users': users,
-        'new_users': new_users_ids,
-        'new_posts': new_posts_ids,
-        'new_votes': new_votes_ids,
+        "date": util.datetime_to_iso(start),
+        "timestamp": util.datetime_to_unix(start),
+        "questions": questions,
+        "answers": answers,
+        "toplevel": toplevel,
+        "comments": comments,
+        "votes": votes,
+        "users": users,
+        "new_users": new_users_ids,
+        "new_posts": new_posts_ids,
+        "new_votes": new_votes_ids,
     }
 
     if not settings.DEBUG:
@@ -103,6 +108,7 @@ def json_response(f):
     """
     Converts any functions which returns a dictionary to a proper HttpResponse with json content.
     """
+
     def to_json(request, *args, **kwargs):
         """
         Creates the actual HttpResponse with json content.
@@ -117,8 +123,9 @@ def json_response(f):
         response = HttpResponse(payload, content_type="application/json")
         if not data:
             response.status_code = 404
-            response.reason_phrase = 'Not found'
+            response.reason_phrase = "Not found"
         return response
+
     return to_json
 
 
@@ -131,16 +138,16 @@ def daily_stats_on_day(request, day):
     Parameters:
     day -- a day, given as a number of days from day-0 (the day of the first post).
     """
-    store = cache.get('default')
-    day_zero = cache.get('day_zero')
-    first_post = Post.objects.order_by('creation_date').only('creation_date')
+    store = cache.get("default")
+    day_zero = cache.get("day_zero")
+    first_post = Post.objects.order_by("creation_date").only("creation_date")
 
     if day_zero is None and not first_post:
         return False
 
     if day_zero is None:
         day_zero = first_post[0].creation_date
-        store.set('day_zero', day_zero, 60 * 60 * 24 * 7)  # Cache valid for a week.
+        store.set("day_zero", day_zero, 60 * 60 * 24 * 7)  # Cache valid for a week.
 
     date = day_zero + timedelta(days=int(day))
 
@@ -175,12 +182,17 @@ def traffic(request):
     now = datetime.now()
     start = now - timedelta(minutes=60)
 
-    post_views = PostView.objects.filter(date__gt=start).exclude(date__gt=now).distinct('ip').count()
+    post_views = (
+        PostView.objects.filter(date__gt=start)
+        .exclude(date__gt=now)
+        .distinct("ip")
+        .count()
+    )
 
     data = {
-        'date': util.datetime_to_iso(now),
-        'timestamp': util.datetime_to_unix(now),
-        'post_views_last_60_min': post_views,
+        "date": util.datetime_to_iso(now),
+        "timestamp": util.datetime_to_unix(now),
+        "post_views_last_60_min": post_views,
     }
     return data
 
@@ -209,13 +221,13 @@ def user_details(request, id):
 
     days_ago = (datetime.now().date() - user.profile.date_joined.date()).days
     data = {
-        'id': user.id,
-        'uid': user.profile.uid,
-        'name': user.name,
-        'date_joined': util.datetime_to_iso(user.profile.date_joined),
-        'last_login': util.datetime_to_iso(user.profile.last_login),
-        'joined_days_ago': days_ago,
-        'vote_count': Vote.objects.filter(author=user).count(),
+        "id": user.id,
+        "uid": user.profile.uid,
+        "name": user.name,
+        "date_joined": util.datetime_to_iso(user.profile.date_joined),
+        "last_login": util.datetime_to_iso(user.profile.last_login),
+        "joined_days_ago": days_ago,
+        "vote_count": Vote.objects.filter(author=user).count(),
     }
     return data
 
@@ -249,12 +261,12 @@ def vote_details(request, id):
         return {}
 
     data = {
-        'id': vote.id,
-        'author_id': vote.author.id,
-        'author': vote.author.name,
-        'post_id': vote.post.id,
-        'type': vote.get_type_display(),
-        'type_id': vote.type,
-        'date': util.datetime_to_iso(vote.date),
+        "id": vote.id,
+        "author_id": vote.author.id,
+        "author": vote.author.name,
+        "post_id": vote.post.id,
+        "type": vote.get_type_display(),
+        "type_id": vote.type,
+        "date": util.datetime_to_iso(vote.date),
     }
     return data

@@ -22,21 +22,24 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
 
-        parser.add_argument('--fname', help="The CSV file with the users to be added. Must have headers: Name, Email")
+        parser.add_argument(
+            "--fname",
+            help="The CSV file with the users to be added. Must have headers: Name, Email",
+        )
 
     def handle(self, *args, **options):
 
         # Get the filename.
-        fname = options['fname']
+        fname = options["fname"]
 
         if not os.path.isfile(fname):
-            logger.error(f'Not a valid filename: {fname}')
+            logger.error(f"Not a valid filename: {fname}")
             return
-        stream = open(fname, 'rU')
+        stream = open(fname, "rU")
         for row in csv.DictReader(stream):
-            name = row.get("Name", '')
-            email = row.get("Email", '')
-            handler = row.get("Handler", '')
+            name = row.get("Name", "")
+            email = row.get("Email", "")
+            handler = row.get("Handler", "")
 
             # All fields must be filled in.
             if not (name and email):
@@ -49,12 +52,16 @@ class Command(BaseCommand):
             handler = handler.strip()
 
             if User.objects.filter(email=email).exists():
-                logger.info(f"Skipped creation. User with email={email} already exists.")
+                logger.info(
+                    f"Skipped creation. User with email={email} already exists."
+                )
             else:
                 username = handler or util.get_uuid(16)
-                user = User.objects.create_user(email=email, username=username, first_name=name)
+                user = User.objects.create_user(
+                    email=email, username=username, first_name=name
+                )
                 user.set_password(settings.DEFAULT_PASSWORD)
                 user.save()
                 logger.info(f"Created user name={name} email={email}")
 
-            #print(User.objects.filter(email=email))
+            # print(User.objects.filter(email=email))

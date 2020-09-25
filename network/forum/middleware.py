@@ -20,9 +20,9 @@ def get_ip(request):
     """
     Attempts to extract the IP number from the HTTP request headers.
     """
-    ip1 = request.META.get('REMOTE_ADDR', '')
-    ip2 = request.META.get('HTTP_X_FORWARDED_FOR', '').split(",")[0].strip()
-    ip = ip1 or ip2 or '0.0.0.0'
+    ip1 = request.META.get("REMOTE_ADDR", "")
+    ip2 = request.META.get("HTTP_X_FORWARDED_FOR", "").split(",")[0].strip()
+    ip = ip1 or ip2 or "0.0.0.0"
     return ip
 
 
@@ -43,12 +43,12 @@ def benchmark(get_response):
         delta = int((time.time() - start) * 1000)
 
         # Generate timing message.
-        msg = f'time={delta}ms for path={request.path}'
+        msg = f"time={delta}ms for path={request.path}"
 
         if delta > 1000:
             logger.warning(f"\n***\n*** SLOW: {msg}\n***\a")
         else:
-            logger.info(f'{msg}')
+            logger.info(f"{msg}")
 
         return response
 
@@ -58,17 +58,16 @@ def benchmark(get_response):
 def update_status(user):
     # Update a new user into trusted after a threshold score is reached.
     if (user.profile.state == Profile.NEW) and (user.profile.score > 50):
-            user.profile.state = Profile.TRUSTED
-            user.save()
-            return True
+        user.profile.state = Profile.TRUSTED
+        user.save()
+        return True
 
     return user.profile.trusted
 
 
 def ban_ip(get_response):
-    """
+    """"""
 
-    """
     def middleware(request):
         user = request.user
 
@@ -95,7 +94,7 @@ def ban_ip(get_response):
                 fp = open(settings.BANNED_IPS, "a")
                 fp.write(message)
                 fp.close()
-                return redirect('/static/message.txt')
+                return redirect("/static/message.txt")
             else:
                 cache.incr(ip)
 
@@ -123,7 +122,7 @@ def user_tasks(get_response):
             logout(request)
 
         update_status(user=user)
-        
+
         # Parses the ip of the request.
         ip = get_ip(request)
 
@@ -142,7 +141,11 @@ def user_tasks(get_response):
             message_count = Message.objects.filter(recipient=user, unread=True).count()
 
             # The number of new votes since last visit.
-            vote_count = Vote.objects.filter(post__author=user, date__gt=user.profile.last_login).exclude(author=user).count()
+            vote_count = (
+                Vote.objects.filter(post__author=user, date__gt=user.profile.last_login)
+                .exclude(author=user)
+                .count()
+            )
 
             # Store the counts into the session.
             counts = dict(message_count=message_count, vote_count=vote_count)

@@ -18,7 +18,7 @@ from network.forum.models import Post, Subscription
 from network.accounts.models import Profile, User
 
 # Test input.
-TEST_INPUT = '''
+TEST_INPUT = """
 
 https://www.360med.org/p/1 https://www.360med.org/p/2
 
@@ -39,22 +39,22 @@ http://www.psu.edu
 
 https://twitter.com/Linux/status/2311234267
 
-'''
+"""
 
-TEST_INPUT2 = '''
+TEST_INPUT2 = """
 
 
 http://test.360med.org/accounts/profile/user-2/ 
 
 http://test.360med.org/p/p371285/
 
-'''
+"""
 
 # Shortcut to re.compile
 rec = re.compile
 
 # Network patterns
-PORT = ':' + settings.HTTP_PORT if settings.HTTP_PORT else ''
+PORT = ":" + settings.HTTP_PORT if settings.HTTP_PORT else ""
 SITE_URL = f"{settings.SITE_DOMAIN}{PORT}"
 USER_PATTERN = rec(fr"^http(s)?://{SITE_URL}/accounts/profile/(?P<uid>[\w_.-]+)(/)?")
 POST_TOPLEVEL = rec(fr"^http(s)?://{SITE_URL}/p/(?P<uid>(\w+))(/)?$")
@@ -65,18 +65,43 @@ POST_ANCHOR = rec(fr"^http(s)?://{SITE_URL}/p/\w+/\#(?P<uid>(\w+))(/)?")
 MENTINONED_USERS = rec(r"(\@(?P<handle>[\w_.'-]+))")
 
 ALLOWED_ATTRIBUTES = {
-    '*': ['class', 'style'],
-    'a': ['href', 'rel'],
-    'img': ['src', 'alt', 'width', 'height'],
-    'table': ['border', 'cellpadding', 'cellspacing'],
+    "*": ["class", "style"],
+    "a": ["href", "rel"],
+    "img": ["src", "alt", "width", "height"],
+    "table": ["border", "cellpadding", "cellspacing"],
 }
 
-ALLOWED_TAGS = ['p', 'div', 'br', 'code', 'pre', 'h1', 'h2' 'h3' 'h4', 'hr', 'span', 's',
-                'sub', 'sup', 'b', 'i', 'img', 'strong', 'strike', 'em', 'underline',
-                'super', 'table', 'thead', 'tr', 'th', 'td', 'tbody']
+ALLOWED_TAGS = [
+    "p",
+    "div",
+    "br",
+    "code",
+    "pre",
+    "h1",
+    "h2" "h3" "h4",
+    "hr",
+    "span",
+    "s",
+    "sub",
+    "sup",
+    "b",
+    "i",
+    "img",
+    "strong",
+    "strike",
+    "em",
+    "underline",
+    "super",
+    "table",
+    "thead",
+    "tr",
+    "th",
+    "td",
+    "tbody",
+]
 
 ALLOWED_TAGS = bleach.ALLOWED_TAGS + ALLOWED_TAGS
-ALLOWED_STYLES = ['color', 'font-weight', 'background-color', 'width height']
+ALLOWED_STYLES = ["color", "font-weight", "background-color", "width height"]
 
 # Youtube patterns
 # https://www.youtube.com/watch?v=G7RDn8Xtf_Y
@@ -95,7 +120,9 @@ GIST_HTML = '<script src="https://gist.github.com/%s.js"></script>'
 
 # Twitter pattern.
 # https://twitter.com/Linux/status/2311234267
-TWITTER_PATTERN = rec(r"http(s)?://(www)?.?twitter.com/\w+/status(es)?/(?P<uid>([\d]+))")
+TWITTER_PATTERN = rec(
+    r"http(s)?://(www)?.?twitter.com/\w+/status(es)?/(?P<uid>([\d]+))"
+)
 
 
 def get_tweet(tweet_id):
@@ -109,11 +136,12 @@ def get_tweet(tweet_id):
     https://twitter.com/Linux/status/2311234267
     """
     try:
-        response = requests.get("https://api.twitter.com/1/statuses/oembed.json?id={}".format(
-            tweet_id))
-        return response.json()['html']
+        response = requests.get(
+            "https://api.twitter.com/1/statuses/oembed.json?id={}".format(tweet_id)
+        )
+        return response.json()["html"]
     except:
-        return ''
+        return ""
 
 
 class MonkeyPatch(InlineLexer):
@@ -136,18 +164,18 @@ class BiostarInlineGrammer(InlineGrammar):
 
     Also the '_' character not considered special use * instead
     """
-    text = re.compile(r'^[\s\S]+?(?=[\\<!\[*`~@]|https?://| {2,}\n|$)')
+
+    text = re.compile(r"^[\s\S]+?(?=[\\<!\[*`~@]|https?://| {2,}\n|$)")
 
 
 class BiostarRenderer(Renderer):
-
     def codespan(self, text):
         """Rendering inline `code` text.
 
         :param text: text content for inline code.
         """
         text = escape_text(text.rstrip(), smart_amp=True)
-        return '<code>%s</code>' % text
+        return "<code>%s</code>" % text
 
     def block_code(self, code, lang=None):
         """
@@ -160,10 +188,10 @@ class BiostarRenderer(Renderer):
         Turn smart_amp=True here to prevent &gt; changing to &amp;gt; after bleach clean.
 
         """
-        code = code.rstrip('\n')
+        code = code.rstrip("\n")
         if not lang:
             code = escape_text(code, smart_amp=True)
-            return '<pre><code>%s\n</code></pre>\n' % code
+            return "<pre><code>%s\n</code></pre>\n" % code
         code = escape_text(code, quote=True, smart_amp=True)
         return '<pre><code class="lang-%s">%s\n</code></pre>\n' % (lang, code)
 
@@ -207,16 +235,16 @@ class BiostarInlineLexer(MonkeyPatch):
 
     def enable_post_link(self):
         self.rules.post_link = POST_TOPLEVEL
-        self.default_rules.insert(0, 'post_link')
+        self.default_rules.insert(0, "post_link")
 
     def enable_mention_link(self):
         self.rules.mention_link = MENTINONED_USERS
-        self.default_rules.insert(0, 'mention_link')
+        self.default_rules.insert(0, "mention_link")
 
     def _process_link(self, m, link, title=None):
         line = m.group(0)
         text = m.group(1)
-        if line[0] == '!':
+        if line[0] == "!":
             if self.allow_rewrite:
                 # Ensure the link is a full url path found in to static directory.
                 link = rewrite_static(link)
@@ -247,13 +275,15 @@ class BiostarInlineLexer(MonkeyPatch):
 
     def output_post_link(self, m):
         uid = m.group("uid")
-        post = Post.objects.filter(uid=uid).first() or Post(title=f"Invalid post uid: {uid}")
+        post = Post.objects.filter(uid=uid).first() or Post(
+            title=f"Invalid post uid: {uid}"
+        )
         link = m.group(0)
         return f'<a href="{link}">{post.title}</a>'
 
     def enable_anchor_link(self):
         self.rules.anchor_link = POST_ANCHOR
-        self.default_rules.insert(0, 'anchor_link')
+        self.default_rules.insert(0, "anchor_link")
 
     def output_anchor_link(self, m):
         uid = m.group("uid")
@@ -264,7 +294,7 @@ class BiostarInlineLexer(MonkeyPatch):
 
     def enable_user_link(self):
         self.rules.user_link = USER_PATTERN
-        self.default_rules.insert(0, 'user_link')
+        self.default_rules.insert(0, "user_link")
 
     def output_user_link(self, m):
         uid = m.group("uid")
@@ -275,7 +305,7 @@ class BiostarInlineLexer(MonkeyPatch):
 
     def enable_youtube_link1(self):
         self.rules.youtube_link1 = YOUTUBE_PATTERN1
-        self.default_rules.insert(1, 'youtube_link1')
+        self.default_rules.insert(1, "youtube_link1")
 
     def output_youtube_link1(self, m):
         uid = m.group("uid")
@@ -283,7 +313,7 @@ class BiostarInlineLexer(MonkeyPatch):
 
     def enable_youtube_link2(self):
         self.rules.youtube_link2 = YOUTUBE_PATTERN2
-        self.default_rules.insert(1, 'youtube_link2')
+        self.default_rules.insert(1, "youtube_link2")
 
     def output_youtube_link2(self, m):
         uid = m.group("uid")
@@ -291,7 +321,7 @@ class BiostarInlineLexer(MonkeyPatch):
 
     def enable_youtube_link3(self):
         self.rules.youtube_link3 = YOUTUBE_PATTERN3
-        self.default_rules.insert(1, 'youtube_link3')
+        self.default_rules.insert(1, "youtube_link3")
 
     def output_youtube_link3(self, m):
         uid = m.group("uid")
@@ -299,7 +329,7 @@ class BiostarInlineLexer(MonkeyPatch):
 
     def enable_twitter_link(self):
         self.rules.twitter_link = TWITTER_PATTERN
-        self.default_rules.insert(1, 'twitter_link')
+        self.default_rules.insert(1, "twitter_link")
 
     def output_twitter_link(self, m):
         uid = m.group("uid")
@@ -307,7 +337,7 @@ class BiostarInlineLexer(MonkeyPatch):
 
     def enable_gist_link(self):
         self.rules.gist_link = GIST_PATTERN
-        self.default_rules.insert(3, 'gist_link')
+        self.default_rules.insert(3, "gist_link")
 
     def output_gist_link(self, m):
         uid = m.group("uid")
@@ -315,7 +345,7 @@ class BiostarInlineLexer(MonkeyPatch):
 
     def enable_ftp_link(self):
         self.rules.ftp_link = FTP_PATTERN
-        self.default_rules.insert(3, 'ftp_link')
+        self.default_rules.insert(3, "ftp_link")
 
     def output_ftp_link(self, m):
         link = m.group(0)
@@ -342,15 +372,21 @@ def parse(text, post=None, clean=True, escape=True, allow_rewrite=False):
     non_mod = not post.lastedit_user.profile.is_moderator if post else True
     if clean and non_mod:
         # strip=True strips all disallowed elements
-        text = bleach.clean(text, tags=ALLOWED_TAGS, styles=ALLOWED_STYLES,
-                            attributes=ALLOWED_ATTRIBUTES)
+        text = bleach.clean(
+            text,
+            tags=ALLOWED_TAGS,
+            styles=ALLOWED_STYLES,
+            attributes=ALLOWED_ATTRIBUTES,
+        )
 
     # Initialize the renderer
     # parse_block_html=True ensures '>','<', etc are dealt with without being escaped.
     renderer = BiostarRenderer(escape=escape, parse_block_html=True)
 
-    # Initialize the lexer 
-    inline = BiostarInlineLexer(renderer=renderer, root=root, allow_rewrite=allow_rewrite)
+    # Initialize the lexer
+    inline = BiostarInlineLexer(
+        renderer=renderer, root=root, allow_rewrite=allow_rewrite
+    )
 
     markdown = mistune.Markdown(hard_wrap=True, renderer=renderer, inline=inline)
 
@@ -365,6 +401,6 @@ def test():
     return html
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     html = test()
     print(html)

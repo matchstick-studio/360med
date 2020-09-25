@@ -10,8 +10,11 @@ def get_uuid(limit=32):
 def fake_request(url, data, user, method="POST"):
     "Make a fake request; defaults to POST."
 
-    methods = {"POST": RequestFactory().post, "GET": RequestFactory().get,
-               'PUT': RequestFactory().put}
+    methods = {
+        "POST": RequestFactory().post,
+        "GET": RequestFactory().get,
+        "PUT": RequestFactory().put,
+    }
 
     assert method in methods
 

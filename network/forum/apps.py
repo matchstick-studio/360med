@@ -3,14 +3,15 @@ from django.db.models.signals import post_migrate
 from django.conf import settings
 from django.apps import AppConfig
 
-logger = logging.getLogger('engine')
+logger = logging.getLogger("engine")
 
 
 class ForumConfig(AppConfig):
-    name = 'network.forum'
+    name = "network.forum"
 
     def ready(self):
         from . import signals
+
         # Triggered upon app initialization.
         post_migrate.connect(init_awards, sender=self)
 

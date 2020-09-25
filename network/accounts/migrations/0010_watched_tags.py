@@ -6,23 +6,33 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0009_add_spamrole'),
+        ("accounts", "0009_add_spamrole"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='watched_tags',
-            field=models.CharField(blank=True, default='', max_length=10000),
+            model_name="profile",
+            name="watched_tags",
+            field=models.CharField(blank=True, default="", max_length=10000),
         ),
         migrations.AlterField(
-            model_name='profile',
-            name='my_tags',
-            field=models.CharField(blank=True, default='', max_length=10000),
+            model_name="profile",
+            name="my_tags",
+            field=models.CharField(blank=True, default="", max_length=10000),
         ),
         migrations.AlterField(
-            model_name='profile',
-            name='state',
-            field=models.IntegerField(choices=[(0, 'New'), (1, 'Active'), (4, 'Inactive'), (2, 'Suspended'), (3, 'Banned')], db_index=True, default=0),
+            model_name="profile",
+            name="state",
+            field=models.IntegerField(
+                choices=[
+                    (0, "New"),
+                    (1, "Active"),
+                    (4, "Inactive"),
+                    (2, "Suspended"),
+                    (3, "Banned"),
+                ],
+                db_index=True,
+                default=0,
+            ),
         ),
     ]

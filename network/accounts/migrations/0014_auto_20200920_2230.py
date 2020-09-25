@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0013_profile_gender'),
+        ("accounts", "0013_profile_gender"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='text',
-            field=models.TextField(blank=True, default='No bio available yet', max_length=10000, null=True),
+            model_name="profile",
+            name="text",
+            field=models.TextField(
+                blank=True, default="No bio available yet", max_length=10000, null=True
+            ),
         ),
     ]

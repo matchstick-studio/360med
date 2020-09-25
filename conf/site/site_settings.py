@@ -19,9 +19,7 @@ DEBUG = True
 SECRET_KEY = str(uuid.uuid4())
 
 # Admin users will be created automatically with DEFAULT_ADMIN_PASSWORD.
-ADMINS = [
-    ("Admin User", "admin@localhost")
-]
+ADMINS = [("Admin User", "admin@localhost")]
 
 # Set the default admin password.
 DEFAULT_ADMIN_PASSWORD = SECRET_KEY
@@ -31,29 +29,28 @@ SITE_DOMAIN = platform.node()
 
 SITE_ID = 1
 SITE_NAME = "360Med Network"
-HTTP_PORT = ''
-PROTOCOL = 'http'
+HTTP_PORT = ""
+PROTOCOL = "http"
 
 ALLOWED_HOSTS = [SITE_DOMAIN]
 
 DATABASE_NAME = "network_prod"
 
 DATABASES = {
-
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': DATABASE_NAME,
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '/var/run/postgresql/',
-        'PORT': '',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": DATABASE_NAME,
+        "USER": "",
+        "PASSWORD": "",
+        "HOST": "/var/run/postgresql/",
+        "PORT": "",
     },
 }
 
-WSGI_APPLICATION = 'conf.run.site_wsgi.application'
+WSGI_APPLICATION = "conf.run.site_wsgi.application"
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 try:
     # Attempts to load site secrets.

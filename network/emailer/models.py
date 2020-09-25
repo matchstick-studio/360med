@@ -16,8 +16,14 @@ class EmailAddress(models.Model):
     """
     Represents an email address.
     """
+
     ACTIVE, DELETED, INACTIVE, UNSUBSCRIBED = 1, 2, 3, 4
-    STATE_CHOICES = [(ACTIVE, "Active"), (DELETED, "Deleted"), (INACTIVE, "Inactive"), (UNSUBSCRIBED, "Unsubscribed")]
+    STATE_CHOICES = [
+        (ACTIVE, "Active"),
+        (DELETED, "Deleted"),
+        (INACTIVE, "Inactive"),
+        (UNSUBSCRIBED, "Unsubscribed"),
+    ]
 
     # Require email
     email = models.CharField(max_length=MAX_NAME_LEN, unique=True, blank=False)
@@ -37,6 +43,7 @@ class EmailGroup(models.Model):
     """
     Represents an group of email addresses.
     """
+
     name = models.CharField(max_length=MAX_NAME_LEN)
     uid = models.CharField(max_length=32, unique=True)
     text = models.CharField(max_length=MAX_TEXT_LEN)
@@ -54,8 +61,14 @@ class Subscription(models.Model):
     """
     Connects email groups to email addresses.
     """
+
     ACTIVE, DELETED, INACTIVE, UNSUBSCRIBE = 1, 2, 3, 4
-    STATE_CHOICES = [(ACTIVE, "Active"), (DELETED, "Deleted"), (INACTIVE, "Inactive"), (UNSUBSCRIBE, "Unsubscirbed")]
+    STATE_CHOICES = [
+        (ACTIVE, "Active"),
+        (DELETED, "Deleted"),
+        (INACTIVE, "Inactive"),
+        (UNSUBSCRIBE, "Unsubscirbed"),
+    ]
 
     uid = models.CharField(max_length=32, unique=True)
     state = models.IntegerField(default=ACTIVE, choices=STATE_CHOICES)

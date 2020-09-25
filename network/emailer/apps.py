@@ -7,7 +7,7 @@ from django.db.models.signals import post_migrate
 
 
 class EmailerConfig(AppConfig):
-    name = 'network.emailer'
+    name = "network.emailer"
 
     def ready(self):
         # Triggered upon app initialization.
@@ -19,6 +19,7 @@ def init(sender, **kwargs):
     Initialize with groups.
     """
     from .models import EmailAddress, EmailGroup, Subscription, get_uuid
+
     # Generate random groups and subscriptions
 
     for num in range(1, 5):

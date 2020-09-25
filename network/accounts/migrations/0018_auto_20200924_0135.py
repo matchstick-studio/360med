@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0017_remove_profile_scholar'),
+        ("accounts", "0017_remove_profile_scholar"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='profile',
-            name='twitter',
+            model_name="profile",
+            name="twitter",
         ),
         migrations.RemoveField(
-            model_name='profile',
-            name='website',
+            model_name="profile",
+            name="website",
         ),
     ]

@@ -40,7 +40,7 @@ def detect_location(ip, user_id):
 
     # Skip value if it has the word unknown in it
     def get(data, attr):
-        value = data.get(attr, '')
+        value = data.get(attr, "")
         return "" if "unknown" in value.lower() else value.title()
 
     # Check and log location.
@@ -49,7 +49,7 @@ def detect_location(ip, user_id):
             url = f"http://api.hostip.info/get_json.php?ip={ip}"
             message(url)
             message(f"{ip}, {profile.user}, {url}")
-            req = Request(url=url, headers={'User-Agent': 'Mozilla/5.0'})
+            req = Request(url=url, headers={"User-Agent": "Mozilla/5.0"})
             resp = urlopen(req, timeout=3).read()
             data = hjson.loads(resp)
 
@@ -85,7 +85,11 @@ def create_messages(template, rec_list, sender=None, extra_context={}):
 
     # Get the sender
     name, email = settings.ADMINS[0]
-    sender = sender or User.objects.filter(email=email).first() or User.objects.filter(is_superuser=True).first()
+    sender = (
+        sender
+        or User.objects.filter(email=email).first()
+        or User.objects.filter(is_superuser=True).first()
+    )
     # Load the template and context
     tmpl = loader.get_template(template_name=template)
     context = dict(sender=sender)

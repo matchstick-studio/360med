@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0012_userimage'),
+        ("accounts", "0012_userimage"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='gender',
-            field=models.IntegerField(choices=[(0, 'Male'), (1, 'Female'), (2, 'Other')], default=0),
+            model_name="profile",
+            name="gender",
+            field=models.IntegerField(
+                choices=[(0, "Male"), (1, "Female"), (2, "Other")], default=0
+            ),
         ),
     ]

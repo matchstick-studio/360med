@@ -21,13 +21,16 @@ def send_all():
     if settings.EMAIL_BACKEND == "mailer.backend.DbBackend":
         try:
             from mailer import engine
+
             logger.info(f"sending queued emails")
             engine.send_all()
         except Exception as exc:
             logger.error(f"send_all() error: {exc}")
 
 
-def send_email(template_name, recipient_list, extra_context={}, from_email=None, subject="Subject"):
+def send_email(
+    template_name, recipient_list, extra_context={}, from_email=None, subject="Subject"
+):
     """
     Sends an email using a template.
     """
@@ -40,22 +43,31 @@ def send_email(template_name, recipient_list, extra_context={}, from_email=None,
         return False
     try:
         # Generate emails.
-        logger.info(f"sending email from={from_email} recipient_list={recipient_list} template={template_name}")
+        logger.info(
+            f"sending email from={from_email} recipient_list={recipient_list} template={template_name}"
+        )
 
         # The email template instance
         email = sender.EmailTemplate(template_name)
 
         # Default context added to each template.
-        port = f":{settings.HTTP_PORT}"if settings.HTTP_PORT else ""
+        port = f":{settings.HTTP_PORT}" if settings.HTTP_PORT else ""
 
-        context = dict(domain=settings.SITE_DOMAIN, protocol=settings.PROTOCOL,
-                       port=port, name=settings.SITE_NAME, subject=subject)
+        context = dict(
+            domain=settings.SITE_DOMAIN,
+            protocol=settings.PROTOCOL,
+            port=port,
+            name=settings.SITE_NAME,
+            subject=subject,
+        )
 
         # Additional context added to the template.
         context.update(extra_context)
 
         # Generate and send the email.
-        email.send(context=context, from_email=from_email, recipient_list=recipient_list)
+        email.send(
+            context=context, from_email=from_email, recipient_list=recipient_list
+        )
 
         logging.info(f"email sent to recipient_list={recipient_list} ")
 

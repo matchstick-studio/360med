@@ -17,7 +17,7 @@ try:
 except ImportError as exc:
     PSYCOPG_INSTALLED = False
 
-logger = logging.getLogger('engine')
+logger = logging.getLogger("engine")
 
 
 def psycopg_required(func):
@@ -57,18 +57,20 @@ def column_list(cursor):
     return colnames
 
 
-def select_related(posts, cursor, fr='posts_vote', where='posts_vote.post_id'):
+def select_related(posts, cursor, fr="posts_vote", where="posts_vote.post_id"):
     cols = {k: i for i, k in enumerate(column_list(cursor))}
 
     # Get author and last edit user ids into a set.
-    post_ids = {p[cols['id']] for p in posts if p}
+    post_ids = {p[cols["id"]] for p in posts if p}
     post_ids = tuple(post_ids)
 
-    cursor.execute(f"""
+    cursor.execute(
+        f"""
                     SELECT *
                     FROM {fr}
                     WHERE {where} IN {post_ids}
-                    """)
+                    """
+    )
 
     objs = cursor.fetchall()
     return objs
@@ -78,14 +80,14 @@ def select_related_votes(posts, cursor):
     """
     Select votes that been made recently.
     """
-    from_q = 'posts_vote'
-    where_q = 'posts_vote.post_id'
+    from_q = "posts_vote"
+    where_q = "posts_vote.post_id"
     return select_related(posts=posts, cursor=cursor, fr=from_q, where=where_q)
 
 
 def select_related_subs(posts, cursor):
-    from_q = 'posts_subscription'
-    where_q = 'posts_subscription.post_id'
+    from_q = "posts_subscription"
+    where_q = "posts_subscription.post_id"
     return select_related(posts=posts, cursor=cursor, fr=from_q, where=where_q)
 
 
@@ -98,12 +100,14 @@ def select_related_users(user_ids, cursor):
     user_ids = tuple(user_ids)
 
     # Joins the user profile as well.
-    cursor.execute(f"""
+    cursor.execute(
+        f"""
                     SELECT *
                     FROM users_user
                     RIGHT JOIN users_profile ON (users_user.id = users_profile.user_id)
                     WHERE users_user.id IN {user_ids}
-                    """)
+                    """
+    )
 
     users = cursor.fetchall()
     return users
@@ -136,18 +140,20 @@ def posts_query_str(start, end, batch=None):
 def most_recent(cursor):
 
     # Fetch the most current post made in the remote database
-    cursor.execute(f"""
+    cursor.execute(
+        f"""
                      SELECT *
                      FROM posts_post
                      ORDER BY posts_post.id DESC 
                      LIMIT 1
-                     """)
+                     """
+    )
 
     post = cursor.fetchone()
     cols = {k: i for i, k in enumerate(column_list(cursor))}
 
     # Get the creation date for this post.
-    date = post[cols['creation_date']]
+    date = post[cols["creation_date"]]
 
     return date
 
@@ -163,7 +169,7 @@ def get_start(days, cursor):
         recent = recent + timedelta(days=2)
     else:
         # Get the most recently created post on the remote server.
-        recent = Post.objects.old().order_by('-creation_date').first()
+        recent = Post.objects.old().order_by("-creation_date").first()
         recent = recent.creation_date if recent else None
         recent = recent - timedelta(days=2)
 
@@ -193,7 +199,7 @@ def split_rows(rows):
     Split incoming row into what is to be updated/created.
     """
 
-    posts = set(Post.objects.all().values_list('uid', flat=True))
+    posts = set(Post.objects.all().values_list("uid", flat=True))
     update = list(filter(lambda r: str(r[0]) in posts, rows))
     create = list(filter(lambda r: str(r[0]) not in posts, rows))
     threads = list(filter(lambda r: (str(r[0]) not in posts) and r[0] == r[1], rows))
@@ -208,24 +214,26 @@ def bulk_create_posts(rows, column, users, relations=dict()):
     for row in rows:
         # Map column names to row.
         row = {col: val for col, val in zip(column, row)}
-        post = Post(lastedit_user=users[row['lastedit_user_id']],
-                    author=users[row['author_id']],
-                    uid=row['id'],
-                    view_count=row['view_count'],
-                    vote_count=row['vote_count'],
-                    book_count=row['book_count'],
-                    accept_count=int(row['has_accepted']),
-                    thread_votecount=row['thread_score'],
-                    creation_date=row['creation_date'],
-                    html=row['html'],
-                    content=row['content'],
-                    title=row['title'],
-                    status=row['status'],
-                    type=row['type'],
-                    tag_val=row['tag_val'],
-                    lastedit_date=row['lastedit_date'],
-                    rank=row['rank'])
-        relations[str(row['id'])] = str(row['root_id']), str(row['parent_id'])
+        post = Post(
+            lastedit_user=users[row["lastedit_user_id"]],
+            author=users[row["author_id"]],
+            uid=row["id"],
+            view_count=row["view_count"],
+            vote_count=row["vote_count"],
+            book_count=row["book_count"],
+            accept_count=int(row["has_accepted"]),
+            thread_votecount=row["thread_score"],
+            creation_date=row["creation_date"],
+            html=row["html"],
+            content=row["content"],
+            title=row["title"],
+            status=row["status"],
+            type=row["type"],
+            tag_val=row["tag_val"],
+            lastedit_date=row["lastedit_date"],
+            rank=row["rank"],
+        )
+        relations[str(row["id"])] = str(row["root_id"]), str(row["parent_id"])
         yield post
 
 
@@ -245,13 +253,19 @@ def bulk_relations(relations):
 
 
 def bulk_counts(relations):
-    descendants = lambda p: (Post.objects.filter(root=p).exclude(id=p.id)
-                             if p.is_toplevel else Post.objects.filter(parent=p))
+    descendants = lambda p: (
+        Post.objects.filter(root=p).exclude(id=p.id)
+        if p.is_toplevel
+        else Post.objects.filter(parent=p)
+    )
 
-    posts = {post: (descendants(post).filter(type=Post.ANSWER).count(),
-                    descendants(post).filter(type=Post.COMMENT).count())
-
-             for post in Post.objects.filter(uid__in=relations.keys())}
+    posts = {
+        post: (
+            descendants(post).filter(type=Post.ANSWER).count(),
+            descendants(post).filter(type=Post.COMMENT).count(),
+        )
+        for post in Post.objects.filter(uid__in=relations.keys())
+    }
 
     for post in posts:
         answer_count, comment_count = posts[post][0], posts[post][1]
@@ -264,14 +278,16 @@ def bulk_counts(relations):
 def bulk_create_votes(rows, column, pdict, udict):
     for row in rows:
         row = {col: val for col, val in zip(column, row)}
-        post = pdict[str(row['post_id'])]
-        author = udict[row['author_id']]
-        vtype = row['type']
+        post = pdict[str(row["post_id"])]
+        author = udict[row["author_id"]]
+        vtype = row["type"]
         # Skip incomplete post/author information.
         if not (post and author) or not post.root:
             continue
 
-        vote = Vote(post=post, author=author, type=vtype, uid=row['id'], date=row['date'])
+        vote = Vote(
+            post=post, author=author, type=vtype, uid=row["id"], date=row["date"]
+        )
 
         yield vote
 
@@ -279,14 +295,16 @@ def bulk_create_votes(rows, column, pdict, udict):
 def bulk_create_subs(rows, column, pdict, udict):
     for row in rows:
         row = {col: val for col, val in zip(column, row)}
-        user = udict.get(row['user_id'])
-        post = pdict.get(str(row['post_id']))
+        user = udict.get(row["user_id"])
+        post = pdict.get(str(row["post_id"]))
 
         # Skip incomplete data.
         if not (user and post):
             continue
 
-        sub = Subscription(uid=row['id'], type=row['type'], user=user, post=post, date=row['date'])
+        sub = Subscription(
+            uid=row["id"], type=row["type"], user=user, post=post, date=row["date"]
+        )
 
         yield sub
 
@@ -297,11 +315,13 @@ def clean_votes(rows, column):
     """
     for row in rows:
         row = {col: val for col, val in zip(column, row)}
-        user_uid = row['author_id']
-        post_uid = row['post_id']
-        vtype = row['type']
+        user_uid = row["author_id"]
+        post_uid = row["post_id"]
+        vtype = row["type"]
         # Check if votes exists with the post and user.
-        vote = Vote.objects.filter(author__profile__uid=user_uid, post__uid=post_uid, type=vtype).first()
+        vote = Vote.objects.filter(
+            author__profile__uid=user_uid, post__uid=post_uid, type=vtype
+        ).first()
         # Delete the existing vote and
         if vote:
             vote.delete()
@@ -313,10 +333,12 @@ def clean_subs(rows, column):
     """
     for row in rows:
         row = {col: val for col, val in zip(column, row)}
-        user_uid = row['user_id']
-        post_uid = row['post_id']
+        user_uid = row["user_id"]
+        post_uid = row["post_id"]
         # Check if sub exists with this post and user
-        sub = Subscription.objects.filter(user__profile__uid=user_uid, post__uid=post_uid).first()
+        sub = Subscription.objects.filter(
+            user__profile__uid=user_uid, post__uid=post_uid
+        ).first()
         # Delete the existing sub and
         if sub:
             sub.delete()
@@ -324,12 +346,12 @@ def clean_subs(rows, column):
 
 @timer
 def sync_votes(votes, users):
-    rows = votes.get('rows', [])
-    column = votes.get('column', [])
+    rows = votes.get("rows", [])
+    column = votes.get("column", [])
 
     cols = {k: i for i, k in enumerate(column)}
 
-    post_ids = set([str(r[cols.get('post_id')]) for r in rows])
+    post_ids = set([str(r[cols.get("post_id")]) for r in rows])
 
     posts = {p.uid: p for p in Post.objects.filter(uid__in=post_ids)}
 
@@ -344,12 +366,12 @@ def sync_votes(votes, users):
 
 @timer
 def sync_subs(subs, users):
-    rows = subs.get('rows', [])
-    column = subs.get('column', [])
+    rows = subs.get("rows", [])
+    column = subs.get("column", [])
 
     cols = {k: i for i, k in enumerate(column)}
 
-    post_ids = set([str(r[cols.get('post_id')]) for r in rows])
+    post_ids = set([str(r[cols.get("post_id")]) for r in rows])
 
     posts = {p.uid: p for p in Post.objects.filter(uid__in=post_ids)}
 
@@ -367,11 +389,13 @@ def get_user_ids(rows, column, is_posts=False, is_subs=False):
     cols = {k: i for i, k in enumerate(column)}
 
     if is_posts:
-        user_ids = [(r[cols['author_id']], r[cols['lastedit_user_id']]) for r in rows if r]
+        user_ids = [
+            (r[cols["author_id"]], r[cols["lastedit_user_id"]]) for r in rows if r
+        ]
     elif is_subs:
-        user_ids = [(r[cols['user_id']],) for r in rows if r]
+        user_ids = [(r[cols["user_id"]],) for r in rows if r]
     else:
-        user_ids = [(r[cols['author_id']],) for r in rows if r]
+        user_ids = [(r[cols["author_id"]],) for r in rows if r]
 
     return user_ids
 
@@ -422,10 +446,12 @@ def retrieve(cursor, start, days, batch=None):
     store_synced_date(start)
 
     # Collapse results into a single dict
-    context = dict(threads=dict(column=post_cols, rows=posts),
-                   users=dict(column=user_cols, rows=users),
-                   votes=dict(column=votes_cols, rows=votes),
-                   subs=dict(column=subs_cols, rows=subs))
+    context = dict(
+        threads=dict(column=post_cols, rows=posts),
+        users=dict(column=user_cols, rows=users),
+        votes=dict(column=votes_cols, rows=votes),
+        subs=dict(column=subs_cols, rows=subs),
+    )
 
     threads = [r for r in posts if r[0] == r[1]]
     logger.info(f"Start\t{start.date()}")
@@ -445,15 +471,17 @@ def sync_posts(threads, users, update=True):
     Update local database with posts in 'threads'.
     Creates the posts if it does not exist.
     """
-    rows = threads.get('rows', [])
-    column = threads.get('column', [])
+    rows = threads.get("rows", [])
+    column = threads.get("column", [])
     relations = dict()
 
     # Split incoming rows into the
     to_create, to_update = split_rows(rows)
 
     # Bulk create new posts
-    creator_gen = bulk_create_posts(rows=to_create, column=column, users=users, relations=relations)
+    creator_gen = bulk_create_posts(
+        rows=to_create, column=column, users=users, relations=relations
+    )
     Post.objects.bulk_create(objs=creator_gen, batch_size=500)
 
     # Bulk update existing posts
@@ -464,13 +492,17 @@ def sync_posts(threads, users, update=True):
         logger.info("Skipped updates.")
 
     # Update the root, parent relationships in the queried posts
-    Post.objects.bulk_update(objs=bulk_relations(relations=relations),
-                             fields=["root", "parent", 'is_toplevel'],
-                             batch_size=1000)
+    Post.objects.bulk_update(
+        objs=bulk_relations(relations=relations),
+        fields=["root", "parent", "is_toplevel"],
+        batch_size=1000,
+    )
     # Update counts on  posts
-    Post.objects.bulk_update(objs=bulk_counts(relations=relations),
-                             fields=["reply_count", "comment_count", "answer_count"],
-                             batch_size=1000)
+    Post.objects.bulk_update(
+        objs=bulk_counts(relations=relations),
+        fields=["reply_count", "comment_count", "answer_count"],
+        batch_size=1000,
+    )
 
 
 @timer
@@ -479,8 +511,8 @@ def sync_users(users):
     Sync users one at a time instead of bulk creating.
     """
     # Get the column names
-    column = users.get('column')
-    rows = users.get('rows', [])
+    column = users.get("column")
+    rows = users.get("rows", [])
     added = dict()
     # Check if this user already exists.
     for row in rows:
@@ -488,30 +520,45 @@ def sync_users(users):
         # Map column names to row.
         row = {col: val for col, val in zip(column, row)}
         # Skip if user exists.
-        user = User.objects.filter(email=row['email']).first()
+        user = User.objects.filter(email=row["email"]).first()
         if user:
-            added[row['user_id']] = user
+            added[row["user_id"]] = user
             continue
 
         # Create the user
         username = f"{row['name'].replace(' ', '-')}-{row['user_id']}"
-        user = User.objects.create(username=username, email=row['email'],
-                                   password=row['password'], is_active=row['is_active'],
-                                   is_staff=row['is_staff'], is_superuser=row['is_admin'])
-        text = util.strip_tags(row['info'])
+        user = User.objects.create(
+            username=username,
+            email=row["email"],
+            password=row["password"],
+            is_active=row["is_active"],
+            is_staff=row["is_staff"],
+            is_superuser=row["is_admin"],
+        )
+        text = util.strip_tags(row["info"])
         # Update the Profile
-        Profile.objects.filter(user=user).update(digest_prefs=row['digest_prefs'],
-                                                 watched_tags=row['watched_tags'],
-                                                 uid=row['user_id'], name=row['name'],
-                                                 message_prefs=row['message_prefs'],
-                                                 role=row['type'], last_login=row['last_login'],
-                                                 html=row['info'], date_joined=row['date_joined'],
-                                                 location=row['location'], text=text, 
-                                                 gender=row['gender'], phone=row['phone'], 
-                                                 occupation=row['occupation'], expertise=row['expertise'],
-                                                 score=row['score'], qualifications=row['qualifications'],
-                                                 my_tags=row['my_tags'], new_messages=row['new_messages'])
-        added[row['user_id']] = user
+        Profile.objects.filter(user=user).update(
+            digest_prefs=row["digest_prefs"],
+            watched_tags=row["watched_tags"],
+            uid=row["user_id"],
+            name=row["name"],
+            message_prefs=row["message_prefs"],
+            role=row["type"],
+            last_login=row["last_login"],
+            html=row["info"],
+            date_joined=row["date_joined"],
+            location=row["location"],
+            text=text,
+            gender=row["gender"],
+            phone=row["phone"],
+            occupation=row["occupation"],
+            expertise=row["expertise"],
+            score=row["score"],
+            qualifications=row["qualifications"],
+            my_tags=row["my_tags"],
+            new_messages=row["new_messages"],
+        )
+        added[row["user_id"]] = user
 
     logger.info(f"Updated {len(rows)} users.")
     return added
@@ -521,12 +568,14 @@ def sync_users(users):
 @timer
 def sync_db(start=None, days=1, options=dict()):
     # Create initial connection to database
-    conn = psycopg2.connect(dbname=options['dbname'],
-                            host=options['host'],
-                            user=options['user'],
-                            password=options['password'],
-                            port=options['port'],
-                            sslmode='require')
+    conn = psycopg2.connect(
+        dbname=options["dbname"],
+        host=options["host"],
+        user=options["user"],
+        password=options["password"],
+        port=options["port"],
+        sslmode="require",
+    )
     # Get the cursor.
     cur = conn.cursor()
 
@@ -534,16 +583,16 @@ def sync_db(start=None, days=1, options=dict()):
     # If none are provided, now() is returned.
     start = start or get_start(days=days, cursor=cur)
 
-    update = options['update']
+    update = options["update"]
 
     # Get all relevant data within a given timespan
     # data is a dict with threads, users, etc.
     data = retrieve(cursor=cur, start=start, days=days)
 
-    users = data.get('users', {})
-    threads = data.get('threads', {})
-    votes = data.get('votes', {})
-    subs = data.get('subs', {})
+    users = data.get("users", {})
+    threads = data.get("threads", {})
+    votes = data.get("votes", {})
+    subs = data.get("subs", {})
 
     # Sync users fist
     synced_users = sync_users(users=users)
@@ -582,12 +631,14 @@ def db_report(cursor, synced):
 @timer
 def report(start=None, days=1, options=dict()):
     # Create initial connection to database
-    conn = psycopg2.connect(dbname=options['dbname'],
-                            host=options['host'],
-                            user=options['user'],
-                            password=options['password'],
-                            port=options['port'],
-                            sslmode='require')
+    conn = psycopg2.connect(
+        dbname=options["dbname"],
+        host=options["host"],
+        user=options["user"],
+        password=options["password"],
+        port=options["port"],
+        sslmode="require",
+    )
 
     # Get the cursor.
     cur = conn.cursor()
@@ -598,7 +649,7 @@ def report(start=None, days=1, options=dict()):
 
     retrieve(cursor=cur, start=start, days=days)
 
-    already_synced = Post.objects.old().values_list('uid', flat=True)
+    already_synced = Post.objects.old().values_list("uid", flat=True)
 
     missing, newest = db_report(cursor=cur, synced=already_synced)
     # Get the currently loaded data

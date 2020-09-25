@@ -3,7 +3,7 @@ import logging
 from django.core.management.base import BaseCommand
 from network.forum import markdown
 
-logger = logging.getLogger('engine')
+logger = logging.getLogger("engine")
 
 test = """
 
@@ -74,7 +74,7 @@ gist_test = "https://gist.github.com/afrendeiro/6732a46b949e864d6803"
 
 
 class Command(BaseCommand):
-    help = 'Used to test markdown rendering'
+    help = "Used to test markdown rendering"
 
     def handle(self, *args, **options):
 

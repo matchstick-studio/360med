@@ -1,6 +1,7 @@
 import logging, functools
 from django.conf import settings
-logger = logging.getLogger('network')
+
+logger = logging.getLogger("network")
 import threading
 
 try:
@@ -25,12 +26,16 @@ except Exception as exc:
                 if settings.MULTI_THREAD:
                     # Run process in separate thread.
                     logger.info(f"new thread for function f{func} {args} {kwargs}")
-                    t = threading.Thread(target=func, args=args, kwargs=kwargs, daemon=True)
+                    t = threading.Thread(
+                        target=func, args=args, kwargs=kwargs, daemon=True
+                    )
                     t.start()
                 else:
                     func(*args, **kwargs)
+
             inner.spool = inner
             return inner
+
         # Gains an attribute called spool that runs the function in the background.
         return outer
 
@@ -58,5 +63,6 @@ except Exception as exc:
 
             inner.timer = inner
             return inner
+
         # Gains an attribute called timer that will run the function periodically.
         return outer

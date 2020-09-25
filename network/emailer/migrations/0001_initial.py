@@ -8,38 +8,95 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='EmailAddress',
+            name="EmailAddress",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('email', models.CharField(max_length=256, unique=True)),
-                ('name', models.CharField(max_length=256)),
-                ('uid', models.CharField(max_length=32, unique=True)),
-                ('state', models.IntegerField(choices=[(1, 'Active'), (2, 'Deleted'), (3, 'Inactive'), (4, 'Unsubscribed')], default=1)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("email", models.CharField(max_length=256, unique=True)),
+                ("name", models.CharField(max_length=256)),
+                ("uid", models.CharField(max_length=32, unique=True)),
+                (
+                    "state",
+                    models.IntegerField(
+                        choices=[
+                            (1, "Active"),
+                            (2, "Deleted"),
+                            (3, "Inactive"),
+                            (4, "Unsubscribed"),
+                        ],
+                        default=1,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='EmailGroup',
+            name="EmailGroup",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=256)),
-                ('uid', models.CharField(max_length=32, unique=True)),
-                ('text', models.CharField(max_length=10000)),
-                ('html', models.CharField(max_length=10000)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=256)),
+                ("uid", models.CharField(max_length=32, unique=True)),
+                ("text", models.CharField(max_length=10000)),
+                ("html", models.CharField(max_length=10000)),
             ],
         ),
         migrations.CreateModel(
-            name='Subscription',
+            name="Subscription",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uid', models.CharField(max_length=32, unique=True)),
-                ('state', models.IntegerField(choices=[(1, 'Active'), (2, 'Deleted'), (3, 'Inactive'), (4, 'Unsubscirbed')], default=1)),
-                ('address', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='emailer.EmailAddress')),
-                ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='emailer.EmailGroup')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("uid", models.CharField(max_length=32, unique=True)),
+                (
+                    "state",
+                    models.IntegerField(
+                        choices=[
+                            (1, "Active"),
+                            (2, "Deleted"),
+                            (3, "Inactive"),
+                            (4, "Unsubscirbed"),
+                        ],
+                        default=1,
+                    ),
+                ),
+                (
+                    "address",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="emailer.EmailAddress",
+                    ),
+                ),
+                (
+                    "group",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="emailer.EmailGroup",
+                    ),
+                ),
             ],
         ),
     ]

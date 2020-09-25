@@ -13,13 +13,23 @@ DEFAULT_ADDR = settings.DEFAULT_FROM_EMAIL
 
 
 class Command(BaseCommand):
-    help = 'tests email settings'
+    help = "tests email settings"
 
     def add_arguments(self, parser):
-        parser.add_argument('-f', '--from', type=str, default=DEFAULT_ADDR,
-                            help="The sender's email (default=%(default)s")
-        parser.add_argument('-t', '--to', type=str, default=DEFAULT_ADDR,
-                            help="Comma separated emails of the recipients (default=%(default)s)")
+        parser.add_argument(
+            "-f",
+            "--from",
+            type=str,
+            default=DEFAULT_ADDR,
+            help="The sender's email (default=%(default)s",
+        )
+        parser.add_argument(
+            "-t",
+            "--to",
+            type=str,
+            default=DEFAULT_ADDR,
+            help="Comma separated emails of the recipients (default=%(default)s)",
+        )
 
     def handle(self, *args, **options):
         from_email = options["from"]
@@ -32,8 +42,12 @@ class Command(BaseCommand):
         logger.info(f"settings.EMAIL_BACKEND={settings.EMAIL_BACKEND}")
         logger.info(f"sending test email from {from_email} to {recipient_list}")
 
-        tasks.send_email(template_name="test_email.html", recipient_list=recipient_list,
-                         from_email=from_email, subject=subject)
+        tasks.send_email(
+            template_name="test_email.html",
+            recipient_list=recipient_list,
+            from_email=from_email,
+            subject=subject,
+        )
 
         # Triggers send if the backend is queued.
         tasks.send_all()

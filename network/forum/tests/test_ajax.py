@@ -9,19 +9,23 @@ from network.forum import models, views, auth, forms, const, ajax
 from network.utils.helpers import fake_request
 from network.forum.util import get_uuid
 
-logger = logging.getLogger('engine')
+logger = logging.getLogger("engine")
 
 
 class PostTest(TestCase):
-
     def setUp(self):
         logger.setLevel(logging.WARNING)
-        self.owner = User.objects.create(username=f"test", email="tested@tested.com", password="tested",
-                                         is_superuser=True)
+        self.owner = User.objects.create(
+            username=f"test",
+            email="tested@tested.com",
+            password="tested",
+            is_superuser=True,
+        )
 
         # Create an existing tested post
-        self.post = models.Post.objects.create(title="Test", author=self.owner, content="Test",
-                                               type=models.Post.QUESTION)
+        self.post = models.Post.objects.create(
+            title="Test", author=self.owner, content="Test", type=models.Post.QUESTION
+        )
         self.owner.save()
         pass
 
@@ -30,25 +34,38 @@ class PostTest(TestCase):
         for stype in ["unfollow", "messages", "email", "all", "default"]:
 
             data = {"sub_type": stype, "root_uid": self.post.uid}
-            request = fake_request(url=reverse('vote'), data=data, user=self.owner)
+            request = fake_request(url=reverse("vote"), data=data, user=self.owner)
             response = ajax.ajax_subs(request)
-            self.assertEqual(response.status_code, 200, f"Could not preform subscription action:{stype}.")
+            self.assertEqual(
+                response.status_code,
+                200,
+                f"Could not preform subscription action:{stype}.",
+            )
 
     def preform_votes(self, post, user):
         for vtype in ["upvote", "bookmark", "accept"]:
 
             data = {"vote_type": vtype, "post_uid": post.uid}
-            request = fake_request(url=reverse('vote'), data=data, user=user)
+            request = fake_request(url=reverse("vote"), data=data, user=user)
             response = ajax.ajax_vote(request)
-            self.assertEqual(response.status_code, 200, f"Could not preform vote:{vtype}.")
+            self.assertEqual(
+                response.status_code, 200, f"Could not preform vote:{vtype}."
+            )
 
     def test_ajax_vote(self):
         """Test the ajax voting using POST request """
         # Create a different user to vote with
-        user2 = User.objects.create(username="user", email="user@tested.com", password="tested")
+        user2 = User.objects.create(
+            username="user", email="user@tested.com", password="tested"
+        )
 
-        answer = models.Post.objects.create(title="answer", author=user2, content="tested foo bar too for",
-                                  type=models.Post.ANSWER, parent=self.post)
+        answer = models.Post.objects.create(
+            title="answer",
+            author=user2,
+            content="tested foo bar too for",
+            type=models.Post.ANSWER,
+            parent=self.post,
+        )
 
         self.preform_votes(post=answer, user=self.owner)
         self.preform_votes(post=self.post, user=self.owner)
@@ -60,20 +77,35 @@ class PostTest(TestCase):
         """
 
         # Create comment to self.parent
-        comment1 = models.Post.objects.create(title="Test", author=self.owner, content="Test",
-                                   type=models.Post.COMMENT, root=self.post,
-                                   parent=self.post)
+        comment1 = models.Post.objects.create(
+            title="Test",
+            author=self.owner,
+            content="Test",
+            type=models.Post.COMMENT,
+            root=self.post,
+            parent=self.post,
+        )
         # Create another post with parent being above comment
-        comment2 = models.Post.objects.create(title="Test", author=self.owner, content="Test",
-                                   type=models.Post.COMMENT, root=self.post,
-                                   parent=comment1)
-        comment3 = models.Post.objects.create(title="Test", author=self.owner, content="Test",
-                                              type=models.Post.COMMENT, root=self.post,
-                                              parent=comment2)
+        comment2 = models.Post.objects.create(
+            title="Test",
+            author=self.owner,
+            content="Test",
+            type=models.Post.COMMENT,
+            root=self.post,
+            parent=comment1,
+        )
+        comment3 = models.Post.objects.create(
+            title="Test",
+            author=self.owner,
+            content="Test",
+            type=models.Post.COMMENT,
+            root=self.post,
+            parent=comment2,
+        )
 
         # Move comment3 to comment1
-        data = {'parent': comment1.uid, 'uid': comment3.uid}
-        url = reverse('drag_and_drop')
+        data = {"parent": comment1.uid, "uid": comment3.uid}
+        url = reverse("drag_and_drop")
         request = fake_request(url=url, data=data, user=self.owner)
         json_response = ajax.drag_and_drop(request)
         self.process_response(json_response)
@@ -83,9 +115,9 @@ class PostTest(TestCase):
         Test AJAX function that toggles users digest options
         """
 
-        data = {'pref': 'daily'}
+        data = {"pref": "daily"}
 
-        url = reverse('ajax_digest')
+        url = reverse("ajax_digest")
         request = fake_request(url=url, data=data, user=self.owner)
         json_response = ajax.ajax_digest(request)
         self.process_response(json_response)
@@ -94,10 +126,14 @@ class PostTest(TestCase):
         """
         Test AJAX function for inplace edits
         """
-        data = {'content': 'New content here foo bar bar', 'title': 'New title here foo bar bar',
-                'post_type': models.Post.FORUM, 'tag_val': ['new', 'tag']}
+        data = {
+            "content": "New content here foo bar bar",
+            "title": "New title here foo bar bar",
+            "post_type": models.Post.FORUM,
+            "tag_val": ["new", "tag"],
+        }
 
-        url = reverse('ajax_edit', kwargs=dict(uid=self.post.uid))
+        url = reverse("ajax_edit", kwargs=dict(uid=self.post.uid))
 
         request = fake_request(url=url, data=data, user=self.owner)
         json_response = ajax.ajax_edit(request, uid=self.post.uid)
@@ -109,10 +145,12 @@ class PostTest(TestCase):
         Test AJAX function used to preform
         """
 
-        nontoplevel_data = {'content': "Addin a new comment foo bar",
-                            'parent': self.post.uid}
+        nontoplevel_data = {
+            "content": "Addin a new comment foo bar",
+            "parent": self.post.uid,
+        }
 
-        url = reverse('ajax_comment_create')
+        url = reverse("ajax_comment_create")
 
         request = fake_request(url=url, data=nontoplevel_data, user=self.owner)
         nontoplevel_response = ajax.ajax_comment_create(request)
@@ -122,10 +160,10 @@ class PostTest(TestCase):
         """
         Test AJAX function used to render inplace form.
         """
-        data = {'parent': self.post.uid, 'uid': self.post.uid, 'top': '1'}
-        url = reverse('inplace_form')
+        data = {"parent": self.post.uid, "uid": self.post.uid, "top": "1"}
+        url = reverse("inplace_form")
 
-        request = fake_request(url=url, data=data, user=self.owner, method='GET')
+        request = fake_request(url=url, data=data, user=self.owner, method="GET")
         toplevel_response = ajax.inplace_form(request)
         self.process_response(toplevel_response)
 
@@ -133,10 +171,10 @@ class PostTest(TestCase):
         """
         Test AJAX function used to produce the similar posts sidebar.
         """
-        data = {'query': 'Test'}
-        url = reverse('similar_posts', kwargs=dict(uid=self.post.uid))
+        data = {"query": "Test"}
+        url = reverse("similar_posts", kwargs=dict(uid=self.post.uid))
 
-        request = fake_request(url=url, data=data, user=self.owner, method='GET')
+        request = fake_request(url=url, data=data, user=self.owner, method="GET")
         toplevel_response = ajax.similar_posts(request, uid=self.post.uid)
         self.process_response(toplevel_response)
 
@@ -146,7 +184,6 @@ class PostTest(TestCase):
         response_data = response.content
         response_data = json.loads(response_data)
 
-        self.assertEqual(response_data['status'], 'success', f'Error:{response_data["msg"]}')
-
-
-
+        self.assertEqual(
+            response_data["status"], "success", f'Error:{response_data["msg"]}'
+        )

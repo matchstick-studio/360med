@@ -1,4 +1,3 @@
-
 from pagedown.widgets import PagedownWidget
 from django import forms
 from django.utils.safestring import mark_safe
@@ -25,22 +24,24 @@ MAX_TAGS = 5
 
 def english_only(text):
     try:
-        text.encode('ascii')
+        text.encode("ascii")
     except Exception:
-        raise ValidationError('Text may only contain plain text (ASCII) characters')
+        raise ValidationError("Text may only contain plain text (ASCII) characters")
 
 
 def valid_title(text):
     "Validates form input for tags"
     text = text.strip()
     if not text:
-        raise ValidationError('Please enter a title')
+        raise ValidationError("Please enter a title")
 
-    text = text.replace(" ", '')
+    text = text.replace(" ", "")
     if len(text) < MIN_CHARS:
-        raise ValidationError(f'Too short, please add more than {MIN_CHARS} characters.')
+        raise ValidationError(
+            f"Too short, please add more than {MIN_CHARS} characters."
+        )
     if len(text) > MAX_TITLE:
-        raise ValidationError(f'Too Long, please add less than {MAX_TITLE} characters.')
+        raise ValidationError(f"Too Long, please add less than {MAX_TITLE} characters.")
 
 
 def valid_tag(text):
@@ -48,7 +49,7 @@ def valid_tag(text):
 
     words = text.split(",")
     if len(words) > MAX_TAGS:
-        raise ValidationError('You have too many tags (5 allowed)')
+        raise ValidationError("You have too many tags (5 allowed)")
 
 
 def informative_choices(choices):
@@ -56,10 +57,13 @@ def informative_choices(choices):
     Map choices for post types to a more informative description.
     """
     mapper = {
-              Post.QUESTION: "Ask a question", Post.TUTORIAL: "Share a Tutorial",
-              Post.JOB: "Post a Job Opening", Post.FORUM: "Start a Discussion",
-              Post.TOOL: "Share a Tool", Post.NEWS: "Announce News"
-              }
+        Post.QUESTION: "Ask a question",
+        Post.TUTORIAL: "Share a Tutorial",
+        Post.JOB: "Post a Job Opening",
+        Post.FORUM: "Start a Discussion",
+        Post.TOOL: "Share a Tool",
+        Post.NEWS: "Announce News",
+    }
     new_choices = []
     for c in choices:
         new_choices.append((c[0], mapper.get(c[0], c[1])))
@@ -81,7 +85,7 @@ def required_tags(lst):
         return
 
     # Get the tags file.
-    tags = open(settings.REQUIRED_TAGS, 'r').readlines()
+    tags = open(settings.REQUIRED_TAGS, "r").readlines()
     tags = set([x.strip() for x in tags])
 
     # Create two sets from the source ( input parameter)
@@ -91,7 +95,9 @@ def required_tags(lst):
 
     if not common_elem(source_set, target_set):
         url = settings.REQUIRED_TAGS_URL
-        msg = mark_safe(f"At least one package from <a href='{url}' target='_blank'>this list</a> is required.")
+        msg = mark_safe(
+            f"At least one package from <a href='{url}' target='_blank'>this list</a> is required."
+        )
         raise forms.ValidationError(msg)
 
     return
@@ -106,21 +112,37 @@ class PostLongForm(forms.Form):
 
     choices = informative_choices(choices=choices)
 
-    post_type = forms.IntegerField(label="Post Type",
-                                   widget=forms.Select(choices=choices, attrs={'class': "ui dropdown"}),
-                                   help_text="What kind of post is this?.")
-    title = forms.CharField(label="Enter a title", max_length=200, min_length=2,
-                            validators=[valid_title, english_only],
-                            help_text="Your title should be descriptive to get better responses.")
-    tag_val = forms.CharField(label="Tag a community", max_length=50, required=True, validators=[valid_tag],
-                              help_text="""
+    post_type = forms.IntegerField(
+        label="Post Type",
+        widget=forms.Select(choices=choices, attrs={"class": "ui dropdown"}),
+        help_text="What kind of post is this?.",
+    )
+    title = forms.CharField(
+        label="Enter a title",
+        max_length=200,
+        min_length=2,
+        validators=[valid_title, english_only],
+        help_text="Your title should be descriptive to get better responses.",
+    )
+    tag_val = forms.CharField(
+        label="Tag a community",
+        max_length=50,
+        required=True,
+        validators=[valid_tag],
+        help_text="""
                               Tag communities by typing it out then adding a comma or press ENTER or SPACE.
                               """,
-                              widget=forms.HiddenInput())
+        widget=forms.HiddenInput(),
+    )
 
-    content = forms.CharField(widget=forms.Textarea,
-                              validators=[english_only],
-                              min_length=MIN_CONTENT, max_length=MAX_CONTENT, label="Post Content", strip=False)
+    content = forms.CharField(
+        widget=forms.Textarea,
+        validators=[english_only],
+        min_length=MIN_CONTENT,
+        max_length=MAX_CONTENT,
+        label="Post Content",
+        strip=False,
+    )
 
     def __init__(self, post=None, user=None, *args, **kwargs):
         self.post = post
@@ -138,12 +160,14 @@ class PostLongForm(forms.Form):
         Edit an existing post.
         """
         if self.user != self.post.author and not self.user.profile.is_moderator:
-            raise forms.ValidationError("Only the author or a moderator can edit a post.")
+            raise forms.ValidationError(
+                "Only the author or a moderator can edit a post."
+            )
         data = self.cleaned_data
-        self.post.title = data.get('title')
+        self.post.title = data.get("title")
         self.post.content = data.get("content")
-        self.post.type = data.get('post_type')
-        self.post.tag_val = data.get('tag_val')
+        self.post.type = data.get("post_type")
+        self.post.tag_val = data.get("tag_val")
         self.post.lastedit_user = self.user
         self.post.save()
         return self.post
@@ -152,7 +176,7 @@ class PostLongForm(forms.Form):
         """
         Take out duplicates
         """
-        tag_val = self.cleaned_data["tag_val"] or 'tag1,tag2'
+        tag_val = self.cleaned_data["tag_val"] or "tag1,tag2"
         tags = set([x for x in tag_val.split(",") if x])
 
         required_tags(tags)
@@ -171,15 +195,18 @@ class PostLongForm(forms.Form):
 
 class PostShortForm(forms.Form):
     MIN_LEN, MAX_LEN = 10, 10000
-    parent_uid = forms.CharField(widget=forms.HiddenInput(), min_length=2, max_length=32)
-    content = forms.CharField(widget=forms.Textarea,
-                              min_length=MIN_LEN, max_length=MAX_LEN, strip=False)
+    parent_uid = forms.CharField(
+        widget=forms.HiddenInput(), min_length=2, max_length=32
+    )
+    content = forms.CharField(
+        widget=forms.Textarea, min_length=MIN_LEN, max_length=MAX_LEN, strip=False
+    )
 
     def __init__(self, user=None, post=None, recaptcha=True, *args, **kwargs):
         self.user = user
         self.post = post
         super().__init__(*args, **kwargs)
-        self.fields['content'].strip = False
+        self.fields["content"].strip = False
 
         not_trusted = self.user.is_authenticated and (not self.user.profile.trusted)
 
@@ -199,7 +226,6 @@ class PostShortForm(forms.Form):
 
 
 class PostModForm(forms.Form):
-
     def __init__(self, post, request, user, *args, **kwargs):
         self.post = post
         self.user = user
@@ -211,29 +237,33 @@ class PostModForm(forms.Form):
             (OPEN_POST, "Open post"),
             (DELETE, "Delete post."),
             (REPORT_SPAM, "Mark as spam."),
-
         ]
 
         # Options for top level posts.
         if post.is_toplevel:
-            suffix = [(CLOSE, "Close post ( reason required ). "),
-                      (DUPLICATE, "Duplicated post ( links required ).")]
+            suffix = [
+                (CLOSE, "Close post ( reason required ). "),
+                (DUPLICATE, "Duplicated post ( links required )."),
+            ]
             choices = [(BUMP_POST, "Bump post.")] + choices + suffix
-            self.fields['comment'] = forms.CharField(required=False, max_length=1000, widget=forms.Textarea,
-                                                     strip=True)
+            self.fields["comment"] = forms.CharField(
+                required=False, max_length=1000, widget=forms.Textarea, strip=True
+            )
 
-        self.fields['action'] = forms.IntegerField(widget=forms.RadioSelect(choices=choices), required=True)
+        self.fields["action"] = forms.IntegerField(
+            widget=forms.RadioSelect(choices=choices), required=True
+        )
 
     def clean(self):
         action = self.cleaned_data.get("action")
         comment = self.cleaned_data.get("comment")
 
         if not self.user.profile.is_moderator:
-            raise forms.ValidationError("You need to be a moderator to preform that action.")
+            raise forms.ValidationError(
+                "You need to be a moderator to preform that action."
+            )
 
         if (action == CLOSE or action == DUPLICATE) and not comment:
             raise forms.ValidationError("Closing a post requires a reason.")
 
         return self.cleaned_data
-
-

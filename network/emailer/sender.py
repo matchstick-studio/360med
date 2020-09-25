@@ -11,7 +11,7 @@ from django.conf import settings
 logger = logging.getLogger("biostar")
 
 # Pattern to extract named blocks from a django template.
-block_patt = r'{%\s+block\s+(?P<name>(.+?))\s+%}(?P<value>(.+?)){%\s+endblock\s+%}'
+block_patt = r"{%\s+block\s+(?P<name>(.+?))\s+%}(?P<value>(.+?)){%\s+endblock\s+%}"
 block_regx = re.compile(block_patt)
 
 
@@ -20,7 +20,9 @@ def strip(text):
 
 
 def get_block(text, name):
-    for match in re.finditer(block_patt, text, re.DOTALL | re.MULTILINE | re.IGNORECASE):
+    for match in re.finditer(
+        block_patt, text, re.DOTALL | re.MULTILINE | re.IGNORECASE
+    ):
         found = match.group("name")
         value = match.group("value")
         if found == name:
@@ -46,7 +48,7 @@ def first_line(text):
     """
     lines = map(strip, text.splitlines())
     lines = list(filter(None, lines))
-    first = lines[0] if lines else ''
+    first = lines[0] if lines else ""
     return first
 
 
@@ -60,12 +62,12 @@ class EmailTemplate(object):
         self.content = open(self.template.origin.name).read()
         self.subj = get_block(self.content, "subject")
         self.text = get_block(self.content, "text")
-        self.html = get_block(self.content, 'html')
+        self.html = get_block(self.content, "html")
 
     def render(self, context):
         subj = safe_render(self.subj, context)
         text = safe_render(self.text, context)
-        html = safe_render(self.html, context) if self.html else ''
+        html = safe_render(self.html, context) if self.html else ""
         subj = first_line(subj)
         return subj, text, html
 
@@ -75,7 +77,9 @@ class EmailTemplate(object):
 
         # Skip sending emails during data migration
         if settings.DATA_MIGRATION:
-            logger.info(f"skip email to: {recipients} DATA_MIGRATION={settings.DATA_MIGRATION} ")
+            logger.info(
+                f"skip email to: {recipients} DATA_MIGRATION={settings.DATA_MIGRATION} "
+            )
             return
         else:
             logger.info(f"sending email to: {recipients}")
@@ -90,13 +94,15 @@ class EmailTemplate(object):
                 message=text,
                 message_html=html,
                 from_email=from_email,
-                recipient_list=recipient_list)
+                recipient_list=recipient_list,
+            )
         else:
             send_mail(
                 subject=subject,
                 message=text,
                 from_email=from_email,
-                recipient_list=recipient_list)
+                recipient_list=recipient_list,
+            )
 
 
 def send_html_mail(subject, message, message_html, from_email, recipient_list):

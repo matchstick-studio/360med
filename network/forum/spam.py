@@ -22,23 +22,27 @@ dirname = os.path.dirname(settings.SPAM_INDEX_DIR)
 basename = f"train_{os.path.basename(settings.SPAM_INDEX_DIR)}"
 TRAIN_DIR = os.path.join(dirname, basename)
 
-STARTER_UID = 'placeholder'
+STARTER_UID = "placeholder"
 
 
 def spam_schema():
     analyzer = StemmingAnalyzer(cachesize=-1)
-    schema = Schema(title=TEXT(stored=True, analyzer=analyzer, sortable=True),
-                    content=TEXT(stored=True, analyzer=analyzer, sortable=True),
-                    content_length=NUMERIC(stored=True, sortable=True),
-                    uid=ID(stored=True),
-                    is_spam=BOOLEAN(stored=True))
+    schema = Schema(
+        title=TEXT(stored=True, analyzer=analyzer, sortable=True),
+        content=TEXT(stored=True, analyzer=analyzer, sortable=True),
+        content_length=NUMERIC(stored=True, sortable=True),
+        uid=ID(stored=True),
+        is_spam=BOOLEAN(stored=True),
+    )
     return schema
 
 
 def init_spam_index():
-    return search.init_index(dirname=settings.SPAM_INDEX_DIR,
-                             indexname=settings.SPAM_INDEX_NAME,
-                             schema=spam_schema())
+    return search.init_index(
+        dirname=settings.SPAM_INDEX_DIR,
+        indexname=settings.SPAM_INDEX_NAME,
+        schema=spam_schema(),
+    )
 
 
 def bootstrap_index(dirname=None, indexname=None):
@@ -46,15 +50,22 @@ def bootstrap_index(dirname=None, indexname=None):
     Create spam index and add one post from the
     """
     if dirname and indexname:
-        ix = search.init_index(dirname=dirname, indexname=indexname, schema=spam_schema())
+        ix = search.init_index(
+            dirname=dirname, indexname=indexname, schema=spam_schema()
+        )
     else:
         ix = init_spam_index()
 
     writer = BufferedWriter(ix)
     # Write text to index.
-    index_writer(writer=writer, title="Placeholder",
-                 content_length=0, is_spam=True,
-                 content='CONTENT', uid=STARTER_UID)
+    index_writer(
+        writer=writer,
+        title="Placeholder",
+        content_length=0,
+        is_spam=True,
+        content="CONTENT",
+        uid=STARTER_UID,
+    )
     writer.commit()
     writer.close()
 
@@ -62,11 +73,13 @@ def bootstrap_index(dirname=None, indexname=None):
 
 
 def index_writer(writer, **kwargs):
-    writer.add_document(title=kwargs.get("title"),
-                        content_length=kwargs.get("content_length"),
-                        content=kwargs.get("content"),
-                        uid=kwargs.get("uid"),
-                        is_spam=kwargs.get("is_spam", False))
+    writer.add_document(
+        title=kwargs.get("title"),
+        content_length=kwargs.get("content_length"),
+        content=kwargs.get("content"),
+        uid=kwargs.get("uid"),
+        is_spam=kwargs.get("is_spam", False),
+    )
 
 
 def add_post_to_index(post, writer, is_spam=None):
@@ -74,10 +87,14 @@ def add_post_to_index(post, writer, is_spam=None):
     Insert post to index.
     """
 
-    index_writer(writer=writer, title=post.title,
-                 content_length=len(post.content),
-                 content=post.content, is_spam=post.is_spam,
-                 uid=f"{post.uid}")
+    index_writer(
+        writer=writer,
+        title=post.title,
+        content_length=len(post.content),
+        content=post.content,
+        is_spam=post.is_spam,
+        uid=f"{post.uid}",
+    )
 
 
 def add_spam(post):
@@ -111,13 +128,18 @@ def build_spam_index(overwrite=False, add_ham=False, limit=500):
     ix = bootstrap_index()
 
     # Batch index spam posts.
-    search.index_posts(posts=posts, ix=ix, overwrite=overwrite, add_func=add_post_to_index)
+    search.index_posts(
+        posts=posts, ix=ix, overwrite=overwrite, add_func=add_post_to_index
+    )
 
     logger.info("Built spam index.")
     return ix
 
 
-def search_spam(post, ix,):
+def search_spam(
+    post,
+    ix,
+):
     """
     Search spam index for posts similar to this one.
     Returns
@@ -127,16 +149,16 @@ def search_spam(post, ix,):
     writer.commit()
 
     # Search for this post in the spam index
-    fields = ['uid']
+    fields = ["uid"]
 
     results = search.preform_whoosh_search(ix=ix, query=post.uid, fields=fields)
 
     # Preform more_like_this on this posts content
-    similar_content = results[0].more_like_this('content', top=5)
+    similar_content = results[0].more_like_this("content", top=5)
 
     # Remove this post from the spam index after results are collected.
     writer = AsyncWriter(ix)
-    writer.delete_by_term('uid', text=post.uid)
+    writer.delete_by_term("uid", text=post.uid)
     writer.commit()
 
     # Get the results into a list and close the searcher object.
@@ -151,7 +173,7 @@ def compute_score(post, ix=None):
 
     ix = ix or init_spam_index()
     N = 1
-    weight = .7
+    weight = 0.7
     bias = -0.25
 
     # Users above a certain score get green light.
@@ -237,7 +259,7 @@ def report(nham, nspam, tn, tp, fn, fp):
     print(f"... \t{tp}\tSPAM predicted\n\t\t---")
     print(f"... \t{nham}\tHAM actual")
     print(f"... \t{tn}\tHAM predicted")
-    print("-"*10)
+    print("-" * 10)
     print(f"... {acc}\tAccuracy\ttp + tn / (tp + tn + fp + fn) ")
     print(f"... {specif}\tSpecificity\ttn / (tn + fp)")
     print(f"... {sens}\tSensitivity\ttp / (tp + fn)")
@@ -253,14 +275,18 @@ def detail(post, post_score, is_spam=True, predict=True, verb=1):
         return
     print()
     if fn:
-        print(f"-----\tFALSE NEGATIVE ( missed spam )\tuid={post.uid} score={post_score}. deleted={post.is_deleted}")
+        print(
+            f"-----\tFALSE NEGATIVE ( missed spam )\tuid={post.uid} score={post_score}. deleted={post.is_deleted}"
+        )
 
     elif fp:
-        print(f"-----\tFALSE POSITIVE ( missed ham )\tuid={post.uid} score={post_score}. ")
+        print(
+            f"-----\tFALSE POSITIVE ( missed ham )\tuid={post.uid} score={post_score}. "
+        )
 
     if verb > 1 and (fp or fn):
         print(post.content)
-        print(">"*5)
+        print(">" * 5)
 
     if verb >= 1 and (fp or fn):
         print("POSER SCORE", post_score)
@@ -279,7 +305,9 @@ def test_classify(threshold=None, niter=100, limitmb=1024, size=100, verbosity=0
     spam = Post.objects.filter(Q(spam=Post.SPAM) | Q(status=Post.DELETED))
 
     # Get the valid posts and shuffle.
-    ham = Post.objects.valid_posts(author__profile__score__lte=0, type__in=[Post.ANSWER, Post.COMMENT])
+    ham = Post.objects.valid_posts(
+        author__profile__score__lte=0, type__in=[Post.ANSWER, Post.COMMENT]
+    )
 
     # Get list of id's for both
     spam = list(spam.values_list("id", flat=True))
@@ -298,14 +326,25 @@ def test_classify(threshold=None, niter=100, limitmb=1024, size=100, verbosity=0
         if os.path.exists(TRAIN_DIR):
             shutil.rmtree(TRAIN_DIR)
 
-        ix = search.init_index(dirname=TRAIN_DIR,
-                               indexname=f"train_{util.get_uuid(8)}_{settings.SPAM_INDEX_NAME}",
-                               schema=spam_schema())
-        writer = BufferedWriter(ix, limit=int((niter/2) + 1), writerargs=dict(limitmb=limitmb, multisegment=True))
+        ix = search.init_index(
+            dirname=TRAIN_DIR,
+            indexname=f"train_{util.get_uuid(8)}_{settings.SPAM_INDEX_NAME}",
+            schema=spam_schema(),
+        )
+        writer = BufferedWriter(
+            ix,
+            limit=int((niter / 2) + 1),
+            writerargs=dict(limitmb=limitmb, multisegment=True),
+        )
 
-        index_writer(writer=writer, title="Placeholder",
-                     content_length=0, is_spam=True,
-                     content='CONTENT', uid=STARTER_UID)
+        index_writer(
+            writer=writer,
+            title="Placeholder",
+            content_length=0,
+            is_spam=True,
+            content="CONTENT",
+            uid=STARTER_UID,
+        )
 
         # Take one spam post out of training set.
         one_out = one_out_train(spam=spam, writer=writer, size=size, ham=ham)
@@ -320,8 +359,13 @@ def test_classify(threshold=None, niter=100, limitmb=1024, size=100, verbosity=0
         seen_spam += 1 if is_spam else 0
         seen_ham += 1 if is_ham else 0
 
-        detail(is_spam=is_spam, predict=predicted_spam, post=one_out,
-               verb=verbosity, post_score=post_score)
+        detail(
+            is_spam=is_spam,
+            predict=predicted_spam,
+            post=one_out,
+            verb=verbosity,
+            post_score=post_score,
+        )
 
         if predicted_spam:
             tp += 1 if is_spam else 0
@@ -345,8 +389,7 @@ def test_classify(threshold=None, niter=100, limitmb=1024, size=100, verbosity=0
 
 
 def score(post, threshold=None):
-    """
-    """
+    """"""
 
     if not settings.CLASSIFY_SPAM:
         return
@@ -367,4 +410,6 @@ def score(post, threshold=None):
     # If the score exceeds threshold it gets quarantined.
     if post_score >= threshold:
         Post.objects.filter(id=post.id).update(spam=Post.SUSPECT)
-        auth.log_action(log_text=f"Quarantined post={post.uid}; spam score={post_score}")
+        auth.log_action(
+            log_text=f"Quarantined post={post.uid}; spam score={post_score}"
+        )

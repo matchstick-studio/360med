@@ -1,9 +1,9 @@
-
 from network.accounts.tasks import create_messages
 from network.emailer.tasks import send_email
 import time
 from network.utils.decorators import spool, timer
 from django.db.models import Q
+
 #
 # Do not use logging in tasks! Deadlocking may occur!
 #
@@ -94,6 +94,7 @@ def created_post(pid):
 #
 #     return
 
+
 @spool(pass_arguments=True)
 def create_user_awards(user_id):
 
@@ -116,7 +117,9 @@ def create_user_awards(user_id):
             badge = Badge.objects.filter(name=award.name).first()
 
             # Do not award a post multiple times.
-            already_awarded = Award.objects.filter(user=user, badge=badge, post=post).exists()
+            already_awarded = Award.objects.filter(
+                user=user, badge=badge, post=post
+            ).exists()
             if post and already_awarded:
                 continue
 
@@ -147,7 +150,12 @@ def notify_followers(subs, author, extra_context={}):
     users = [sub.user for sub in subs]
 
     # Every subscribed user gets local messages with any subscription type.
-    create_messages(template=local_template, extra_context=extra_context, rec_list=users, sender=author)
+    create_messages(
+        template=local_template,
+        extra_context=extra_context,
+        rec_list=users,
+        sender=author,
+    )
 
     # Select users with email subscriptions.
     email_subs = subs.filter(type=Subscription.EMAIL_MESSAGE)
@@ -158,4 +166,8 @@ def notify_followers(subs, author, extra_context={}):
 
     recipient_list = [sub.user.email for sub in email_subs]
 
-    send_email(template_name=email_template, extra_context=extra_context, recipient_list=recipient_list)
+    send_email(
+        template_name=email_template,
+        extra_context=extra_context,
+        recipient_list=recipient_list,
+    )

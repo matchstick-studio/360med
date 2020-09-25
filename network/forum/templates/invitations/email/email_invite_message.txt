@@ -2,11 +2,17 @@
 {% autoescape off %}
 {% blocktrans %}
 
-Hello,
+Dear {{ full_name }},
 
-You ({{ email }}) have been invited to join {{ site_name }}
+You have been invited to join 360Med Network by {{ inviter }}
 
-If you'd like to join, please go to {{ invite_url }}
+360MedNet is a private community of medical professionals in Africa across all disciplines.
+You will have access professionals beyond your physical reach, share interesting medical cases, 
+get connected to mentors or mentees, be a part of forum discussions, get prompt updates 
+for conferences and scholarships and job opportunities among other things.
+
+If you are interested, click the link below to setup your account 
+{{ invite_url }}
 
 {% endblocktrans %}
 {% endautoescape %}

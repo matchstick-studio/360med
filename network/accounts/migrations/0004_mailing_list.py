@@ -6,13 +6,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0003_message_prefs'),
+        ("accounts", "0003_message_prefs"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='message_prefs',
-            field=models.IntegerField(choices=[(0, 'Local messages.'), (1, 'Email messages.'), (2, 'Mailing list.')], default=0),
+            model_name="profile",
+            name="message_prefs",
+            field=models.IntegerField(
+                choices=[
+                    (0, "Local messages."),
+                    (1, "Email messages."),
+                    (2, "Mailing list."),
+                ],
+                default=0,
+            ),
         ),
     ]

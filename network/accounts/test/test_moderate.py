@@ -6,14 +6,21 @@ from network.accounts.models import User
 from network.utils.helpers import fake_request
 from network.accounts import views, forms
 
+
 @override_settings(RECAPTCHA_PRIVATE_KEY="", RECAPTCHA_PUBLIC_KEY="")
 class ModerateUser(TestCase):
     def setUp(self):
 
-        self.user1 = User.objects.create(username=f"foo1", email="foo@tested.com",
-                                         password="foo", is_superuser=True, is_staff=True)
-        self.user2 = User.objects.create(username=f"foo2", email="foo2@tested.com",
-                                       password="foo2")
+        self.user1 = User.objects.create(
+            username=f"foo1",
+            email="foo@tested.com",
+            password="foo",
+            is_superuser=True,
+            is_staff=True,
+        )
+        self.user2 = User.objects.create(
+            username=f"foo2", email="foo2@tested.com", password="foo2"
+        )
         pass
 
     def test_user_moderate(self):
@@ -37,7 +44,9 @@ class ModerateUser(TestCase):
 
         url = reverse("debug_user")
 
-        request = fake_request(user=self.user1, data=dict(uid=self.user2.profile.uid), url=url)
+        request = fake_request(
+            user=self.user1, data=dict(uid=self.user2.profile.uid), url=url
+        )
 
         response = views.debug_user(request=request)
 

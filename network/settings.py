@@ -22,19 +22,15 @@ DISABLE_TASKS = False
 PAGEDOWN_IMAGE_UPLOAD_ENABLED = False
 
 # Set the home page to the engine or forum
-INTERNAL_IPS = ['127.0.0.1']
+INTERNAL_IPS = ["127.0.0.1"]
 
 # Admin users will be created automatically with DEFAULT_ADMIN_PASSWORD.
-ADMINS = [
-    ("Collin Rukundo", "support@matchstick.ug")
-]
+ADMINS = [("Collin Rukundo", "support@matchstick.ug")]
 
 DEFAULT_ADMIN_PASSWORD = "ultimate012"
 
 # Allowed CORS websites
-CORS_ORIGIN_WHITELIST = [
-    
-]
+CORS_ORIGIN_WHITELIST = []
 
 POSTGRES_HOST = os.environ.setdefault("POSTGRES_HOST", "")
 
@@ -58,34 +54,34 @@ DEBUG = True
 
 # Default installed apps.
 DEFAULT_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.humanize',
-    'mailer',
-    'compressor',
-    'taggit',
-    'snowpenguin.django.recaptcha2',
-    'phonenumber_field',
-    'widget_tweaks',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.sites",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.humanize",
+    "mailer",
+    "compressor",
+    "taggit",
+    "snowpenguin.django.recaptcha2",
+    "phonenumber_field",
+    "widget_tweaks",
+    "invitations",
 ]
 
 # Enabled apps.
 INSTALLED_APPS = DEFAULT_APPS
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 # Site specific information
@@ -95,28 +91,28 @@ SITE_NAME = "360Med Network"
 
 # Deployment specific parameters.
 PROTOCOL = "http"
-HTTP_PORT = '8000'
+HTTP_PORT = "8000"
 BASE_URL = f"{PROTOCOL}://{SITE_DOMAIN}:{HTTP_PORT}"
 
 # Change this in production!
-SECRET_KEY = 'secret-key'
+SECRET_KEY = "secret-key"
 
 # Change this in production!
 API_KEY = "api-key"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'string_if_invalid': "**MISSING**",
-            'context_processors': [
-                'django.contrib.auth.context_processors.auth',
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.template.context_processors.media',
-                'django.contrib.messages.context_processors.messages',
-                'network.context.main',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "string_if_invalid": "**MISSING**",
+            "context_processors": [
+                "django.contrib.auth.context_processors.auth",
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.template.context_processors.media",
+                "django.contrib.messages.context_processors.messages",
+                "network.context.main",
             ],
         },
     },
@@ -128,42 +124,40 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # The WSGI application.
-WSGI_APPLICATION = 'network.wsgi.application'
+WSGI_APPLICATION = "network.wsgi.application"
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-
 ]
 
 # Database settings.
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'network_prod',
-        'USER': 'postgres',
-        'PASSWORD': 'ultimate012',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "network_prod",
+        "USER": "postgres",
+        "PASSWORD": "ultimate012",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
     },
-    
 }
 
-ALLOWED_HOSTS = ['www.360med.org', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ["www.360med.org", "localhost", "127.0.0.1"]
 
 
 # The URL configuration.
-ROOT_URLCONF = 'network.urls'
+ROOT_URLCONF = "network.urls"
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'Africa/Kampala'
+TIME_ZONE = "Africa/Kampala"
 
 USE_I18N = True
 
@@ -172,13 +166,13 @@ USE_L10N = True
 USE_TZ = True
 
 # Configure language detection
-LANGUAGE_DETECTION = ['en']
+LANGUAGE_DETECTION = ["en"]
 
 # The static URL start.
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 
 # The static root directory.
-STATIC_ROOT = join(BASE_DIR, 'export', 'static')
+STATIC_ROOT = join(BASE_DIR, "export", "static")
 
 # Global directories for static files.
 STATICFILES_DIRS = [
@@ -187,28 +181,28 @@ STATICFILES_DIRS = [
 
 
 # The media URL start.
-MEDIA_URL = '/media/'
+MEDIA_URL = "/media/"
 
 # The media root directory.
-MEDIA_ROOT = join(BASE_DIR, 'export', 'media')
+MEDIA_ROOT = join(BASE_DIR, "export", "media")
 
 # The root for all docs
-DOCS_ROOT = join(BASE_DIR, 'docs')
+DOCS_ROOT = join(BASE_DIR, "docs")
 
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder'
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder",
 ]
 
 # Apply default logger setting.
 LOGGER_NAME = "network"
 
 # The email delivery engine.
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-#EMAIL_BACKEND = 'sparkpost.django.email_backend.SparkPostEmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'sparkpost.django.email_backend.SparkPostEmailBackend'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Session engine.
 SESSION_ENGINE = "django.contrib.sessions.backends.db"

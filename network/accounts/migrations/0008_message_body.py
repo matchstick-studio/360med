@@ -7,25 +7,35 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0007_profile_prefs'),
+        ("accounts", "0007_profile_prefs"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='MessageBody',
+            name="MessageBody",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('body', models.TextField(max_length=10000)),
-                ('html', models.TextField(default='', max_length=100000)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("body", models.TextField(max_length=10000)),
+                ("html", models.TextField(default="", max_length=100000)),
             ],
         ),
         migrations.RemoveField(
-            model_name='message',
-            name='html',
+            model_name="message",
+            name="html",
         ),
         migrations.AlterField(
-            model_name='message',
-            name='body',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounts.MessageBody'),
+            model_name="message",
+            name="body",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="accounts.MessageBody"
+            ),
         ),
     ]

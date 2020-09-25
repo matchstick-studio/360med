@@ -1,4 +1,3 @@
-
 import logging
 from datetime import datetime, timedelta
 from django.db.models import Count
@@ -7,7 +6,7 @@ from network.accounts.models import Message, User
 from network.forum.util import now
 from network.forum.models import PostView, Post
 
-logger = logging.getLogger('engine')
+logger = logging.getLogger("engine")
 
 
 MAX_MSG = 100
@@ -32,7 +31,9 @@ def prune_data(weeks=10, days=1):
     messages.delete()
 
     # Get rid of too many messages
-    users = User.objects.annotate(total=Count("recipients")).filter(total__gt=MAX_MSG)[:100]
+    users = User.objects.annotate(total=Count("recipients")).filter(total__gt=MAX_MSG)[
+        :100
+    ]
     for user in users:
         since = now() - timedelta(days=1)
         Message.objects.filter(user=user, sent_at__lt=since).delete()

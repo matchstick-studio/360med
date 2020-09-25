@@ -2,10 +2,19 @@ from django.shortcuts import render
 from .models import *
 from django.db.models import Count
 
+
 def index(request):
 
-    groups = EmailGroup.objects.all().annotate(count=Count('subscription')).order_by("-count")
-    emails = EmailAddress.objects.all().annotate(count=Count('subscription')).order_by("-count")[:20]
+    groups = (
+        EmailGroup.objects.all()
+        .annotate(count=Count("subscription"))
+        .order_by("-count")
+    )
+    emails = (
+        EmailAddress.objects.all()
+        .annotate(count=Count("subscription"))
+        .order_by("-count")[:20]
+    )
 
     subs = Subscription.objects.all()[:20]
 

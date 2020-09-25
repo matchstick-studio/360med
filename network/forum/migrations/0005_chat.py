@@ -6,13 +6,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('forum', '0004_indexed'),
+        ("forum", "0004_indexed"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='post',
-            name='type',
-            field=models.IntegerField(choices=[(0, 'Question'), (1, 'Answer'), (6, 'Comment'), (2, 'Job'), (3, 'Forum'), (8, 'Tutorial'), (12, 'Chat'), (7, 'Data'), (4, 'Page'), (10, 'Tool'), (11, 'News'), (5, 'Blog'), (9, 'Bulletin Board')], db_index=True),
+            model_name="post",
+            name="type",
+            field=models.IntegerField(
+                choices=[
+                    (0, "Question"),
+                    (1, "Answer"),
+                    (6, "Comment"),
+                    (2, "Job"),
+                    (3, "Forum"),
+                    (8, "Tutorial"),
+                    (12, "Chat"),
+                    (7, "Data"),
+                    (4, "Page"),
+                    (10, "Tool"),
+                    (11, "News"),
+                    (5, "Blog"),
+                    (9, "Bulletin Board"),
+                ],
+                db_index=True,
+            ),
         ),
     ]

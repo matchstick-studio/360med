@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('forum', '0006_locked'),
+        ("forum", "0006_locked"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='post',
-            name='status',
-            field=models.IntegerField(choices=[(0, 'Pending'), (1, 'Open'), (2, 'Off topic'), (3, 'Deleted')], db_index=True, default=1),
+            model_name="post",
+            name="status",
+            field=models.IntegerField(
+                choices=[(0, "Pending"), (1, "Open"), (2, "Off topic"), (3, "Deleted")],
+                db_index=True,
+                default=1,
+            ),
         ),
     ]

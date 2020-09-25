@@ -10,13 +10,10 @@ Invitation = get_invitation_model()
 
 
 class CleanEmailMixin(object):
-
     def validate_invitation(self, email):
-        if Invitation.objects.all_valid().filter(
-                email__iexact=email, accepted=False):
+        if Invitation.objects.all_valid().filter(email__iexact=email, accepted=False):
             raise AlreadyInvited
-        elif Invitation.objects.filter(
-                email__iexact=email, accepted=True):
+        elif Invitation.objects.filter(email__iexact=email, accepted=True):
             raise AlreadyAccepted
         elif get_user_model().objects.filter(email__iexact=email):
             raise UserRegisteredEmail
@@ -28,59 +25,78 @@ class CleanEmailMixin(object):
         email = get_invitations_adapter().clean_email(email)
 
         errors = {
-            "already_invited": _("This e-mail address has already been"
-                                 " invited."),
-            "already_accepted": _("This e-mail address has already"
-                                  " accepted an invite."),
+            "already_invited": _("This e-mail address has already been" " invited."),
+            "already_accepted": _(
+                "This e-mail address has already" " accepted an invite."
+            ),
             "email_in_use": _("An active user is using this e-mail address"),
         }
         try:
             self.validate_invitation(email)
-        except(AlreadyInvited):
+        except (AlreadyInvited):
             raise forms.ValidationError(errors["already_invited"])
-        except(AlreadyAccepted):
+        except (AlreadyAccepted):
             raise forms.ValidationError(errors["already_accepted"])
-        except(UserRegisteredEmail):
+        except (UserRegisteredEmail):
             raise forms.ValidationError(errors["email_in_use"])
         return email
 
 
 class InviteForm(forms.Form, CleanEmailMixin):
+    def __init__(self, *args, **kwargs):
+        super(InviteForm, self).__init__(*args, **kwargs)
+        self.fields["full_name"] = forms.CharField(
+            required=True, widget=forms.TextInput(attrs={"placeholder": "Full name"})
+        )
 
-    email = forms.EmailField(
-        label=_("E-mail"),
-        required=True,
-        widget=forms.TextInput(
-            attrs={"type": "email", "size": "30"}), initial="")
+        self.fields["email"] = forms.EmailField(
+            label=_("E-mail"),
+            required=True,
+            widget=forms.TextInput(attrs={"type": "email", "size": "30"}),
+            initial="",
+        )
 
-    def save(self, email):
-        return Invitation.create(email=email)
+    def save(self, *args, **kwargs):
+        full_name = self.cleaned_data["full_name"]
+        email = self.cleaned_data["email"]
+
+        params = {}
+        params["full_name"] = full_name
+        params["email"] = email
+
+        instance = Invitation.create(**params)
+        return instance
 
 
-class InvitationAdminAddForm(forms.ModelForm, CleanEmailMixin):
-    email = forms.EmailField(
-        label=_("E-mail"),
-        required=True,
-        widget=forms.TextInput(attrs={"type": "email", "size": "30"}))
+class InvitationAdminAddForm(InviteForm):
+    """email = forms.EmailField(
+    label=_("E-mail"),
+    required=True,
+    widget=forms.TextInput(attrs={"type": "email", "size": "30"}))"""
 
     def save(self, *args, **kwargs):
         cleaned_data = super(InvitationAdminAddForm, self).clean()
-        email = cleaned_data.get("email")
-        params = {'email': email}
+        full_name = self.cleaned_data["full_name"]
+        email = self.cleaned_data["email"]
+
+        return Invitation.create(full_name=full_name, email=email)
+
+        params = {}
+        params["full_name"] = full_name
+        params["email"] = email
+
         if cleaned_data.get("inviter"):
-            params['inviter'] = cleaned_data.get("inviter")
+            params["inviter"] = cleaned_data.get("inviter")
         instance = Invitation.create(**params)
-        instance.send_invitation(self.request)
         super(InvitationAdminAddForm, self).save(*args, **kwargs)
         return instance
 
     class Meta:
         model = Invitation
-        fields = ("email", "inviter")
+        fields = "inviter"
 
 
 class InvitationAdminChangeForm(forms.ModelForm):
-
     class Meta:
         model = Invitation
-        fields = '__all__'
+        fields = "__all__"

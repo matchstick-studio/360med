@@ -59,55 +59,69 @@ class AwardDef(object):
 AUTOBIO = AwardDef(
     name="Autobiographer",
     desc="has more than 110 characters in the information field of the user's profile",
-    func=lambda user: wrap_qs(len(user.profile.text) > 110 and user.profile.score > 1, User, user.id),
+    func=lambda user: wrap_qs(
+        len(user.profile.text) > 110 and user.profile.score > 1, User, user.id
+    ),
     max=1,
-    icon="bullhorn icon"
+    icon="bullhorn icon",
 )
 
 GOOD_QUESTION = AwardDef(
     name="Good Question",
     desc="asked a question that was upvoted at least 5 times",
-    func=lambda user: Post.objects.filter(vote_count__gte=5, author=user, type=Post.QUESTION),
+    func=lambda user: Post.objects.filter(
+        vote_count__gte=5, author=user, type=Post.QUESTION
+    ),
     max=1,
-    icon="question icon"
+    icon="question icon",
 )
 
 GOOD_ANSWER = AwardDef(
     name="Good Answer",
     desc="created an answer that was upvoted at least 5 times",
-    func=lambda user: Post.objects.filter(vote_count__gt=5, author=user, type=Post.ANSWER),
+    func=lambda user: Post.objects.filter(
+        vote_count__gt=5, author=user, type=Post.ANSWER
+    ),
     max=1,
-    icon="edit outline icon"
+    icon="edit outline icon",
 )
 
 STUDENT = AwardDef(
     name="Student",
     desc="asked a question with at least 3 up-votes",
-    func=lambda user: Post.objects.filter(vote_count__gt=2, author=user, type=Post.QUESTION),
+    func=lambda user: Post.objects.filter(
+        vote_count__gt=2, author=user, type=Post.QUESTION
+    ),
     max=1,
-    icon="certificate icon"
+    icon="certificate icon",
 )
 
 TEACHER = AwardDef(
     name="Teacher",
     desc="created an answer with at least 3 up-votes",
-    func=lambda user: Post.objects.filter(vote_count__gt=2, author=user, type=Post.ANSWER),
+    func=lambda user: Post.objects.filter(
+        vote_count__gt=2, author=user, type=Post.ANSWER
+    ),
     max=1,
-    icon="smile outline icon"
+    icon="smile outline icon",
 )
 
 COMMENTATOR = AwardDef(
     name="Commentator",
     desc="created a comment with at least 3 up-votes",
-    func=lambda user: Post.objects.filter(vote_count__gt=2, author=user, type=Post.COMMENT),
+    func=lambda user: Post.objects.filter(
+        vote_count__gt=2, author=user, type=Post.COMMENT
+    ),
     max=1,
-    icon="comment icon"
+    icon="comment icon",
 )
 
 CENTURION = AwardDef(
     name="Centurion",
     desc="created 100 posts",
-    func=lambda user: wrap_qs(Post.objects.filter(author=user).count() > 100, User, user.id),
+    func=lambda user: wrap_qs(
+        Post.objects.filter(author=user).count() > 100, User, user.id
+    ),
     max=1,
     icon="bolt icon",
     type=Badge.SILVER,
@@ -134,7 +148,9 @@ POPULAR = AwardDef(
 ORACLE = AwardDef(
     name="Oracle",
     desc="created more than 1,000 posts (questions + answers + comments)",
-    func=lambda user: wrap_qs(Post.objects.filter(author=user).count() > 1000, User, user.id),
+    func=lambda user: wrap_qs(
+        Post.objects.filter(author=user).count() > 1000, User, user.id
+    ),
     max=1,
     icon="sun icon",
     type=Badge.GOLD,
@@ -143,7 +159,9 @@ ORACLE = AwardDef(
 PUNDIT = AwardDef(
     name="Pundit",
     desc="created a comment with more than 10 votes",
-    func=lambda user: Post.objects.filter(author=user, type=Post.COMMENT, vote_count__gt=10),
+    func=lambda user: Post.objects.filter(
+        author=user, type=Post.COMMENT, vote_count__gt=10
+    ),
     max=1,
     icon="comments icon",
     type=Badge.SILVER,
@@ -152,7 +170,9 @@ PUNDIT = AwardDef(
 GURU = AwardDef(
     name="Guru",
     desc="received more than 100 upvotes",
-    func=lambda user: wrap_qs(Vote.objects.filter(post__author=user).count() > 100, User, user.id),
+    func=lambda user: wrap_qs(
+        Vote.objects.filter(post__author=user).count() > 100, User, user.id
+    ),
     max=1,
     icon="beer icon",
     type=Badge.SILVER,
@@ -161,7 +181,9 @@ GURU = AwardDef(
 CYLON = AwardDef(
     name="Cylon",
     desc="received 1,000 up votes",
-    func=lambda user: wrap_qs(Vote.objects.filter(post__author=user).count() > 1000, User, user.id),
+    func=lambda user: wrap_qs(
+        Vote.objects.filter(post__author=user).count() > 1000, User, user.id
+    ),
     max=1,
     icon="rocket icon",
     type=Badge.GOLD,
@@ -170,15 +192,19 @@ CYLON = AwardDef(
 VOTER = AwardDef(
     name="Voter",
     desc="voted more than 100 times",
-    func=lambda user: wrap_qs(Vote.objects.filter(author=user).count() > 100, User, user.id),
+    func=lambda user: wrap_qs(
+        Vote.objects.filter(author=user).count() > 100, User, user.id
+    ),
     max=1,
-    icon="thumbs up outline icon"
+    icon="thumbs up outline icon",
 )
 
 SUPPORTER = AwardDef(
     name="Supporter",
     desc="voted at least 25 times",
-    func=lambda user: wrap_qs(Vote.objects.filter(author=user).count() > 25, User, user.id),
+    func=lambda user: wrap_qs(
+        Vote.objects.filter(author=user).count() > 25, User, user.id
+    ),
     max=1,
     icon="thumbs up icon",
     type=Badge.SILVER,
@@ -187,25 +213,31 @@ SUPPORTER = AwardDef(
 SCHOLAR = AwardDef(
     name="Scholar",
     desc="created an answer that has been accepted",
-    func=lambda user: Post.objects.filter(author=user, type=Post.ANSWER, accept_count__gt=0),
+    func=lambda user: Post.objects.filter(
+        author=user, type=Post.ANSWER, accept_count__gt=0
+    ),
     max=1,
-    icon="check circle outline icon"
+    icon="check circle outline icon",
 )
 
 PROPHET = AwardDef(
     name="Prophet",
     desc="created a post with more than 20 followers",
-    func=lambda user: Post.objects.filter(author=user, type__in=Post.TOP_LEVEL, subs_count__gt=20),
+    func=lambda user: Post.objects.filter(
+        author=user, type__in=Post.TOP_LEVEL, subs_count__gt=20
+    ),
     max=1,
-    icon="leaf icon"
+    icon="leaf icon",
 )
 
 LIBRARIAN = AwardDef(
     name="Librarian",
     desc="created a post with more than 10 bookmarks",
-    func=lambda user: Post.objects.filter(author=user, type__in=Post.TOP_LEVEL, book_count__gt=10),
+    func=lambda user: Post.objects.filter(
+        author=user, type__in=Post.TOP_LEVEL, book_count__gt=10
+    ),
     max=1,
-    icon="bookmark outline icon"
+    icon="bookmark outline icon",
 )
 
 
@@ -252,7 +284,6 @@ APPRECIATED = AwardDef(
 
 
 ALL_AWARDS = [
-
     # These awards can only be earned once
     AUTOBIO,
     STUDENT,

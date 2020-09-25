@@ -6,18 +6,45 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('forum', '0005_chat'),
+        ("forum", "0005_chat"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='post',
-            name='status',
-            field=models.IntegerField(choices=[(0, 'Pending'), (1, 'Open'), (2, 'Off topic'), (4, 'Locked'), (3, 'Deleted'), (5, 'Closed')], db_index=True, default=1),
+            model_name="post",
+            name="status",
+            field=models.IntegerField(
+                choices=[
+                    (0, "Pending"),
+                    (1, "Open"),
+                    (2, "Off topic"),
+                    (4, "Locked"),
+                    (3, "Deleted"),
+                    (5, "Closed"),
+                ],
+                db_index=True,
+                default=1,
+            ),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='type',
-            field=models.IntegerField(choices=[(0, 'Question'), (1, 'Answer'), (6, 'Comment'), (2, 'Job'), (3, 'Forum'), (8, 'Tutorial'), (7, 'Data'), (4, 'Page'), (10, 'Tool'), (11, 'News'), (5, 'Blog'), (9, 'Bulletin Board')], db_index=True),
+            model_name="post",
+            name="type",
+            field=models.IntegerField(
+                choices=[
+                    (0, "Question"),
+                    (1, "Answer"),
+                    (6, "Comment"),
+                    (2, "Job"),
+                    (3, "Forum"),
+                    (8, "Tutorial"),
+                    (7, "Data"),
+                    (4, "Page"),
+                    (10, "Tool"),
+                    (11, "News"),
+                    (5, "Blog"),
+                    (9, "Bulletin Board"),
+                ],
+                db_index=True,
+            ),
         ),
     ]

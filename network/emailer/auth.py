@@ -4,7 +4,7 @@ from .models import EmailAddress, Subscription
 logger = logging.getLogger("engine")
 
 
-def add_subscription(email, group, name=''):
+def add_subscription(email, group, name=""):
 
     # Get the address from the database.
     address = EmailAddress.objects.filter(email=email).first()

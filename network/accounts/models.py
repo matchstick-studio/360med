@@ -27,14 +27,17 @@ MAX_FIELD_LEN = 1024
 
 
 class ProfileManager(models.Manager):
-
     def valid_users(self):
         """
         Return valid user queryset, filtering new and trusted users.
         """
 
         # Filter for new or trusted users.
-        query = super().get_queryset().filter(models.Q(state=Profile.TRUSTED) | models.Q(state=Profile.NEW))
+        query = (
+            super()
+            .get_queryset()
+            .filter(models.Q(state=Profile.TRUSTED) | models.Q(state=Profile.NEW))
+        )
 
         return query
 
@@ -51,27 +54,39 @@ class UserImage(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 
     # Image file path, relative to MEDIA_ROOT
-    image = models.ImageField(default=None, blank=True, upload_to=image_path, max_length=MAX_FIELD_LEN)
+    image = models.ImageField(
+        default=None, blank=True, upload_to=image_path, max_length=MAX_FIELD_LEN
+    )
 
 
 class Profile(models.Model):
     NEW, TRUSTED, SUSPENDED, BANNED, SPAMMER = range(5)
-    STATE_CHOICES = [(NEW, "New"), (TRUSTED, "Active"), (SPAMMER, "Spammer"),
-                     (SUSPENDED, "Suspended"), (BANNED, "Banned")]
+    STATE_CHOICES = [
+        (NEW, "New"),
+        (TRUSTED, "Active"),
+        (SPAMMER, "Spammer"),
+        (SUSPENDED, "Suspended"),
+        (BANNED, "Banned"),
+    ]
     state = models.IntegerField(default=NEW, choices=STATE_CHOICES, db_index=True)
 
     READER, MODERATOR, MANAGER, BLOGGER = range(4)
     ROLE_CHOICES = [
-        (READER, "Reader"), (MODERATOR, "Moderator"), (MANAGER, "Admin"),
-        (BLOGGER, "Blog User")
+        (READER, "Reader"),
+        (MODERATOR, "Moderator"),
+        (MANAGER, "Admin"),
+        (BLOGGER, "Blog User"),
     ]
 
     NO_DIGEST, DAILY_DIGEST, WEEKLY_DIGEST, MONTHLY_DIGEST, ALL_MESSAGES = range(5)
 
-    DIGEST_CHOICES = [(NO_DIGEST, 'Never'), (DAILY_DIGEST, 'Daily'),
-                      (WEEKLY_DIGEST, 'Weekly'), (MONTHLY_DIGEST, 'Monthly'),
-                      (ALL_MESSAGES, "Email for every new thread (mailing list mode)")
-                      ]
+    DIGEST_CHOICES = [
+        (NO_DIGEST, "Never"),
+        (DAILY_DIGEST, "Daily"),
+        (WEEKLY_DIGEST, "Weekly"),
+        (MONTHLY_DIGEST, "Monthly"),
+        (ALL_MESSAGES, "Email for every new thread (mailing list mode)"),
+    ]
     # Subscription to daily and weekly digests.
     digest_prefs = models.IntegerField(choices=DIGEST_CHOICES, default=WEEKLY_DIGEST)
 
@@ -81,28 +96,32 @@ class Profile(models.Model):
         (EMAIL_MESSAGE, "Email"),
         (LOCAL_MESSAGE, "Local Messages"),
         (NO_MESSAGES, "No messages"),
-
     ]
     # Default subscriptions inherit from this
-    message_prefs = models.IntegerField(choices=MESSAGING_TYPE_CHOICES, default=DEFAULT_MESSAGES)
+    message_prefs = models.IntegerField(
+        choices=MESSAGING_TYPE_CHOICES, default=DEFAULT_MESSAGES
+    )
 
     # Gender choices
-    MALE, FEMALE, OTHER = range(3) 
-    GENDER_CHOICES = [
-        (MALE, "Male"),
-        (FEMALE, "Female"),
-        (OTHER, "Other")
-    ]
+    MALE, FEMALE, OTHER = range(3)
+    GENDER_CHOICES = [(MALE, "Male"), (FEMALE, "Female"), (OTHER, "Other")]
 
-    #Occupations
-    MEDICAL_DOCTOR, NURSE, DENTIST, CLINICAL_OFFICER, PHARMACIST, LABORATORY_SCIENTIST = range(6)
+    # Occupations
+    (
+        MEDICAL_DOCTOR,
+        NURSE,
+        DENTIST,
+        CLINICAL_OFFICER,
+        PHARMACIST,
+        LABORATORY_SCIENTIST,
+    ) = range(6)
     OCCUPATION_CHOICES = [
         (MEDICAL_DOCTOR, "Medical Doctor"),
         (NURSE, "Nurse"),
         (DENTIST, "Dentist"),
         (CLINICAL_OFFICER, "Clinical Officer"),
         (PHARMACIST, "Pharmacist"),
-        (LABORATORY_SCIENTIST, "Laboratory Scientist")
+        (LABORATORY_SCIENTIST, "Laboratory Scientist"),
     ]
 
     # Connection to the user.
@@ -112,7 +131,7 @@ class Profile(models.Model):
     uid = models.CharField(max_length=MAX_UID_LEN, unique=True)
 
     # User diplay name.
-    name = models.CharField(max_length=MAX_NAME_LEN, default='', db_index=True)
+    name = models.CharField(max_length=MAX_NAME_LEN, default="", db_index=True)
 
     # Maximum amount of uploaded files a user is allowed to aggregate, in mega-bytes.
     max_upload_size = models.IntegerField(default=0)
@@ -123,7 +142,7 @@ class Profile(models.Model):
     # The role of the user.
     gender = models.IntegerField(default=MALE, choices=GENDER_CHOICES)
 
-     # The main occupation of the user.
+    # The main occupation of the user.
     occupation = models.IntegerField(default=MEDICAL_DOCTOR, choices=OCCUPATION_CHOICES)
 
     qualifications = models.CharField(blank=True, null=True, max_length=100)
@@ -156,7 +175,9 @@ class Profile(models.Model):
     watched_tags = models.CharField(max_length=MAX_TEXT_LEN, default="", blank=True)
 
     # Description provided by the user html.
-    text = models.TextField(default="No bio available yet", null=True, max_length=MAX_TEXT_LEN, blank=True)
+    text = models.TextField(
+        default="No bio available yet", null=True, max_length=MAX_TEXT_LEN, blank=True
+    )
 
     # The html version of the user information.
     html = models.TextField(null=True, max_length=MAX_TEXT_LEN, blank=True)
@@ -181,7 +202,7 @@ class Profile(models.Model):
         self.max_upload_size = self.max_upload_size or self.set_upload_size()
         self.name = self.name or self.user.first_name or self.user.email.split("@")[0]
         self.date_joined = self.date_joined or now()
-        self.last_login = self.last_login or now() #- timedelta(days=1)
+        self.last_login = self.last_login or now()  # - timedelta(days=1)
         super(Profile, self).save(*args, **kwargs)
 
     @property
@@ -213,24 +234,35 @@ class Profile(models.Model):
 
     def require_recaptcha(self):
         """Check to see if this user requires reCAPTCHA"""
-        is_required = not (self.trusted or self.score > settings.RECAPTCHA_THRESHOLD_USER_SCORE)
+        is_required = not (
+            self.trusted or self.score > settings.RECAPTCHA_THRESHOLD_USER_SCORE
+        )
         return is_required
 
     def get_score(self):
-        """
-        """
+        """"""
         score = self.score * 10
         return score
 
     @property
     def is_moderator(self):
         # Managers can moderate as well.
-        return self.role == self.MODERATOR or self.role == self.MANAGER or self.user.is_staff or self.user.is_superuser
+        return (
+            self.role == self.MODERATOR
+            or self.role == self.MANAGER
+            or self.user.is_staff
+            or self.user.is_superuser
+        )
 
     @property
     def trusted(self):
-        return (self.user.is_staff or self.state == self.TRUSTED or
-                self.role == self.MODERATOR or self.role == self.MANAGER or self.user.is_superuser)
+        return (
+            self.user.is_staff
+            or self.state == self.TRUSTED
+            or self.role == self.MODERATOR
+            or self.role == self.MANAGER
+            or self.user.is_superuser
+        )
 
     @property
     def is_manager(self):
@@ -238,7 +270,7 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
 
-        return reverse('user_profile', kwargs=dict(uid=self.uid))
+        return reverse("user_profile", kwargs=dict(uid=self.uid))
 
     @property
     def is_suspended(self):
@@ -287,12 +319,14 @@ class Logger(models.Model):
     # Put in delte
     MODERATING, CREATION, EDIT, LOGIN, LOGOUT, BROWSING = range(6)
 
-    ACTIONS_CHOICES = [(MODERATING, "Preformed a moderation action."),
-                       (CREATION, "Created an object."),
-                       (EDIT, "Edited an object."),
-                       (LOGIN, "Logged in to the site."),
-                       (LOGOUT, "Logged out of the site."),
-                       (BROWSING, "Browsing the site.")]
+    ACTIONS_CHOICES = [
+        (MODERATING, "Preformed a moderation action."),
+        (CREATION, "Created an object."),
+        (EDIT, "Edited an object."),
+        (LOGIN, "Logged in to the site."),
+        (LOGOUT, "Logged out of the site."),
+        (BROWSING, "Browsing the site."),
+    ]
 
     # User that preformed this action
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -301,7 +335,7 @@ class Logger(models.Model):
     action = models.IntegerField(choices=ACTIONS_CHOICES, default=BROWSING)
 
     # Stores the specific log text
-    log_text = models.TextField(default='')
+    log_text = models.TextField(default="")
 
     # Date this log was created
     date = models.DateTimeField(auto_now_add=True)
@@ -312,8 +346,9 @@ class MessageBody(models.Model):
     """
     A message that may be shared across all users.
     """
+
     body = models.TextField(max_length=MAX_TEXT_LEN)
-    html = models.TextField(default='', max_length=MAX_TEXT_LEN * 10)
+    html = models.TextField(default="", max_length=MAX_TEXT_LEN * 10)
 
     def save(self, *args, **kwargs):
         self.html = self.html or mistune.markdown(self.body)
@@ -331,7 +366,9 @@ class Message(models.Model):
     spam = models.IntegerField(choices=SPAM_CHOICES, default=UNKNOWN)
 
     uid = models.CharField(max_length=32, unique=True)
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="author", on_delete=models.CASCADE)
+    sender = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name="author", on_delete=models.CASCADE
+    )
     recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     subject = models.CharField(max_length=120)
@@ -349,4 +386,4 @@ class Message(models.Model):
         return f"Message {self.sender}, {self.recipient}"
 
     def css(self):
-        return 'new' if self.unread else ''
+        return "new" if self.unread else ""

@@ -1,4 +1,3 @@
-
 import logging
 
 from datetime import timedelta
@@ -6,11 +5,12 @@ from django import template
 from django.conf import settings
 
 from network.accounts.util import now
+
 logger = logging.getLogger("biostar")
 register = template.Library()
 
 
-@register.inclusion_tag('widgets/show_messages.html')
+@register.inclusion_tag("widgets/show_messages.html")
 def show_messages(messages):
     """
     Renders the messages
@@ -37,6 +37,3 @@ def show_email(target, user=None):
         return "*" * 10
 
     return email
-
-
-

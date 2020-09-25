@@ -6,18 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('forum', '0003_subtype'),
+        ("forum", "0003_subtype"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='post',
-            name='indexed',
+            model_name="post",
+            name="indexed",
             field=models.BooleanField(default=False),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='status',
-            field=models.IntegerField(choices=[(0, 'Pending'), (1, 'Open'), (2, 'Off topic'), (3, 'Deleted')], db_index=True, default=1),
+            model_name="post",
+            name="status",
+            field=models.IntegerField(
+                choices=[(0, "Pending"), (1, "Open"), (2, "Off topic"), (3, "Deleted")],
+                db_index=True,
+                default=1,
+            ),
         ),
     ]
