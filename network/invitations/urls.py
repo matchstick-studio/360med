@@ -4,7 +4,7 @@ from django.urls import include, path, re_path
 from . import views
 
 app_name = 'invitations'
-invitation_patterns = [
+urlpatterns = [
     url(r'^send-invite/$', views.SendInvite.as_view(),
         name='send-invite'),
 
@@ -13,11 +13,4 @@ invitation_patterns = [
 
     url(r'^accept-invite/(?P<key>\w+)/?$', views.AcceptInvite.as_view(),
         name='accept-invite'),
-]
-
-
-urlpatterns = [
-
-    path("", include((invitation_patterns, 'invitations'), namespace='invitations')),
-
 ]

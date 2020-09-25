@@ -303,6 +303,14 @@ function highligh_preview(form, text) {
 
 $(document).ready(function () {
 
+    $('.message .close')
+        .on('click', function () {
+            $(this)
+                .closest('.message')
+                .transition('fade')
+                ;
+        });
+
     $('.spam').dropdown({on: 'hover'});
     $('.spam .mark.item').click(function (event) {
         var post = $(this).closest('.post');
@@ -449,5 +457,4 @@ $(document).ready(function () {
     tags_dropdown();
 
 
-})
-;
+});

@@ -50,6 +50,8 @@ class Invitation(AbstractBaseInvitation):
             'site_name': current_site.name,
             'email': self.email,
             'key': self.key,
+            'full_name': self.full_name,
+            'custom_msg': self.custom_msg,
             'inviter': self.inviter,
         })
 

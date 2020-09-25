@@ -542,7 +542,7 @@ def get_wording(filtered, prefix="Sort by:", default=""):
 
     display = dict(all="all time", week="this week", month="this month",
                    year="this year", rank="Rank", views="Views", today="today",
-                   replies="replies", votes="Votes", visit="recent visit",
+                   replies="replies", votes="Likes", visit="recent visit",
                    reputation="reputation", joined="date joined", activity="activity level",
                    rsent="oldest to newest ", sent="newest to oldest",
                    rep="sender reputation", tagged="tagged")

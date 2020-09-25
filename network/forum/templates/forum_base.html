@@ -80,22 +80,16 @@
             <div class="sidebar">
                 <div class="sidebar_innr" data-simplebar>
                     <div class="sections">
-                        <div class="profile-details my-5">
-                            <div class="profile-image">
-                                <img src="" alt="{{ request.user.get_full_name }} picture">
+                        <div class="ui warning message">
+                            <i class="close icon"></i>
+                            <div class="header">
+                                What's new, {{ user.profile.name }}?
                             </div>
-                            <div class="profile-details-info mb-2">
-                                <i class="{{ user.location.flag_css }}"></i>
-                                <h2 class="mb-1"> {{ request.user.get_full_name }} </h2>
-                                {% if user.bio %}
-                                <p style="line-height:1.2;margin-bottom:20px"> {{ user.bio }} </p>
-                                {% else %}
-                                <small>Add bio on profile</small>
-                                {% endif %}
+                            <p>Let's update some profile info that may have changed.</p>
+                            <div class="inline">
+                                <div class="ui close mini button">Not Now</div>
+                                <a href="{% url 'edit_profile' %}" role="button" class="ui primary mini button">Update Profile</a>
                             </div>
-
-                            <a class="button small soft-primary" href="">View Profile</a>
-
                         </div>
 
                         <ul>

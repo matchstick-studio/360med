@@ -1,0 +1,31 @@
+{% extends 'forum_list.html' %}
+{% load static i18n %}
+
+{% block body %}
+
+<h1>{% trans "Invite your peers in the medical profession to join 360Med" %}</h1>
+
+<form class="ui form" id="invite-form" method="POST" action="{% url 'invitations:send-invite' %}">
+  {% csrf_token %}
+  <div class="field">
+    <label>Email</label>
+    <input type="text" name="email" id="id_email" value="{{ form.email.value }}" class="form-control validate-email"
+      placeholder="{% trans 'Email' %}">
+  </div>
+
+  <button class="ui button generic-ajax-submit" type="submit">Submit</button>
+</form>
+
+{% for error in form.email.errors %}
+<div class="ui info message">
+  <i class="close icon"></i>
+  <div class="header">
+    <h2>Error</h2>
+  </div>
+  {{ error }}
+</div>
+{% endfor %}
+
+{{ success_message }}
+
+{% endblock %}

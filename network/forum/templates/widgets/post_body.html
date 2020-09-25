@@ -11,7 +11,7 @@
 
     {# Show author message about their quarantied post. #}
 
-    <div class="title">{{ post.title_prefix }}{{ post.title }}</div>
+    <h2 class="title">{{ post.title }}</h3>
     {% endif %}
 
     {#  Post body #}
@@ -48,8 +48,8 @@
 
                 <div class="wrap magnify">
 
-                    {# Display post author. #}
-                    {% post_user_box target_user=post.author %}
+                   <!--  {# Display post author. #}
+                    {% post_user_box target_user=post.author %} -->
 
                     {# Display post content. #}
                     {% if post.is_editable %}

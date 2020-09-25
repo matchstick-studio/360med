@@ -8,35 +8,31 @@
         </div>
 
         <a href="{% url 'post_view' post.uid %}">
-            <h3> 
+            <h3>
                 {{ post.title|truncatechars:150 }}
             </h3>
         </a>
 
-        {{ post.html|safe|truncatechars:100 }}
+        {{ post.html|safe|truncatechars:300 }}
 
-        {% if post.is_toplevel %}
+        <!-- {% if post.is_toplevel %}
         {% post_tags post spaced=False %}
-        {% endif %}
+        {% endif %} -->
 
-        <!-- quiz block buttons -->
-        <div class="btn-acts">
-            <div>
-                <a href="#" class="button small white">
-                    <span> {{ post.get_votecount|bignum }} like{{ post.get_votecount|pluralize }}</span>
-                </a>
-                <a href="#" class="button small white">
-                    <span> {{ post.reply_count }} repl{{ post.reply_count|pluralize:"y,ies" }}</span>
-                </a>
-                <a href="#" class="button small white">
-                    <span> {{ post.root.view_count|bignum }} view{{ post.root.view_count|pluralize }}</span>
-                </a>
-                {% if show_subs %}
-                {% subscription_label post.subs_count %}
-                {% endif %}
+        <div class="post-state">
+            <div class="post-state-btns"> <i class="uil-thumbs-up"></i> {{ post.get_votecount|bignum }}<span> like{{ post.get_votecount|pluralize }} </span>
             </div>
+            <div class="post-state-btns"> <i class="uil-comment"></i> {{ post.reply_count }} <span> repl{{ post.reply_count|pluralize:"y,ies" }}</span>
+            </div>
+            <div class="post-state-btns"> <i class="uil-eye"></i> {{ post.root.view_count|bignum }} <span> view{{ post.root.view_count|pluralize }} </span>
+            </div>
+            {% if show_subs %}
+            <div class="post-state-btns"> <i class="uil-bookmark"></i>
+                {% subscription_label post.subs_count %}
+            </div>
+            {% endif %}
             {% if post.high_spam_score and user.profile.is_moderator %}
-            <div>
+            <div class="post-state-btns">
                 <button href="#" class="button primary small circle uk-visible@s">
                     Moderate
                     <i class="icon-feather-chevron-down ml-2"></i>
