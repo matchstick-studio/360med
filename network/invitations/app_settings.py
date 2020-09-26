@@ -56,7 +56,7 @@ class AppSettings(object):
     @property
     def ADAPTER(self):
         """ The adapter, setting ACCOUNT_ADAPTER overrides this default """
-        return self._setting("ADAPTER", "invitations.adapters.BaseInvitationsAdapter")
+        return self._setting("ADAPTER", "network.invitations.adapters.BaseInvitationsAdapter")
 
     @property
     def EMAIL_MAX_LENGTH(self):
@@ -81,18 +81,18 @@ class AppSettings(object):
 
     @property
     def INVITE_FORM(self):
-        return self._setting("INVITE_FORM", "invitations.forms.InviteForm")
+        return self._setting("INVITE_FORM", "network.invitations.forms.InviteForm")
 
     @property
     def ADMIN_ADD_FORM(self):
         return self._setting(
-            "ADMIN_ADD_FORM", "invitations.forms.InvitationAdminAddForm"
+            "ADMIN_ADD_FORM", "network.invitations.forms.InvitationAdminAddForm"
         )
 
     @property
     def ADMIN_CHANGE_FORM(self):
         return self._setting(
-            "ADMIN_CHANGE_FORM", "invitations.forms.InvitationAdminChangeForm"
+            "ADMIN_CHANGE_FORM", "network.invitations.forms.InvitationAdminChangeForm"
         )
 
 

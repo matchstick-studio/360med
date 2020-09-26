@@ -19,7 +19,8 @@ from .base_invitation import AbstractBaseInvitation
 
 
 class Invitation(AbstractBaseInvitation):
-    full_name = models.CharField(blank=True, max_length=150)
+    first_name = models.TextField(verbose_name=_("First Name"), blank=True, null=True)
+    last_name = models.TextField(verbose_name=_("Last Name"), blank=True, null=True)
     email = models.EmailField(
         unique=True,
         verbose_name=_("e-mail address"),
@@ -28,10 +29,15 @@ class Invitation(AbstractBaseInvitation):
     created = models.DateTimeField(verbose_name=_("created"), default=timezone.now)
 
     @classmethod
-    def create(cls, email, inviter=None, **kwargs):
+    def create(cls, first_name, last_name, email, inviter=None, **kwargs):
         key = get_random_string(64).lower()
         instance = cls._default_manager.create(
-            email=email, key=key, inviter=inviter, **kwargs
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            key=key,
+            inviter=inviter,
+            **kwargs
         )
         return instance
 
@@ -51,9 +57,9 @@ class Invitation(AbstractBaseInvitation):
                 "invite_url": invite_url,
                 "site_name": current_site.name,
                 "email": self.email,
+                "first_name": self.first_name,
+                "last_name": self.last_name,
                 "key": self.key,
-                "full_name": self.full_name,
-                "custom_msg": self.custom_msg,
                 "inviter": self.inviter,
             }
         )

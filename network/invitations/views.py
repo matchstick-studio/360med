@@ -31,10 +31,12 @@ class SendInvite(FormView):
         return super(SendInvite, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
+        first_name = form.cleaned_data["first_name"]
+        last_name = form.cleaned_data["last_name"]
         email = form.cleaned_data["email"]
 
         try:
-            invite = form.save(email)
+            invite = form.save(email, first_name, last_name)
             invite.inviter = self.request.user
             invite.save()
             invite.send_invitation(self.request)
@@ -42,7 +44,8 @@ class SendInvite(FormView):
             return self.form_invalid(form)
         return self.render_to_response(
             self.get_context_data(
-                success_message=_("%(email)s has been invited") % {"email": email}
+                success_message=_("%(email)s has been invited")
+                % {"email": email, "first_name": first_name, "last_name": last_name}
             )
         )
 
@@ -131,7 +134,9 @@ class AcceptInvite(SingleObjectMixin, View):
                 self.request,
                 messages.ERROR,
                 "invitations/messages/invite_already_accepted.txt",
-                {"email": invitation.email},
+                {
+                    "email": invitation.email,
+                },
             )
             # Redirect to login since there's hopefully an account already.
             return redirect(app_settings.LOGIN_REDIRECT)
@@ -142,7 +147,9 @@ class AcceptInvite(SingleObjectMixin, View):
                 self.request,
                 messages.ERROR,
                 "invitations/messages/invite_expired.txt",
-                {"email": invitation.email},
+                {
+                    "email": invitation.email,
+                },
             )
             # Redirect to sign-up since they might be able to register anyway.
             return redirect(self.get_signup_redirect())
@@ -176,13 +183,17 @@ def accept_invitation(invitation, request, signal_sender):
     invitation.accepted = True
     invitation.save()
 
-    invite_accepted.send(sender=signal_sender, email=invitation.email)
+    invite_accepted.send(sender=signal_sender, email=invitation.email, first_name=invitation.first_name, last_name=invitation.last_name)
 
     get_invitations_adapter().add_message(
         request,
         messages.SUCCESS,
         "invitations/messages/invite_accepted.txt",
-        {"email": invitation.email},
+        {
+            "email": invitation.email,
+            "first_name": invitation.first_name,
+            "last_name": invitation.last_name,
+        },
     )
 
 

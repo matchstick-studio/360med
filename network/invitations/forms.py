@@ -43,57 +43,70 @@ class CleanEmailMixin(object):
 
 
 class InviteForm(forms.Form, CleanEmailMixin):
-    def __init__(self, *args, **kwargs):
-        super(InviteForm, self).__init__(*args, **kwargs)
-        self.fields["full_name"] = forms.CharField(
-            required=True, widget=forms.TextInput(attrs={"placeholder": "Full name"})
+    first_name = forms.CharField(
+        label=_("First Name"),
+        widget=forms.TextInput(
+            attrs={"placeholder": _("First Name"), "autofocus": "autofocus"}
+        ),
+    )
+
+    last_name = forms.CharField(
+        label=_("Last Name"),
+        widget=forms.TextInput(
+            attrs={"placeholder": _("Last Name"), "autofocus": "autofocus"}
+        ),
+    )
+
+    email = forms.EmailField(
+        label=_("E-mail"),
+        required=True,
+        widget=forms.TextInput(attrs={"type": "email", "size": "30"}),
+        initial="",
+    )
+
+    def save(self, email):
+        return Invitation.create(
+            first_name=first_name, last_name=last_name, email=email
         )
 
-        self.fields["email"] = forms.EmailField(
-            label=_("E-mail"),
-            required=True,
-            widget=forms.TextInput(attrs={"type": "email", "size": "30"}),
-            initial="",
-        )
 
-    def save(self, *args, **kwargs):
-        full_name = self.cleaned_data["full_name"]
-        email = self.cleaned_data["email"]
+class InvitationAdminAddForm(forms.ModelForm, CleanEmailMixin):
+    first_name = forms.CharField(
+        label=_("First Name"),
+        widget=forms.TextInput(
+            attrs={"placeholder": _("First Name"), "autofocus": "autofocus"}
+        ),
+    )
 
-        params = {}
-        params["full_name"] = full_name
-        params["email"] = email
+    last_name = forms.CharField(
+        label=_("Last Name"),
+        widget=forms.TextInput(
+            attrs={"placeholder": _("Last Name"), "autofocus": "autofocus"}
+        ),
+    )
 
-        instance = Invitation.create(**params)
-        return instance
-
-
-class InvitationAdminAddForm(InviteForm):
-    """email = forms.EmailField(
-    label=_("E-mail"),
-    required=True,
-    widget=forms.TextInput(attrs={"type": "email", "size": "30"}))"""
+    email = forms.EmailField(
+        label=_("E-mail"),
+        required=True,
+        widget=forms.TextInput(attrs={"type": "email", "size": "30"}),
+    )
 
     def save(self, *args, **kwargs):
         cleaned_data = super(InvitationAdminAddForm, self).clean()
-        full_name = self.cleaned_data["full_name"]
-        email = self.cleaned_data["email"]
-
-        return Invitation.create(full_name=full_name, email=email)
-
-        params = {}
-        params["full_name"] = full_name
-        params["email"] = email
-
+        first_name = cleaned_data.get("first_name")
+        last_name = cleaned_data.get("last_name")
+        email = cleaned_data.get("email")
+        params = {"email": email, "first_name": first_name, "last_name": last_name}
         if cleaned_data.get("inviter"):
             params["inviter"] = cleaned_data.get("inviter")
         instance = Invitation.create(**params)
+        instance.send_invitation(self.request)
         super(InvitationAdminAddForm, self).save(*args, **kwargs)
         return instance
 
     class Meta:
         model = Invitation
-        fields = "inviter"
+        fields = ("first_name", "last_name", "email", "inviter")
 
 
 class InvitationAdminChangeForm(forms.ModelForm):

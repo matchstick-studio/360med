@@ -68,7 +68,7 @@ DEFAULT_APPS = [
     "snowpenguin.django.recaptcha2",
     "phonenumber_field",
     "widget_tweaks",
-    "invitations",
+    "network.invitations", # app to support invitations linked to allauth
 ]
 
 # Enabled apps.
@@ -88,6 +88,10 @@ MIDDLEWARE = [
 SITE_ID = 1
 SITE_DOMAIN = "localhost"
 SITE_NAME = "360Med Network"
+
+# INVITATIONS config
+INVITATIONS_INVITATION_ONLY = True
+INVITATIONS_EMAIL_SUBJECT_PREFIX = "[Welcome to 360Med]"
 
 # Deployment specific parameters.
 PROTOCOL = "http"

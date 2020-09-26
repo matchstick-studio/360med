@@ -8,9 +8,10 @@
 
 {% block body %}
 
-<div class="center-text">
-{% pages objs=all_messages %}
-</div>
+<ul class="uk-pagination" uk-margin>
+    {% pages objs=all_messages %}
+</ul>
+
 
 <table class="ui very basic striped table">
     <tbody>
@@ -34,9 +35,9 @@
 {#  this will reset the user unread messages #}
 {% toggle_unread user=request.user %}
 
-<div class="center-text">
-{% pages objs=all_messages %}
-</div>
+<ul class="uk-pagination" uk-margin>
+    {% pages objs=all_messages %}
+</ul>
 
 
 {% endblock %}

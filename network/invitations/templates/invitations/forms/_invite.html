@@ -1,5 +1,5 @@
 {% extends 'forum_list.html' %}
-{% load static i18n %}
+{% load static widget_tweaks %}
 
 {% block body %}
 
@@ -11,13 +11,18 @@
 <form class="ui form" id="invite-form" method="POST" action="{% url 'invitations:send-invite' %}">
   {% csrf_token %}
   <div class="field">
-    <label>Full name</label>
-    <input type="text" name="full_name" id="id_full_name" value="" placeholder="Prospect's name">
+    <label>First name</label>
+    {% render_field form.first_name id="id_first_name" name="first_name" placeholder="First name" %}
   </div>
 
   <div class="field">
-    <label>Email</label>
-    <input type="text" name="email" id="id_email" value="{{ form.email.value }}" placeholder="Prospect's email address">
+    <label>Last name</label>
+    {% render_field form.last_name id="id_last_name" name="last_name" placeholder="Last name" %}
+  </div>
+
+  <div class="field">
+    <label>Email address</label>
+    {% render_field form.email class="validate-email" id="id_email" name="email" placeholder="Email address" %}
   </div>
 
   {% for error in form.errors %}

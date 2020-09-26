@@ -7,6 +7,7 @@ from network.forum import views
 from network.accounts.views import image_upload_view
 from network.forum import ajax, api
 from network.accounts.urls import account_patterns
+from network.invitations.urls import urlpatterns
 
 
 forum_patterns = [
@@ -62,8 +63,8 @@ urlpatterns = [
     path("", include(forum_patterns)),
     # Include the accounts urls
     path("accounts/", include(account_patterns)),
-    # Invitation app urls
-    path("invitations/", include("invitations.urls", namespace="invitations")),
+    # include invitations urls
+    path("invitations/", include("network.invitations.urls", namespace="invitations")),
 ]
 
 if settings.PAGEDOWN_IMAGE_UPLOAD_ENABLED:
