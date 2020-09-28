@@ -2,6 +2,9 @@
 {% load static %}
 
 <!-- Logo-->
+<div class="header-btn-traiger" uk-toggle="target: #wrapper ; cls: collapse-sidebar mobile-visible">
+    <span></span></div>
+    
 <div id="logo">
     <a href="/"> <img src="{% static 'img/logo.png' %}" alt="360Med Logo"></a>
 </div>
@@ -18,14 +21,14 @@
 <!-- user icons -->
 <div class="head_user">
 
-    <!-- <a class="opts_icon_link uk-visible@s {% activate tab "latest" %} " href="{% url 'post_list' %}">
+    <a class="opts_icon_link uk-visible@s {% activate tab "latest" %} " href="{% url 'post_list' %}">
         <i class="list icon"></i> Latest
     </a>
 
-    <a class="opts_icon_link uk-visible@s {% activate tab "community" %}" href="{% url 'community_list' %}">
+<!--     <a class="opts_icon_link uk-visible@s {% activate tab "community" %}" href="{% url 'community_list' %}">
         <i class="world icon"></i> Community
-    </a>
- -->
+    </a> -->
+
     <a class="ui button teal small opts_icon_link uk-visible@s {% activate tab "invite" %}" href="{% url 'invitations:send-invite' %}">
         <i class="uil-user-plus"> </i> Invite Peers
     </a>
@@ -44,7 +47,7 @@
     </a>
 
     <!-- profile -image -->
-    <a class="opts_account" href="#"> <img src="{% static 'img/user.png' %}" alt=""></a>
+    <a class="opts_account" href="#"> <img src="{% gravatar user=user size=150 %}" alt=""></a>
 
     <!-- profile dropdown-->
     <div uk-dropdown="mode:click ; animation: uk-animation-slide-bottom-small" class="dropdown-notifications rounded">
@@ -54,7 +57,7 @@
 
             <div class="dropdown-user-details">
                 <div class="dropdown-user-avatar">
-                    <img src="{% static 'img/user.png' %}" alt="">
+                    <img src="{% gravatar user=user size=150 %}" alt="">
                 </div>
                 <div class="dropdown-user-name"> {{ user.profile.name }} <span>See your profile</span> </div>
             </div>
@@ -63,8 +66,6 @@
         <ul class="dropdown-user-menu">
             <li><a class="item  {% activate tab "profile" %}" href="{% url 'edit_profile' %}"> <i class="uil-user"></i>
                     Edit Profile </a> </li>
-            <li><a href="#"> <i class="uil-thumbs-up"></i> My Communities </a></li>
-            <li><a href="#"> <i class="uil-cog"></i> Notification Settings</a></li>
             <li><a class="item  {% activate tab "logout" %}" href="{% url 'logout' %}"> <i
                         class="uil-sign-out-alt"></i>Log Out</a>
             </li>

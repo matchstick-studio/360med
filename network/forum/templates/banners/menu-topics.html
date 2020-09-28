@@ -12,7 +12,7 @@
 <li class="{% activate tab "bookmarks" %}">
     <a href="{% url 'bookmarks' %}">
         <img src="{% static 'img/document.png' %}" alt="">
-        <span>Bookmarks</span>
+        <span>My Bookmarks</span>
     </a>
 </li>
 
@@ -24,17 +24,17 @@
                 ({{ counts.votes.count }})</span></div>
         {%  else %}
         <img src="{% static 'img/flag.png' %}" alt="">
-        <span>Likes</span>
+        <span>My Likes/Upvotes</span>
         {% endif %}
 
     </a>
 </li>
-<li class="{% activate tab "mytags" %}">
+<!-- <li class="{% activate tab "mytags" %}">
     <a href="{% url 'mytags' %}">
         <img src="{% static 'img/book.png' %}" alt="">
         <span>My Tags</span>
     </a>
-</li>
+</li> -->
 <li class="{% activate tab "following" %}">
     <a href="{% url 'following' %}">
         <img src="{% static 'img/bell.svg' %}" alt="">

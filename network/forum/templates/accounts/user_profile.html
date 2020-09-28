@@ -4,85 +4,90 @@
 {% block headtitle %}{{ target.profile.name }}{% endblock %}
 
 {% block content %}
-<div class="uk-grid-large" uk-grid>
-    <div class="uk-width-2-3@m">
 
-        <div class="profile" data-value="{{ target.profile.id }}">
-            <div class="profile-cover">
-            </div>
+        <div class="profile">
 
             <div class="profile-details">
                 <div class="profile-image">
-                    <img src="{% gravatar user=target size=150 %}" alt="">
+                    <img src="{% gravatar user=target size=150 %}" alt="{{ target.profile.name }} avatar">
                     <a href="#"> </a>
                 </div>
                 <div class="profile-details-info">
-                    <h1> {{ target.profile.name }} <code>@{{ target.username }}</code></h1>
-                    <p>Joined {{ target.profile.date_joined|time_ago }} &bull; {{ target.profile.gender }} &bull; {{ target.profile.location }}</p>
+                    <h1> {{ target.profile.name }}</h1>
+                    <code>@{{ target.username }}</code>
                     <p>{{ target.profile.text }}</p>
-                    {% if target.profile.is_moderator %}
-                    <span class="uk-label uk-label-danger">{{ target.profile.get_role_display }}</span>
-                    {% endif %}
-                    <!-- @todo only show status if it's negative e.g suspended or banned -->
-                    <span class="uk-label uk-label-danger">{{ target.profile.get_state_display }}</span>
+                </div>
+        
+            </div>
+        
+        
+        </div>
+        
+        <div class="ui divider"></div>
+        
+        <div class="section-small">
+        
+            <div uk-grid>
+        
+                <div class="uk-width-2-3@m fead-area">
 
-                    <div class="my-3">
-                        {% if target != request.user %}
-                        <a href="#" class="button small secondary mr-2"> <i class="uil-envelope"> </i> Send Message </i> </a>
-                        {% endif %}
+                    <div class="ui large header"> Activity </div>
+        
+                    <!-- Post loop goes here -->
+                    {% include 'accounts/profile_post_listing.html' %}
+                </div>
+        
+            
+        
+                <!-- sidebar -->
+                <div class="uk-width-expand ml-lg-2">
+        
+                    <div uk-sticky="offset:144 ; bottom:true ; meda : @m">
+        
+                        <div class="ui large header"> About </div>
+
+                        <div class="list-group-items">
+                            <i class="uil-medkit"></i>
+                            <h5 style="margin:0!important"> <span> {{ target.profile.qualifications }} </span> </h5>
+                        </div>
+
+                        <div class="list-group-items">
+                            <i class="uil-briefcase-alt"></i>
+                            <h5 style="margin:0!important"> {{ target.profile.get_occupation_display }} at <span> {{ target.profile.occupation }} </span> </h5>
+                        </div>
+
+                        <div class="list-group-items">
+                            <i class="uil-home"></i>
+                            <h5 style="margin:0!important"> Lives in <span> {{ target.profile.location }} </span> </h5>
+                        </div>
+                        
+                        <div class="list-group-items">
+                            <i class="uil-clock"></i>
+                            <h5 style="margin:0!important"> Joined <span> {{ target.profile.date_joined|time_ago }} </span> </h5>
+                        </div>
+                        
                         {% if target == request.user %}
-                        <a href="{% url 'edit_profile' %}" class="button small soft-primary m-2"> <i class="uil-edit"></i> Edit Profile</a>
+                        <a href="{% url 'edit_profile' %}" class="button soft-primary block"> Edit Profile </a>
+                        <p></p>
+                        {% else %}
+                        <a href="#" class="button secondary block"> <i class="uil-envelope"> </i> Send Message </i> </a>
                         {% endif %}
                         {% if can_moderate %}
-                        <a href="#" class="button small danger m-2 moderate"> <i class="uil-signal"></i> Moderate</a>
+                        <a href="#" class="button danger moderate block"> <i class="uil-signal"></i> Moderate</a>
+                        <p></p>
                         {% endif %}
                         {% if request.user.is_superuser and debugging %}
-                        <a class="button small success" href="{% url 'debug_user' %}?uid={{ target.profile.uid }}">
+                        <a class="button success block" href="{% url 'debug_user' %}?uid={{ target.profile.uid }}">
                             <i class="uil-sign-in-alt"></i> Log in
                         </a>
+                        <p></p>
                         {% endif %}
+        
                     </div>
-
                 </div>
-
+        
             </div>
-
-            <ul class="uk-tab" data-uk-tab="{connect:'#my-id2'}">
-                <li><a href="">Profile</a></li>
-                <li><a href="{{ target.profile.get_absolute_url }}?active=posts">Posts</a></li>
-            </ul>
-
-            <ul id="my-id2" class="uk-switcher uk-margin">
-                <li>
-                    <!-- user profile details-->
-                    <div class="uk-card uk-card-default uk-card-small mt-2">
-                        <div class="uk-card-header">
-                            <div class="uk-grid-small uk-flex-middle" uk-grid>
-                                <div class="uk-width-expand">
-                                    <h3 class="uk-card-title uk-margin-remove-bottom">Contact details</h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="uk-card-body">
-                            <div class="list-group-items">
-                                <i class="uil-phone-alt"></i>
-                                <h5> Phone: <span>{{ target.profile.phone }} </span> </h5>
-                            </div>
-                            <div class="list-group-items">
-                                <i class="uil-envelope"></i>
-                                <h5> Email: <span class="uk-text-lowercase">{{ request.user.email }}</span> </h5>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                {% include 'accounts/profile_post_listing.html' %}
-                </li>
-            </ul>
-            
+        
         </div>
-
-    </div>
-</div>
 
 {% endblock %}

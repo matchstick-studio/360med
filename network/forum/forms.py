@@ -127,7 +127,7 @@ class PostLongForm(forms.Form):
     tag_val = forms.CharField(
         label="Tag a community",
         max_length=50,
-        required=True,
+        required=False,
         validators=[valid_tag],
         help_text="""
                               Tag communities by typing it out then adding a comma or press ENTER or SPACE.

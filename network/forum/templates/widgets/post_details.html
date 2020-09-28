@@ -9,15 +9,11 @@
 
         <a href="{% url 'post_view' post.uid %}">
             <h3>
-                {{ post.title|truncatechars:150 }}
+                {{ post.title }}
             </h3>
         </a>
 
         {{ post.html|safe|truncatechars:300 }}
-
-        <!-- {% if post.is_toplevel %}
-        {% post_tags post spaced=False %}
-        {% endif %} -->
 
         <div class="post-state">
             <div class="post-state-btns"> <i class="uil-thumbs-up"></i> {{ post.get_votecount|bignum }}<span> like{{ post.get_votecount|pluralize }} </span>

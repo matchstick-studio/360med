@@ -10,9 +10,9 @@
 
 {% search_bar %}
 
-<div class="center-text">
-{% pages objs=votes %}
-</div>
+<ul class="uk-pagination" uk-margin>
+    {% pages objs=votes %}
+</ul>
 
 <table class="ui very basic striped table">
     <tbody>
@@ -34,10 +34,9 @@
     </tbody>
 </table>
 
-<div class="center-text">
-{% pages objs=votes %}
-</div>
-
+<ul class="uk-pagination" uk-margin>
+    {% pages objs=votes %}
+</ul>
 {% endblock %}
 
 {% block sidebar %}

@@ -3,6 +3,7 @@
 
 {% if post.author.id != post.lastedit_user.id %}
 
+<!-- 
     <span class="menu-tablet_small">
 
     {{ post.creation_date|time_ago }}
@@ -17,7 +18,7 @@
             {{ post.author.profile.name|truncatechars:40 }}
         </a>
 
-        <!-- {% user_icon user=post.author %} -->
+        {% user_icon user=post.author %}
 
     </span>
 
@@ -26,7 +27,7 @@
 updated
 
 {{ post.lastedit_date|time_ago }}
-
+ -->
 {% if avatar %}
 <div class="user-details-card-avatar">
     <img src="{% gravatar user=post.author size=80 %}" alt="">
@@ -36,7 +37,7 @@ updated
     <div class="user-details-card-name">
         {{ post.author.profile.name|truncatechars:40 }}
         <span class="ml-0">
-            {{ post.creation_date|time_ago }}
+           posted {{ post.creation_date|time_ago }} {% if  post.lastedit_user.profile.is_valid %}&bull; Updated {{ post.lastedit_date|time_ago }} {% endif %}
         </span>
     </div>
 </a>
@@ -55,7 +56,7 @@ updated
     <div class="user-details-card-name">
         {{ post.lastedit_user.profile.name|truncatechars:40 }}
         <span class="ml-0">
-            {{ post.lastedit_date|time_ago }}
+            posted {{ post.lastedit_date|time_ago }}
         </span>
     </div>
 </a>

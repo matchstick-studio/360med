@@ -58,19 +58,16 @@
 {% endwith %}
 
 {% if show %}
-    <div class="bg-gradient-primary uk-light" uk-alert>
-        <p>Showing :<b> {{ show }}</b>
-        </p>
-    </div>
+<div class="ui blue message"> Showing :<b> {{ show }}</b></div>
 {% endif %}
 
-<ul class="uk-list uk-list-divider">
+<div class="ui divided items">
     {% get_post_list request=request target=target show=show as post_list %}
     {% for post in post_list %}
-        {% post_details post=post user=request.user %}
+    {% post_details post=post user=request.user %}
     {% empty %}
-        <div class="uk-alert-danger" uk-alert>
-            No posts found.
-        </div>
+    <div class="ui warn message">
+        No posts found.
+    </div>
     {% endfor %}
-    </ul>
+</div>

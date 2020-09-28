@@ -6,19 +6,11 @@
 <div class="post comment {{ post.css }}" data-value="{{ post.uid }}">
 
     <div class="body">
-        <div class="voting">
-            <button class="ui icon mini button" data-value="upvote" data-state="{{ post.has_upvote }}">
-                <i class="thumbs up icon "></i>
-            </button>
-
-            <div class="score">{{ post.vote_count }}</div>
-
-            <button class="ui icon mini button bookmark" data-value="bookmark" data-state="{{ post.has_bookmark }}">
-                <i class="bookmark icon "></i>
-            </button>
-        </div>
 
         <div class="content">
+            <div class="user-details-card">
+                {% post_user_line post avatar=avatar %}
+            </div>
             <div class="droppable inplace">
                 <div class="ui inverted dimmer">
                     <div class="ui text loader">
@@ -32,7 +24,7 @@
                     {{ post.html|safe }}
                     {% endif %}
                 </div>
-                {% post_actions post=post label="ADD REPLY" avatar=False %}
+                {% post_actions post=post label="Reply" avatar=True %}
             </div>
         </div>
     </div>

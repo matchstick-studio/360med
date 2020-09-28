@@ -37,7 +37,7 @@ DEFAULT_ADMIN_PASSWORD = "admin@localhost"
 ADMIN_NAME, ADMIN_EMAIL = ADMINS[0]
 
 # The default sender name on emails.
-DEFAULT_FROM_EMAIL = "360Med Support"
+DEFAULT_FROM_EMAIL = "360Med Network"
 
 # User score threshold to be considered low reputation.
 LOW_REP_THRESHOLD = 0
