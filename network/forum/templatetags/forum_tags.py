@@ -342,19 +342,19 @@ def read_tags(filepath, exclude=[], limit=500):
     return tags_opts
 
 
-def get_tags_file():
-    """
-    Get a list of files to render from a file
-    """
-    # Get the tags op
-    tags_file = getattr(settings, "TAGS_OPTIONS_FILE", None)
+""" def get_tags_file(form_field):
 
-    return tags_file
+    if form_field == "form.expertise":
+        tags_file = getattr(settings, "EXPERTISE_TAGS", None)
+    else:
+        tags_file = getattr(settings, "AFFILATIONS_TAGS", None)
+
+    return tags_file """
 
 
-def get_dropdown_options(selected_list):
+def get_dropdown_options(field, selected_list):
 
-    tags_file = get_tags_file()
+    tags_file = getattr(settings, "EXPERTISE_TAGS", None) if field=="expertise" else getattr(settings, "AFFILIATIONS_TAGS", None)
 
     # Read tags file from a file if it is set
     selected_tags = {(val, True) for val in selected_list}
@@ -379,7 +379,8 @@ def tags_field(context, form_field, initial=""):
 
     # Get currently selected tags from the post or request
     selected_list = initial.split(",") if initial else []
-    dropdown_options = get_dropdown_options(selected_list=selected_list)
+    field = form_field.name
+    dropdown_options = get_dropdown_options(field=field, selected_list=selected_list)
 
     context = dict(
         initial=initial, form_field=form_field, dropdown_options=dropdown_options

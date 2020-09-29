@@ -113,7 +113,7 @@ def validate_tags(tags):
 
 class EditProfile(forms.Form):
     name = forms.CharField(label="Name", max_length=100, required=True)
-    email = forms.CharField(label="Email", max_length=100, required=True)
+    email = forms.CharField(label="Email", max_length=100, required=True, disabled=True)
     username = forms.CharField(label="Handler", max_length=100, required=True)
     location = forms.CharField(label="Location", max_length=100, required=False)
 
@@ -132,6 +132,10 @@ class EditProfile(forms.Form):
         widget=forms.Select(attrs={"class": "ui dropdown"}),
         help_text="""Choose your gender""",
     )
+
+    alt_email_a = forms.CharField(label="Alternative Email A", max_length=255, required=False)
+
+    alt_email_b = forms.CharField(label="Alternative Email B", max_length=255, required=False)
 
     occupation = forms.ChoiceField(
         required=True,
@@ -153,6 +157,14 @@ class EditProfile(forms.Form):
         max_length=500,
         required=False,
         help_text="""Your specific areas of expertise or interest""",
+        widget=forms.HiddenInput(),
+    )
+
+    affiliations = forms.CharField(
+        label="Affiliations",
+        max_length=500,
+        required=False,
+        help_text="""Institutions you are affiliated to or with""",
         widget=forms.HiddenInput(),
     )
 
@@ -226,6 +238,11 @@ class EditProfile(forms.Form):
         expertise = self.cleaned_data["expertise"]
         expertise = ",".join(list(set(expertise.split(","))))
         return validate_tags(tags=expertise)
+
+    def clean_affiliations(self):
+        affiliations = self.cleaned_data["affiliations"]
+        affiliations = ",".join(list(set(affiliations.split(","))))
+        return validate_tags(tags=affiliations)
 
     def clean_my_tags(self):
         my_tags = self.cleaned_data["my_tags"]

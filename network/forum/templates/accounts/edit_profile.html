@@ -43,19 +43,28 @@
 
             <div class="fields">
 
-                <div class="disabled form-field field">
+                <div class="form-field field">
                     <div class="ui form-wrap segment">
-                        <label><i class="envelope icon"></i>Email</label>
-                        {{ form.email }}
                         <div class="muted">
-                            Email used to register to the site.
+                            Registered email address
+                        </div>
+                        {{ form.email }}
+                        <label><i class="envelope icon"></i>Alternative Email A</label>
+                        {{ form.alt_email_a }}
+                        <div class="muted">
+                           Add a secondary email address
+                        </div>
+                        <label><i class="envelope icon"></i>Alternative Email B</label>
+                        {{ form.alt_email_b }}
+                        <div class="muted">
+                            Add another email address
                         </div>
                     </div>
                 </div>
 
                 <div class="form-field field">
                     <div class="ui form-wrap segment">
-                        <label><i class="phone icon"></i>Phone number (optional)</label>
+                        <label><i class="mobile dark icon"></i>Phone number</label>
                         {{ form.phone }}
                     </div>
                 </div>
@@ -112,6 +121,20 @@
                 
                             <div class="muted">
                                 {{ form.expertise.help_text }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fields">
+                    <div class="field">
+                        <div class="ui form-wrap segment" style="display: grid">
+                            <label><i class="tags icon"></i>Affiliations </label>
+                
+                            {% tags_field form_field=form.affiliations initial=user.profile.affiliations %}
+                
+                            <div class="muted">
+                                {{ form.affiliations.help_text }}
                             </div>
                         </div>
                     </div>

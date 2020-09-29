@@ -142,6 +142,11 @@ class Profile(models.Model):
     # The role of the user.
     gender = models.IntegerField(default=MALE, choices=GENDER_CHOICES)
 
+    # Alt email addresses (up to two)
+    alt_email_a = models.EmailField(max_length=MAX_TEXT_LEN, null=True, blank=True)
+
+    alt_email_b = models.EmailField(max_length=MAX_TEXT_LEN, null=True, blank=True)
+
     # The main occupation of the user.
     occupation = models.IntegerField(default=MEDICAL_DOCTOR, choices=OCCUPATION_CHOICES)
 
@@ -149,6 +154,9 @@ class Profile(models.Model):
 
     # User can specify their professional focus
     expertise = models.CharField(default="", max_length=MAX_TEXT_LEN, blank=True)
+
+    # Users select those institutions they are affiliated with
+    affiliations = models.CharField(default="", max_length=MAX_TEXT_LEN, blank=True)
 
     # The date the user last logged in.
     last_login = models.DateTimeField(null=True, max_length=255, db_index=True)

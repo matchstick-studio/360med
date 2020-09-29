@@ -553,6 +553,7 @@ def sync_users(users):
             phone=row["phone"],
             occupation=row["occupation"],
             expertise=row["expertise"],
+            affiliations=row["affiliations"],
             score=row["score"],
             qualifications=row["qualifications"],
             my_tags=row["my_tags"],

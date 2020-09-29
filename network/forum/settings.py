@@ -15,6 +15,12 @@ TAGS_PER_PAGE = 50
 
 STATS_DIR = os.path.join(BASE_DIR, "export", "stats")
 
+TAGS_OPTIONS_FILE = os.path.join(BASE_DIR, "initial", "tags", "expertise.txt")
+
+EXPERTISE_TAGS = os.path.join(BASE_DIR, "initial", "tags", "expertise.txt")
+
+AFFILIATIONS_TAGS = os.path.join(BASE_DIR, "initial", "tags", "affiliations.txt")
+
 REQUIRED_TAGS = ""
 
 # Time period to cache Ips for banning.
