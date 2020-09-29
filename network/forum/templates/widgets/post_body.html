@@ -19,7 +19,8 @@
 
         {#  Voting buttons #}
         <div class="voting">
-
+            <!-- moving the reply and edit buttons ruined the JS modal that came through the 
+            content tag below. Fix it. Reply and edit won't work for top-level content for now. -->
             {% if post.can_accept %}
             <button class="ui icon small button" data-value="accept" data-state="{{ post.accept_count }}"><i
                     class="check circle icon"></i>

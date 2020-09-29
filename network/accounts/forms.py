@@ -152,9 +152,7 @@ class EditProfile(forms.Form):
         label="Expertise",
         max_length=500,
         required=False,
-        help_text="""
-                              Your specific areas of expertise or interest
-                              """,
+        help_text="""Your specific areas of expertise or interest""",
         widget=forms.HiddenInput(),
     )
 

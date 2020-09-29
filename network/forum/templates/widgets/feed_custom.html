@@ -11,7 +11,7 @@
                        <img class="ui centered circular image" src="{% gravatar user=user size=30 %}">
                             <a href="{% url 'user_profile' user.profile.uid %}">
                                 {{user.profile.name }}
-                                {% user_icon user=user %}
+                                {# % user_icon user=user % #}
                             </a>
                        </div>
                     {% endfor %}

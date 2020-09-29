@@ -1,9 +1,17 @@
 {% load humanize %}
-{% load forum_tags %}
+{% load static forum_tags %}
 
 {#  Post action bar. #}
 
 <div class="{% if post.is_toplevel %}top-level{% endif %}">
+
+    <div class="post-state-details">
+        <div>
+            <img src="{% static 'img/reactions_like.png' %}" alt="">
+            <p> {{ post.get_votecount|bignum }} </p>
+        </div>
+        <p> {{ post.reply_count }} repl{{ post.reply_count|pluralize:"y,ies" }}</p>
+    </div>
 
     <div class="voting">
         <button class="ui tertiary button" data-value="upvote" data-state="{{ post.has_upvote }}">
