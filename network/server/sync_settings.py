@@ -1,4 +1,4 @@
-from biostar.forum.settings import *
+from network.forum.settings import *
 
 
 # Disable the tasks when syncing.

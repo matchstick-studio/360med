@@ -3,7 +3,7 @@
 set -uex
 
 # The host name of the server.
-HOST_NAME=test.biostars.org
+HOST_NAME=test.360med.org
 
 # Set the hostname.
 hostnamectl set-hostname $HOST_NAME

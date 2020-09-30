@@ -11,7 +11,7 @@
         executable: /bin/bash
         chdir: "{{ engine_dir }}"
 
-    - name: Update the biostar-engine
+    - name: Update the 360med-engine
       git:
         repo: "{{ engine_git }}"
         dest: "{{ engine_dir }}"

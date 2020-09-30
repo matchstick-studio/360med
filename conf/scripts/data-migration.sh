@@ -27,13 +27,13 @@ OLD_DATABASE_DUMP=${1:=OLD_DUMP_DIR/biostar-database-2.3.0-hourly-00.sql.gz}
 LIMIT=1000
 
 # Set the old database.
-export OLD_DATABASE=old_biostar_db
+export OLD_DATABASE=old_360med_db
 
 # Set the new database
-export NEW_DATABASE=new_biostar_db
+export NEW_DATABASE=new_360med_db
 
 # Set the configuration module.
-TRANSFER_SETTINGS_MODULE=biostar.transfer.settings
+TRANSFER_SETTINGS_MODULE=network.transfer.settings
 
 
 #------------------------------------------------------------------------------------------

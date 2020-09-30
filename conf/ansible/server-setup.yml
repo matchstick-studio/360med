@@ -16,9 +16,9 @@
         update_cache=yes
         cache_valid_time=86400 # One day
 
-    - name: Create the bioinfo group
+    - name: Create the network-agents group
       group:
-        name: bioinfo
+        name: agents
 
     - name: Create the www group
       group:
@@ -28,7 +28,7 @@
       user:
         name: www
         shell: /bin/bash
-        groups: www, bioinfo, sudo
+        groups: www, agents, sudo
 
     - name: Set authorized key for www user
       authorized_key:
@@ -89,6 +89,6 @@
       become: yes
       become_user: postgres
       postgresql_db:
-        name: biostar-database
+        name: network-database
         owner: www
       no_log: true

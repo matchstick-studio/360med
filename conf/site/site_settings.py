@@ -19,13 +19,13 @@ DEBUG = True
 SECRET_KEY = str(uuid.uuid4())
 
 # Admin users will be created automatically with DEFAULT_ADMIN_PASSWORD.
-ADMINS = [("Admin User", "admin@localhost")]
+ADMINS = [("Network Admin", "admin@360med.org")]
 
 # Set the default admin password.
 DEFAULT_ADMIN_PASSWORD = SECRET_KEY
 
 # Attempts to detect hostname so that automatic deployment works. It is best to set it with known data.
-SITE_DOMAIN = platform.node()
+SITE_DOMAIN = "www.360med.org"
 
 SITE_ID = 1
 SITE_NAME = "360Med Network"

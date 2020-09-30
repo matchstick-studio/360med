@@ -48,7 +48,7 @@ def send_verification_email(user):
     template = "accounts/email_verify.html"
     email_list = [user.email]
     context = dict(token=token, userid=userid, user=user)
-    subject = "Welcome to Bioinformatics Recipes!"
+    subject = "Welcome to 360Med Network!"
     # Send the verification email
     send_email(
         template_name=template,

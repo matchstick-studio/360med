@@ -6,7 +6,7 @@ from django.conf import settings
 
 from network.accounts.util import now
 
-logger = logging.getLogger("biostar")
+logger = logging.getLogger("network")
 register = template.Library()
 
 

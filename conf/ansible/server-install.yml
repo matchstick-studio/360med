@@ -67,7 +67,7 @@
     - name: Link directory to the home
       file:
         src: "{{ engine_dir }}"
-        dest: "~/biostar-central"
+        dest: "~/360med-central"
         state: link
 
     - name: Make the spooler directory
