@@ -37,7 +37,7 @@ updated
     <div class="user-details-card-name">
         {{ post.author.profile.name|truncatechars:40 }}
         <span class="ml-0">
-           posted {{ post.creation_date|time_ago }} {% if  post.lastedit_user.profile.is_valid %}&bull; Updated {{ post.lastedit_date|time_ago }} {% endif %}
+           posted {{ post.creation_date|time_ago }} {% if  post.lastedit_user.profile.is_valid %}&bull; updated {{ post.lastedit_date|time_ago }} {% endif %}
         </span>
     </div>
 </a>

@@ -19,7 +19,7 @@ MULTI_THREAD = True
 DISABLE_TASKS = False
 
 # Pagedown
-PAGEDOWN_IMAGE_UPLOAD_ENABLED = False
+PAGEDOWN_IMAGE_UPLOAD_ENABLED = True
 
 # Set the home page to the engine or forum
 INTERNAL_IPS = ["127.0.0.1"]

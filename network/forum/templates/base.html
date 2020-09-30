@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Welcome to 360Med Network</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+    <link href="{% static 'style.css' %}" rel="stylesheet">
+    <link href="{% static 'framework.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'fonts/icons.css' %}">
+</head>
+
+<body>
+
+    {% block content %}
+    MAIN CONTENT
+    {% endblock %}
+
+    <script src="{% static 'framework.js' %}" type="text/javascript"></script>
+    <script src="{% static 'main.js' %}"></script>
+
+</body>
+
+</html>

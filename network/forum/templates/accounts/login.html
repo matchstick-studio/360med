@@ -1,81 +1,69 @@
-{% extends "forum_base.html" %}
-{% load forum_tags %}
-{% load socialaccount %}
-{% block headtitle %}Login{% endblock %}
+{% extends "base.html" %}
+{% load static widget_tweaks %}
 
 {% block content %}
 
-    {% if  social_login %}
-        <div class="ui segment inputcolor socialbox">
-            <div class="ui header">
-                <i class="universal access icon"></i> Automatic Login
-            </div>
+    <div uk-height-viewport="" class="uk-flex uk-flex-middle uk-grid-collapse uk-grid-match uk-grid uk-grid-stack"
+        uk-grid="" style="min-height: calc(100vh);">
 
-            <p>
-                Click the link below to log in or sign up automatically:
-            </p>
+        <div class="form-media uk-width-2-3@m uk-width-1-2@s uk-visible@s uk-height-viewport uk-background-cover"
+            data-src="assets/images/bg-form2.jpg" uk-img>
 
-           <div class="ui large relaxed icon list">
-                {% for provider in social_login.iterator %}
-                    <a class="item" href="{% provider_login_url provider.provider %}">
-                        <i class="{{ provider.name|lower }} large icon"></i>
-                        <div class="middle aligned content"> {{ provider.name|title }}</div>
+            <div class="form-media-content uk-light">
 
-                    </a>
-                {% endfor %}
-            </div>
+                <h1> The largest networking platform for <br>medical professionals in Africa.</h1>
 
-            <p>
-                Social login is used for authentication only.
-            </p>
-        </div>
-    {% endif %}
 
-    <form class="ui form" method="post" action="{% url 'login' %}">
+                <div class="form-media-footer">
+                    <ul>
+                        <li> <a href="#"> About </a></li>
+                        <li> <a href="#"> Contact </a></li>
+                    </ul>
+                </div>
 
-        <div class="ui segment inputcolor socialbox">
-
-            <div class="ui header">
-                <i class="user icon"></i> Email Login
-            </div>
-
-            {% csrf_token %}
-
-            {{ form.errors }}
-
-            <div class="field">
-                <label>Email</label>
-                {{ form.email }}
-            </div>
-
-            <div class="field">
-                <label>Password</label>
-                {{ form.password }}
-            </div>
-
-            <div class="field">
-                <button class="ui primary button" type="submit">
-                    <i class="sign in icon"></i>Log In
-                </button>
-
-                <a class="ui right floated button" href="#" onclick="window.history.back()">
-                    <i class="chevron left icon"></i>Back
-                </a>
             </div>
 
         </div>
+        <div class="uk-width-1-3@m uk-width-1-2@s uk-animation-slide-right-medium">
 
+            <div style="padding:0 30px;">
+                <div class="logo uk-text-center mb-10"><img src="{% static 'img/logo.png' %}" alt=""></div>
+                <div class="my-4 uk-text-center">
 
-    </form>
+                    <h1 class="mb-2"> Sign In </h1>
+                </div>
 
-    <div class="ui center aligned basic segment">
+                <form class="login" method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
 
+                    {{ form.errors }}
+                    
+                    <div class="uk-form-group">
+                        <div class="uk-position-relative">
+                            {% render_field form.email class="uk-input bg-secondary" type="email" placeholder="Email address" %}
+                        </div>
+                    </div>
+                    <div class="uk-form-group">
+                        <div class="uk-position-relative">
+                            {% render_field form.password class="uk-input bg-secondary" type="password" placeholder="Password" %}
+                        </div>
+                    </div>
 
-        <a href="{% url 'password_reset' %}"><i class="question circle icon"></i>Forgot your password?</a>
-        &bull; <a class="" href="{% url 'signup' %}"><i class="add user icon"></i>Sign up with email</a>
+                    {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                    {% endif %}
+
+                    <button type="submit" class="button primary large block mb-4">Enter</button>
+                    <p></p>
+                    <a href="{% url 'password_reset' %}"> Forgot your password?</a>
+                </form>
+            </div>
+
+        </div>
     </div>
 
+    {% endblock %}
 
+</body>
 
-
-{% endblock %}
+</html>

@@ -219,7 +219,7 @@ def pages(request, fname):
 
     return render(request, "pages.html", context=context)
 
-
+@login_required
 @ensure_csrf_cookie
 def post_list(request, show=None, cache_key="", extra_context=dict()):
     """

@@ -40,6 +40,12 @@ def check_size(fobj, maxsize=0.3, field=None):
 
 class SignUpForm(forms.Form):
 
+    name = forms.CharField(
+        max_length=30, 
+        label="Full Name",
+        help_text="Provide your full names"
+    )
+
     password1 = forms.CharField(
         label="Password",
         strip=False,

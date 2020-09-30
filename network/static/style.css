@@ -1,5 +1,12 @@
 @charset "UTF-8";
 
+@import url(https://fonts.googleapis.com/css?family=Lato:300,400,600,700);
+
+html {
+  font-family: "Lato", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* letter-spacing: .2px; */
+}
+
 form {
   margin-block-end: 0em!important;
 }
@@ -5421,4 +5428,58 @@ header .opts_icon_link:hover {
 
 .user-data-content h4{
   margin-bottom: 0;
+}
+
+.form-media {
+  position: relative;
+  padding: 30px !important;
+}
+
+.form-media .logo {
+  max-width: 140px;
+  margin-bottom: 15px;
+}
+
+.form-media::before {
+  position: absolute;
+  content: '';
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  opacity: 0.5;
+  border-radius: inherit;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #212529 60%);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #212529 60%);
+  background-blend-mode: color-burn;
+}
+
+.form-media-content {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.form-media-content h1 {
+  line-height: 1.6;
+  margin-bottom: 15px;
+  font-size: 32px;
+}
+
+.form-media-footer ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.form-media-footer ul li {
+  display: inline-block;
+}
+
+.form-media-footer ul li a {
+  display: block;
+  padding-right: 11px;
+  color: rgba(255, 255, 255, 0.5294117647058824);
 }
