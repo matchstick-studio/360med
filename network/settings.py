@@ -68,7 +68,7 @@ DEFAULT_APPS = [
     "snowpenguin.django.recaptcha2",
     "phonenumber_field",
     "widget_tweaks",
-    "network.invitations", # app to support invitations linked to allauth
+    "network.invitations",  # app to support invitations linked to allauth
 ]
 
 # Enabled apps.

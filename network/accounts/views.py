@@ -176,6 +176,18 @@ def message_list(request):
     return render(request, "message_list.html", context)
 
 
+def menu_view(request):
+    return render(
+        request,
+        "accounts/edit_profile.html",
+        {
+            "menu_data": {
+                "example": 1,
+            },
+        },
+    )
+
+
 def user_profile(request, uid):
     profile = Profile.objects.filter(uid=uid).first()
 

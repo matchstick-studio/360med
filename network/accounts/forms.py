@@ -133,9 +133,13 @@ class EditProfile(forms.Form):
         help_text="""Choose your gender""",
     )
 
-    alt_email_a = forms.CharField(label="Alternative Email A", max_length=255, required=False)
+    alt_email_a = forms.CharField(
+        label="Alternative Email A", max_length=255, required=False
+    )
 
-    alt_email_b = forms.CharField(label="Alternative Email B", max_length=255, required=False)
+    alt_email_b = forms.CharField(
+        label="Alternative Email B", max_length=255, required=False
+    )
 
     occupation = forms.ChoiceField(
         required=True,

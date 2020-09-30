@@ -47,13 +47,13 @@
                         <div class="ui large header"> About </div>
 
                         <div class="list-group-items">
-                            <i class="uil-medkit"></i>
-                            <h5 style="margin:0!important"> <span> {{ target.profile.qualifications }} </span> </h5>
+                            <i class="uil-briefcase-alt"></i>
+                            <h5 style="margin:0!important"> {{ target.profile.get_occupation_display }} </h5>
                         </div>
 
                         <div class="list-group-items">
-                            <i class="uil-briefcase-alt"></i>
-                            <h5 style="margin:0!important"> {{ target.profile.get_occupation_display }} at <span> {{ target.profile.occupation }} </span> </h5>
+                            <i class="uil-medkit"></i>
+                            <h5 style="margin:0!important"> <span> {{ target.profile.qualifications }} </span> </h5>
                         </div>
 
                         <div class="list-group-items">

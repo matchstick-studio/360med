@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0021_profile_affiliations'),
+        ("accounts", "0021_profile_affiliations"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='alt_email_a',
+            model_name="profile",
+            name="alt_email_a",
             field=models.EmailField(blank=True, max_length=10000, null=True),
         ),
         migrations.AddField(
-            model_name='profile',
-            name='alt_email_b',
+            model_name="profile",
+            name="alt_email_b",
             field=models.EmailField(blank=True, max_length=10000, null=True),
         ),
     ]

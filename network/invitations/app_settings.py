@@ -56,7 +56,9 @@ class AppSettings(object):
     @property
     def ADAPTER(self):
         """ The adapter, setting ACCOUNT_ADAPTER overrides this default """
-        return self._setting("ADAPTER", "network.invitations.adapters.BaseInvitationsAdapter")
+        return self._setting(
+            "ADAPTER", "network.invitations.adapters.BaseInvitationsAdapter"
+        )
 
     @property
     def EMAIL_MAX_LENGTH(self):

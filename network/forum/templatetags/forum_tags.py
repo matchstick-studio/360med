@@ -354,7 +354,11 @@ def read_tags(filepath, exclude=[], limit=500):
 
 def get_dropdown_options(field, selected_list):
 
-    tags_file = getattr(settings, "EXPERTISE_TAGS", None) if field=="expertise" else getattr(settings, "AFFILIATIONS_TAGS", None)
+    tags_file = (
+        getattr(settings, "EXPERTISE_TAGS", None)
+        if field == "expertise"
+        else getattr(settings, "AFFILIATIONS_TAGS", None)
+    )
 
     # Read tags file from a file if it is set
     selected_tags = {(val, True) for val in selected_list}

@@ -73,9 +73,7 @@ class BaseInvitationsAdapter(object):
 
     def is_open_for_signup(self, request):
         if hasattr(request, "session") and request.session.get(
-            "account_verified_email",
-            "account_first_name",
-            "account_last_name"
+            "account_verified_email", "account_first_name", "account_last_name"
         ):
             return True
         elif app_settings.INVITATION_ONLY is True:

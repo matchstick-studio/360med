@@ -1,5 +1,6 @@
 from network.settings import *
 from network.emailer.settings import *
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -12,11 +13,9 @@ ALLOW_SIGNUP = False
 # Private key used to validate external logins. Must be changed in production
 LOGIN_PRIVATE_KEY = "private-key"
 
-ADMINS = [
-    ("Admin User", "admin@localhost")
-]
+ADMINS = [("Admin User", "admin@localhost")]
 
-PAGEDOWN_APP = ['pagedown.apps.PagedownConfig']
+PAGEDOWN_APP = ["pagedown.apps.PagedownConfig"]
 
 PAGEDOWN_IMAGE_UPLOAD_ENABLED = True
 
@@ -76,14 +75,12 @@ ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 
 
 ACCOUNTS_APPS = [
-
     # Accounts configuration.
-    'network.accounts.apps.AccountsConfig',
-
+    "network.accounts.apps.AccountsConfig",
     # Allauth templates come last.
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
 ]
 
 # Should the server look up locations in a task.
@@ -96,7 +93,7 @@ INSTALLED_APPS = DEFAULT_APPS + ACCOUNTS_APPS + EMAILER_APP + PAGEDOWN_APP
 
 AUTHENTICATION_BACKENDS += ["allauth.account.auth_backends.AuthenticationBackend"]
 
-ROOT_URLCONF = 'network.accounts.urls'
+ROOT_URLCONF = "network.accounts.urls"
 
 # List of social login clients tuples.
 # ( name, client_id, secret )
@@ -112,7 +109,6 @@ ROOT_URLCONF = 'network.accounts.urls'
 # http://localhost:8000/accounts/social/github/login/callback/
 #
 SOCIAL_CLIENTS = [
-
     # ("Google", "A", "B"),
     # ("GitHub", "A", "B")
 ]
