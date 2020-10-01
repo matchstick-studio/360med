@@ -58,7 +58,7 @@
       when: conda_installed is success
       with_items: "{{conda_environments}}"
 
-    - name: Get the biostar-central software
+    - name: Get the 360med software
       git:
         repo: "{{ engine_git }}"
         dest: "{{ engine_dir }}"
@@ -82,7 +82,6 @@
         dest: "{{ engine_dir }}/conf/run/site_secrets.py"
         force: no
         mode: 0644
-        ignore_errors: yes
 
     - name: Initialize scripts
       copy:
