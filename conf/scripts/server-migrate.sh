@@ -15,7 +15,7 @@ set -ue
 # Set the configuration module.
 export DJANGO_SETTINGS_MODULE=conf.run.site_settings
 
-export POSTGRES_HOST=/var/run/postgresql
+export POSTGRES_HOST="network-prod-do-user-7418254-0.b.db.ondigitalocean.com"
 
 # Migrate the server.
 python manage.py migrate
