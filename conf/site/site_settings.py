@@ -34,16 +34,16 @@ PROTOCOL = "http"
 
 ALLOWED_HOSTS = [SITE_DOMAIN]
 
-DATABASE_NAME = "network_prod"
+DATABASE_NAME = "network-prod"
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": DATABASE_NAME,
-        "USER": "",
-        "PASSWORD": "",
-        "HOST": "/var/run/postgresql/",
-        "PORT": "",
+        "USER": "doadmin",
+        "PASSWORD": "s3t2lvem5vjb0r4l",
+        "HOST": "network-prod-do-user-7418254-0.b.db.ondigitalocean.com",
+        "PORT": "25060",
     },
 }
 
