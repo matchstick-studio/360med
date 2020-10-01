@@ -79,7 +79,7 @@
     - name: Initialize local secrets
       copy:
         content: ""
-        dest: "{{ engine_dir }}/conf/run/site_secrets.py"
+        dest: "{{ engine_dir }}/conf/run/secrets.py"
         force: no
         mode: 0644
 

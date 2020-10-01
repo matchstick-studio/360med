@@ -54,8 +54,8 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 try:
     # Attempts to load site secrets.
-    from .site_secrets import *
+    from .secrets import *
 
-    logger.info("Imported settings from .site_secrets")
+    logger.info("Imported settings from .secrets")
 except ImportError as exc:
     logger.warn(f"No secrets module could be imported: {exc}")
