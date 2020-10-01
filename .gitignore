@@ -1,0 +1,12 @@
+# Byte-compiled / optimized / DLL files
+.idea
+*.db
+export/static/*
+*.DS_Store
+__pycache__/
+*.py[cod]
+*$py.class
+# C extensions
+*secrets*.py
+.pyc
+*.so

@@ -76,12 +76,13 @@
         state: directory
         mode: 0755
 
-    - name: Initialize local secrets
-      copy:
-        content: ""
-        dest: "{{ engine_dir }}/conf/run/site_secrets.py"
-        force: no
-        mode: 0644
+    # - name: Initialize local secrets
+    #   copy:
+    #     content: ""
+    #     dest: "{{ engine_dir }}/conf/run/site_secrets.py"
+    #     force: no
+    #     mode: 0644
+    #     ignore_errors: yes
 
     - name: Initialize scripts
       copy:
