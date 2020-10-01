@@ -6,7 +6,7 @@
 engine_git:  "{{ repo | default('https://github.com/matchstick-studio/360med.git') }}"
 
 # The directory the site is deployed to.
-engine_dir:  "{{ main_dir | default('/export/www/360med-central') }}"
+engine_dir:  "{{ main_dir | default('/export/www/platform') }}"
 
 # File structure for bioinformatics tools.
 bin_dir: "/export/bin"

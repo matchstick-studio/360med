@@ -83,7 +83,6 @@
         name: www
         password: md5437a687918743dac1889ef033bcb5bbd
         role_attr_flags: CREATEDB
-      no_log: true
 
     - name: Create postgresql database user
       become: yes
@@ -91,4 +90,3 @@
       postgresql_db:
         name: network-database
         owner: www
-      no_log: true
