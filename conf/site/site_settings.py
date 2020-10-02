@@ -39,7 +39,7 @@ PROTOCOL = 'http'
 
 ALLOWED_HOSTS = [SITE_DOMAIN]
 
-DATABASE_NAME = "network-prod"
+DATABASE_NAME = "network_prod"
 
 DATABASES = {
 
