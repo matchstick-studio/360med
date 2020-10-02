@@ -150,6 +150,7 @@ AUTH_PASSWORD_VALIDATORS = [
         "PORT": "5432",
     },
 } """
+
 DATABASE_DIR = os.path.join(BASE_DIR, 'export', 'db')
 os.makedirs(DATABASE_DIR, exist_ok=True)
 
@@ -163,6 +164,7 @@ DATABASES = {
         'NAME': DATABASE_NAME,
     }
 }
+
 ALLOWED_HOSTS = ["www.360med.org", "localhost", "127.0.0.1"]
 
 
