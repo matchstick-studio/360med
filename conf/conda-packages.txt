@@ -1,3 +1,4 @@
 uwsgi
 psycopg2
 django
+postgresql
