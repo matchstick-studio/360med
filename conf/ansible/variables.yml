@@ -14,7 +14,7 @@ src_dir: "/export/src"
 ref_dir: "/export/refs"
 
 # Default django settings to be used.
-django_settings_module: "conf.site.site_settings"
+django_settings_module: "conf.run.site_settings"
 
 # Conda setup.
 conda_env: "engine"
