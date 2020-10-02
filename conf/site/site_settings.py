@@ -1,7 +1,7 @@
 import os
 import uuid
 
-from network.settings import *
+#from network.settings import *
 
 # from biostar.recipes.settings import *
 
