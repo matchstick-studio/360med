@@ -12,5 +12,5 @@
 
     - name: Restart nginx
       become: yes
-      service: name=nginx state=restarted
+      service: name=nginx state=started
   
