@@ -49,42 +49,52 @@
                     <div uk-sticky="offset:144 ; bottom:true ; meda : @m">
         
                         <div class="ui large header">About</div>
-
+                    {% if target.profile.occupation %}
                         <div class="list-group-items">
                             <i class="uil-briefcase-alt"></i>
                             <h5 style="margin:0!important">{{ target.profile.get_occupation_display }} </h5>
                         </div>
-
+                    {% endif %}
+                    
+                    {% if target.profile.qualifications %}
                         <div class="list-group-items">
                             <i class="uil-medkit"></i>
                             <h5 style="margin:0!important"><span>{{ target.profile.qualifications }}</span> </h5>
                         </div>
+                    {% endif %}
 
+                    {% if target.profile.location %}
                         <div class="list-group-items">
                             <i class="uil-home"></i>
                             <h5 style="margin:0!important">Lives in<span>{{ target.profile.location }}</span> </h5>
                         </div>
-                        
+                    {% endif %}
+
+                    {% if target.profile.date_joined %}    
                         <div class="list-group-items">
                             <i class="uil-clock"></i>
                             <h5 style="margin:0!important">Joined<span>{{ target.profile.date_joined|time_ago }}</span> </h5>
                         </div>
+                    {% endif %}
 
                         <hr>
-
+                    {% if target.profile.affiliations %}
                         <h4>Affiliated with: </h4>
 
                         <div class="list-group-items">
                             <i class="uil-medkit"></i>
                             <p>{{ target.profile.affiliations }}</p>
                         </div>
+                    {% endif %}
 
+                    {% if target.profile.expertise %}
                         <h4>Expertise/interests: </h4>
 
                         <div class="list-group-items">
                             <i class="uil-medkit"></i>
                             <p>{{ target.profile.expertise|lower|capfirst }}</p>
                         </div>
+                    {% endif %}
                         
                         {% if target == request.user %}
                         <a href="{% url 'edit_profile' %}" class="button soft-primary block">Edit Profile</a>

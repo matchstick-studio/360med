@@ -9,7 +9,7 @@
 <head>
 
     <title>
-        {% block title %}{{ site_name }}{% endblock %}
+        {% block title %}{% block headtitle %}{% endblock headtitle %} | {{ site_name }}{% endblock title %}
     </title>
 
     <meta charset="UTF-8">
@@ -86,7 +86,7 @@
                             <div class="header">
                                 What's new, {{ user.profile.name }}?
                             </div>
-                            <p>Let's update some profile info that may have changed.</p>
+                            <p style="font-size:14px;line-height:1;margin:10px 0">Let's update some profile info that may have changed.</p>
                             <div class="inline">
                                 <div class="ui close mini button">Not Now</div>
                                 <a href="{% url 'edit_profile' %}" role="button" class="ui primary mini button">Update Profile</a>

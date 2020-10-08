@@ -3,7 +3,7 @@
 {% load accounts_tags %}
 
 {% block headtitle %}
-    Votes
+    Likes
 {% endblock %}
 
 {% block body %}
@@ -29,7 +29,7 @@
                     </td>
                 </tr>
         {% empty %}
-        <div class="ui message">No votes found.</div>
+        <div class="ui message">No likes found.</div>
         {% endfor %}
     </tbody>
 </table>
@@ -41,6 +41,6 @@
 
 {% block sidebar %}
 
-    {% custom_feed feed_type='votes' objs=votes title='People voting on your posts'%}
+    {% custom_feed feed_type='votes' objs=votes title='People liking your posts'%}
 
 {% endblock %}
