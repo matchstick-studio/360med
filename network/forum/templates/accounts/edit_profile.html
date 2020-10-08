@@ -42,6 +42,20 @@
             </div>
 
             <div class="fields">
+            
+                <div class="field">
+                    <div class="ui form-wrap segment" style="display: grid">
+                        <label><i class="info icon"></i>Short bio</label>
+                        {{ form.text }}
+                        <div class="muted">
+                            {{ form.text.help_text }}
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+
+            <div class="fields">
 
                 <div class="form-field field">
                     <div class="ui form-wrap segment">
@@ -145,20 +159,6 @@
                             {{ form.message_prefs }}
                             <div class="muted">
                                 {{ form.message_prefs.help_text }}
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="fields">
-
-                    <div class="field">
-                        <div class="ui form-wrap segment" style="display: grid">
-                            <label><i class="info icon"></i>Short bio</label>
-                            {{ form.text }}
-                            <div class="muted">
-                                {{ form.text.help_text }}
                             </div>
                         </div>
                     </div>

@@ -20,11 +20,13 @@
     <a href="{% url 'myvotes' %}">
 
         {% if counts.votes.count %}
-        <div class="ui pink label"><img src="{% static 'img/icons/chat.png' %}" alt=""> <span>New Votes
-                ({{ counts.votes.count }})</span></div>
+        <img src="{% static 'img/reactions_like.png' %}" alt="">
+        <span>
+            New Likes ({{ counts.votes.count }})
+        </span>
         {%  else %}
         <img src="{% static 'img/reactions_like.png' %}" alt="">
-        <span>My Likes/Upvotes</span>
+        <span>My Likes</span>
         {% endif %}
 
     </a>

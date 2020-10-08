@@ -15,7 +15,11 @@
                 <div class="profile-details-info">
                     <h1> {{ target.profile.name }}</h1>
                     <code>@{{ target.username }}</code>
-                    <p>{{ target.profile.text }}</p>
+                    <p class="lead">{{ target.profile.text }}</p>
+                    <div class="ui label">
+                        Last seen:
+                        <div class="detail">{{ target.profile.last_login |time_ago }}</div>
+                    </div>
                 </div>
         
             </div>
@@ -44,30 +48,46 @@
         
                     <div uk-sticky="offset:144 ; bottom:true ; meda : @m">
         
-                        <div class="ui large header"> About </div>
+                        <div class="ui large header">About</div>
 
                         <div class="list-group-items">
                             <i class="uil-briefcase-alt"></i>
-                            <h5 style="margin:0!important"> {{ target.profile.get_occupation_display }} </h5>
+                            <h5 style="margin:0!important">{{ target.profile.get_occupation_display }} </h5>
                         </div>
 
                         <div class="list-group-items">
                             <i class="uil-medkit"></i>
-                            <h5 style="margin:0!important"> <span> {{ target.profile.qualifications }} </span> </h5>
+                            <h5 style="margin:0!important"><span>{{ target.profile.qualifications }}</span> </h5>
                         </div>
 
                         <div class="list-group-items">
                             <i class="uil-home"></i>
-                            <h5 style="margin:0!important"> Lives in <span> {{ target.profile.location }} </span> </h5>
+                            <h5 style="margin:0!important">Lives in<span>{{ target.profile.location }}</span> </h5>
                         </div>
                         
                         <div class="list-group-items">
                             <i class="uil-clock"></i>
-                            <h5 style="margin:0!important"> Joined <span> {{ target.profile.date_joined|time_ago }} </span> </h5>
+                            <h5 style="margin:0!important">Joined<span>{{ target.profile.date_joined|time_ago }}</span> </h5>
+                        </div>
+
+                        <hr>
+
+                        <h4>Affiliated with: </h4>
+
+                        <div class="list-group-items">
+                            <i class="uil-medkit"></i>
+                            <p>{{ target.profile.affiliations }}</p>
+                        </div>
+
+                        <h4>Expertise/interests: </h4>
+
+                        <div class="list-group-items">
+                            <i class="uil-medkit"></i>
+                            <p>{{ target.profile.expertise|lower|capfirst }}</p>
                         </div>
                         
                         {% if target == request.user %}
-                        <a href="{% url 'edit_profile' %}" class="button soft-primary block"> Edit Profile </a>
+                        <a href="{% url 'edit_profile' %}" class="button soft-primary block">Edit Profile</a>
                         <p></p>
                         {% else %}
                         <a href="#" class="button secondary block"> <i class="uil-envelope"> </i> Send Message </i> </a>
