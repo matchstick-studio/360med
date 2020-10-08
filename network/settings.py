@@ -140,15 +140,18 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Database settings.
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+DATABASE_DIR = os.path.join(BASE_DIR, 'export', 'db')
+os.makedirs(DATABASE_DIR, exist_ok=True)
+
+DATABASE_NAME = os.environ.setdefault("DATABASE_NAME", "database.db")
+# Ensure database is inside database directory.
+DATABASE_NAME = os.path.join(DATABASE_DIR, DATABASE_NAME)
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "network_prod",
-        "USER": "postgres",
-        "PASSWORD": "ultimate012",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
-    },
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': DATABASE_NAME,
+    }
 }
 
 ALLOWED_HOSTS = ["www.360med.org", "localhost", "127.0.0.1"]
@@ -189,9 +192,6 @@ MEDIA_URL = "/media/"
 
 # The media root directory.
 MEDIA_ROOT = join(BASE_DIR, "export", "media")
-
-# The root for all docs
-DOCS_ROOT = join(BASE_DIR, "docs")
 
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
