@@ -3,7 +3,7 @@
 
 {#  Post action bar. #}
 
-<div class="{% if post.is_toplevel %}top-level{% endif %}">
+<div class="actions {% if post.is_toplevel %}top-level{% endif %}">
 
     <div class="post-state-details">
         <div>
@@ -15,7 +15,7 @@
 
     <div class="voting">
         <button class="ui tertiary button" data-value="upvote" data-state="{{ post.has_upvote }}">
-            <i class="thumbs up icon"></i>Like
+            <i class="thumbs up icon"></i>Like/Upvote
         </button>
 
         <button class="ui tertiary button" data-value="bookmark" data-state="{{ post.has_bookmark }}">

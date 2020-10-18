@@ -30,38 +30,42 @@
 
 
         {# Render the content#}
-        <div class="content">
-            <div class="user-details-card">
-                {% post_user_line post avatar=avatar %}
-            </div>
-
-            <div class="droppable inplace">
-                <div class="ui inverted dimmer">
-                    <div class="ui text loader">
-                        <div class="muted">Entering edit mode</div>
-                    </div>
+    <div class="content">
+        <div class="droppable inplace">
+            <div class="ui inverted dimmer">
+                <div class="ui text loader">
+                    <div class="muted">Entering edit mode</div>
                 </div>
-
-                <div class="wrap magnify">
-
-                   <!--  {# Display post author. #}
-                    {% post_user_box target_user=post.author %} -->
-
-                    {# Display post content. #}
-                    {% if post.is_editable %}
-                    <div class="editable">{{ post.html|safe }}</div>
-                    {% else %}
-                    {{ post.html|safe }}
-                    {% endif %}
-                </div>
-
             </div>
+    
+            <div class="wrap magnify">
+    
+                {# Display post author. #}
+                <div class="user-details-card">
+                    {% post_user_line post avatar=avatar %}
+                </div>
+    
+                {# Display post content. #}
+                {% if post.is_editable %}
+                <div class="editable">{{ post.html|safe }}</div>
+                {% else %}
+                {{ post.html|safe }}
+                {% endif %}
+            </div>
+    
+            {# Show tags #}
+            {% if post.is_toplevel %}
+            {% post_tags post=post show_views=False %}
+            {% endif %}
+    
             {# Show the post actions #}
             {% post_actions post=post %}
-            <p></p>
-            {# Render all comments #}
-            {% render_comments tree=tree post=post %}
+    
         </div>
+    
+        {# Render all comments #}
+        {% render_comments tree=tree post=post %}
+    </div>
 
     </div>
 
