@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.http import Http404, HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import FormView, View
@@ -31,12 +31,11 @@ class SendInvite(FormView):
         return super(SendInvite, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        first_name = form.cleaned_data["first_name"]
-        last_name = form.cleaned_data["last_name"]
         email = form.cleaned_data["email"]
+        name = form.cleaned_data["name"]
 
         try:
-            invite = form.save(email, first_name, last_name)
+            invite = form.save(name, email)
             invite.inviter = self.request.user
             invite.save()
             invite.send_invitation(self.request)
@@ -44,13 +43,13 @@ class SendInvite(FormView):
             return self.form_invalid(form)
         return self.render_to_response(
             self.get_context_data(
-                success_message=_("%(email)s has been invited")
-                % {"email": email, "first_name": first_name, "last_name": last_name}
-            )
-        )
+                success_message=_("%(email)s has been invited") % {
+                    "email": email}))
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
+
+
 
 
 class SendJSONInvite(View):
@@ -163,7 +162,7 @@ class AcceptInvite(SingleObjectMixin, View):
                 signal_sender=self.__class__,
             )
 
-        get_invitations_adapter().stash_verified_email(self.request, invitation.email)
+        get_invitations_adapter().stash_verified_email(self.request, invitation.email, invitation.name)
 
         return redirect(self.get_signup_redirect())
 
@@ -186,8 +185,7 @@ def accept_invitation(invitation, request, signal_sender):
     invite_accepted.send(
         sender=signal_sender,
         email=invitation.email,
-        first_name=invitation.first_name,
-        last_name=invitation.last_name,
+        name=invitation.name,
     )
 
     get_invitations_adapter().add_message(
@@ -196,8 +194,7 @@ def accept_invitation(invitation, request, signal_sender):
         "invitations/messages/invite_accepted.txt",
         {
             "email": invitation.email,
-            "first_name": invitation.first_name,
-            "last_name": invitation.last_name,
+            "name": invitation.name,
         },
     )
 

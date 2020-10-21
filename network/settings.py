@@ -68,7 +68,7 @@ DEFAULT_APPS = [
     "snowpenguin.django.recaptcha2",
     "phonenumber_field",
     "widget_tweaks",
-    "network.invitations",  # app to support invitations linked to allauth
+    #"network.invitations",  app to support invitations linked to allauth
 ]
 
 # Enabled apps.
@@ -204,9 +204,11 @@ LOGGER_NAME = "network"
 
 # The email delivery engine.
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_BACKEND = 'sparkpost.django.email_backend.SparkPostEmailBackend'
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# Lets use mailhog for now.
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "localhost"
+EMAIL_PORT = 1025
 
 # Session engine.
 SESSION_ENGINE = "django.contrib.sessions.backends.db"

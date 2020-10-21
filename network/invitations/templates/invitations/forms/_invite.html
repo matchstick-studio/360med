@@ -1,6 +1,10 @@
 {% extends 'forum_list.html' %}
 {% load static widget_tweaks %}
 
+{% block headtitle %}
+Send Invitations
+{% endblock %}
+
 {% block body %}
 
 <h1>Invite your peers in the medical profession to join 360Med Network</h1>
@@ -11,21 +15,16 @@
 <form class="ui form" id="invite-form" method="POST" action="{% url 'invitations:send-invite' %}">
   {% csrf_token %}
   <div class="field">
-    <label>First name</label>
-    {% render_field form.first_name id="id_first_name" name="first_name" placeholder="First name" %}
+    <label>Their full name</label>
+    {% render_field form.name id="id_name" name="name" placeholder="e.g Kwame Nkrumah" %}
   </div>
 
   <div class="field">
-    <label>Last name</label>
-    {% render_field form.last_name id="id_last_name" name="last_name" placeholder="Last name" %}
+    <label>Their email address</label>
+    {% render_field form.email id="id_email" name="email" value=form.email.value class="validate-email" placeholder="Email address" %}
   </div>
 
-  <div class="field">
-    <label>Email address</label>
-    {% render_field form.email class="validate-email" id="id_email" name="email" placeholder="Email address" %}
-  </div>
-
-  {% for error in form.errors %}
+  {% for error in form.email.errors %}
   <div class="ui error message">
     <i class="close icon"></i>
     <div class="header">
@@ -35,7 +34,17 @@
   </div>
   {% endfor %}
 
-  <button class="ui button primary generic-ajax-submit" type="submit">Send Invite</button>
+{% if success_message %}
+<div class="ui positive message">
+  <i class="close icon"></i>
+  <div class="header">
+    <h2>Invitation Sent</h2>
+  </div>
+  {{ success_message }}
+</div>
+{% endif %}
+
+  <input class="ui button primary generic-ajax-submit" value="Send Invite" type="submit">
 </form>
 
 <!-- {{ success_message }} -->
@@ -43,5 +52,25 @@
 {% endblock %}
 
 {% block sidebar %}
+<div class="ui column">
+<div class="ui segment">
+  <a class="ui teal left ribbon label">Invited</a>
 
+  <div class="ui relaxed divided list">
+    <div class="item">
+      <i class="check left aligned icon"></i>
+      <div class="content">
+        <div class="description">rukundocollin@gmail.com</div>
+      </div>
+    </div>
+    <div class="item">
+      <i class="hourglass half left aligned icon"></i>
+      <div class="content">
+        <div class="description">collinrukundo@gmail.com</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
 {% endblock sidebar %}

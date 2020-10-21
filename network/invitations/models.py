@@ -19,8 +19,7 @@ from .base_invitation import AbstractBaseInvitation
 
 
 class Invitation(AbstractBaseInvitation):
-    first_name = models.TextField(verbose_name=_("First Name"), blank=True, null=True)
-    last_name = models.TextField(verbose_name=_("Last Name"), blank=True, null=True)
+    name = models.TextField(verbose_name=_("Full Name"), blank=True, null=True)
     email = models.EmailField(
         unique=True,
         verbose_name=_("e-mail address"),
@@ -29,11 +28,10 @@ class Invitation(AbstractBaseInvitation):
     created = models.DateTimeField(verbose_name=_("created"), default=timezone.now)
 
     @classmethod
-    def create(cls, first_name, last_name, email, inviter=None, **kwargs):
+    def create(cls, name, email, inviter=None, **kwargs):
         key = get_random_string(64).lower()
         instance = cls._default_manager.create(
-            first_name=first_name,
-            last_name=last_name,
+            name=name,
             email=email,
             key=key,
             inviter=inviter,
@@ -57,8 +55,7 @@ class Invitation(AbstractBaseInvitation):
                 "invite_url": invite_url,
                 "site_name": current_site.name,
                 "email": self.email,
-                "first_name": self.first_name,
-                "last_name": self.last_name,
+                "name": self.name,
                 "key": self.key,
                 "inviter": self.inviter,
             }
@@ -66,7 +63,7 @@ class Invitation(AbstractBaseInvitation):
 
         email_template = "invitations/email/email_invite"
 
-        get_invitations_adapter().send_mail(email_template, self.email, ctx)
+        get_invitations_adapter().send_mail(email_template, self.email, self.name, ctx)
         self.sent = timezone.now()
         self.save()
 
@@ -79,7 +76,6 @@ class Invitation(AbstractBaseInvitation):
 
     def __str__(self):
         return "Invite: {0}".format(self.email)
-
 
 # here for backwards compatibility, historic allauth adapter
 if hasattr(settings, "ACCOUNT_ADAPTER"):

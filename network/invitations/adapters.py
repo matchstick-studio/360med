@@ -16,16 +16,14 @@ except ImportError:
 
 # Code credits here to django-allauth
 class BaseInvitationsAdapter(object):
-    def stash_verified_email(self, request, email, first_name, last_name):
+    def stash_verified_email(self, request, email, name):
         request.session["account_verified_email"] = email
-        request.session["account_first_name"] = first_name
-        request.session["account_last_name"] = last_name
+        request.session["account_name"] = name
 
     def unstash_verified_email(self, request):
-        ret = request.session.get("account_verified_email")
+        ret = request.session.get("account_verified_email", "account_name")
         request.session["account_verified_email"] = None
-        request.session["account_first_name"] = None
-        request.session["account_last_name"] = None
+        request.session["account_name"] = None
         return ret
 
     def format_email_subject(self, subject):
@@ -67,13 +65,13 @@ class BaseInvitationsAdapter(object):
             msg.content_subtype = "html"  # Main content is now text/html
         return msg
 
-    def send_mail(self, template_prefix, email, context):
+    def send_mail(self, template_prefix, email, name, context):
         msg = self.render_mail(template_prefix, email, context)
         msg.send()
 
     def is_open_for_signup(self, request):
         if hasattr(request, "session") and request.session.get(
-            "account_verified_email", "account_first_name", "account_last_name"
+            "account_verified_email", "account_name"
         ):
             return True
         elif app_settings.INVITATION_ONLY is True:

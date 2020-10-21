@@ -2,7 +2,7 @@
 {% autoescape off %}
 {% blocktrans %}
 
-Dear {{ full_name }},
+Dear {{ name }},
 
 You have been invited to join 360Med Network by {{ inviter }}
 

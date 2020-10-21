@@ -132,7 +132,9 @@ ALLOWED_POST_TYPES = [
 # to avoid having to specify all the default styles
 PAGEDOWN_WIDGET_CSS = ("pagedown/demo/browser/demo.css",)
 
-INSTALLED_APPS = DEFAULT_APPS + FORUM_APPS + PAGEDOWN_APP + ACCOUNTS_APPS + EMAILER_APP
+INSTALLED_APPS = DEFAULT_APPS + FORUM_APPS + PAGEDOWN_APP + ACCOUNTS_APPS + EMAILER_APP + [
+    "network.invitations"
+]
 
 """ FORUM_DOCS = os.path.join(DOCS_ROOT, "forum")
 

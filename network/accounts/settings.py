@@ -8,7 +8,7 @@ from network.emailer.settings import *
 DEBUG = True
 
 # Should the site allow signup.
-ALLOW_SIGNUP = False
+ALLOW_SIGNUP = True
 
 # Private key used to validate external logins. Must be changed in production
 LOGIN_PRIVATE_KEY = "private-key"
@@ -55,9 +55,9 @@ ADMIN_UPLOAD_SIZE = 1000
 
 MESSAGES_PER_PAGE = 5
 
-# Set RECAPTCH keys here.
-RECAPTCHA_PUBLIC_KEY = ""
-RECAPTCHA_PRIVATE_KEY = ""
+# Set Google RECAPTCH keys here.
+RECAPTCHA_PUBLIC_KEY = "6Lc3hdkZAAAAAAaHuWQ7Sxg9cJYtvu4x1bExQqpq"
+RECAPTCHA_PRIVATE_KEY = "6Lc3hdkZAAAAAMupHo8diqNLO1lgc_5X4Dh4-pxT"
 
 # Django allauth settings.
 ACCOUNT_AUTHENTICATION_METHOD = "email"
@@ -80,7 +80,6 @@ ACCOUNTS_APPS = [
     # Allauth templates come last.
     "allauth",
     "allauth.account",
-    "allauth.socialaccount",
 ]
 
 # Should the server look up locations in a task.

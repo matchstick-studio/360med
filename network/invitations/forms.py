@@ -43,17 +43,10 @@ class CleanEmailMixin(object):
 
 
 class InviteForm(forms.Form, CleanEmailMixin):
-    first_name = forms.CharField(
-        label=_("First Name"),
+    name = forms.CharField(
+        label=_("Full Name"),
         widget=forms.TextInput(
-            attrs={"placeholder": _("First Name"), "autofocus": "autofocus"}
-        ),
-    )
-
-    last_name = forms.CharField(
-        label=_("Last Name"),
-        widget=forms.TextInput(
-            attrs={"placeholder": _("Last Name"), "autofocus": "autofocus"}
+            attrs={"placeholder": _("Full Name"), "autofocus": "autofocus"}
         ),
     )
 
@@ -64,24 +57,18 @@ class InviteForm(forms.Form, CleanEmailMixin):
         initial="",
     )
 
-    def save(self, email):
+    def save(self, name, email):
         return Invitation.create(
-            first_name=first_name, last_name=last_name, email=email
+            name=name, email=email
         )
 
 
 class InvitationAdminAddForm(forms.ModelForm, CleanEmailMixin):
-    first_name = forms.CharField(
-        label=_("First Name"),
-        widget=forms.TextInput(
-            attrs={"placeholder": _("First Name"), "autofocus": "autofocus"}
-        ),
-    )
 
-    last_name = forms.CharField(
-        label=_("Last Name"),
+    name = forms.CharField(
+        label=_("Full Name"),
         widget=forms.TextInput(
-            attrs={"placeholder": _("Last Name"), "autofocus": "autofocus"}
+            attrs={"placeholder": _("Full Name"), "autofocus": "autofocus"}
         ),
     )
 
@@ -93,10 +80,9 @@ class InvitationAdminAddForm(forms.ModelForm, CleanEmailMixin):
 
     def save(self, *args, **kwargs):
         cleaned_data = super(InvitationAdminAddForm, self).clean()
-        first_name = cleaned_data.get("first_name")
-        last_name = cleaned_data.get("last_name")
+        name = cleaned_data.get("name")
         email = cleaned_data.get("email")
-        params = {"email": email, "first_name": first_name, "last_name": last_name}
+        params = {"email": email, "name": name}
         if cleaned_data.get("inviter"):
             params["inviter"] = cleaned_data.get("inviter")
         instance = Invitation.create(**params)
@@ -106,7 +92,7 @@ class InvitationAdminAddForm(forms.ModelForm, CleanEmailMixin):
 
     class Meta:
         model = Invitation
-        fields = ("first_name", "last_name", "email", "inviter")
+        fields = ("name", "email", "inviter")
 
 
 class InvitationAdminChangeForm(forms.ModelForm):

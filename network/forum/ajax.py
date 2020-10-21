@@ -88,7 +88,7 @@ def ajax_vote(request):
     was_limited = getattr(request, "limited", False)
 
     if was_limited:
-        return ajax_error(msg="Too many votes from same IP address. Temporary ban.")
+        return ajax_error(msg="Too many likes from same IP address. Temporary ban.")
 
     user = request.user
     type_map = dict(upvote=Vote.UP, bookmark=Vote.BOOKMARK, accept=Vote.ACCEPT)
@@ -103,7 +103,7 @@ def ajax_vote(request):
     post = Post.objects.filter(uid=post_uid).first()
 
     if post.author == user and vote_type == Vote.UP:
-        return ajax_error("You can not upvote your own post.")
+        return ajax_error("You can not like your own post.")
 
     if post.author == user and vote_type == Vote.ACCEPT:
         return ajax_error("You can not accept your own post.")
