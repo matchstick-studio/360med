@@ -1,0 +1,75 @@
+---
+- hosts: all
+  user: www
+
+  tasks:
+    - include_vars: variables.yml
+
+    - debug:
+        msg: "Remote target destination: {{ remote }} Source file: {{ local_old }}, "
+
+    - name: Create data backup
+      shell: "./server-backup.sh"
+      args:
+        executable: /bin/bash
+        chdir: "{{ engine_dir }}"
+
+    - name: Update the biostar-engine
+      git:
+        repo: "{{ engine_git }}"
+        dest: "{{ engine_dir }}"
+        update: yes
+
+    - name: Create supporting directories
+      file:
+        path: "{{ engine_dir }}/export/sql/"
+        state: directory
+        owner: www
+        group: www
+        mode: 0755
+
+    - name: Check if old database dump exists in local machine.
+      local_action: stat path="{{ local_old }}"
+      register: local_copy
+
+    - name: Check if old database dump exists in remote site.
+      stat:
+        path: "{{ remote }}"
+      register: remote_copy
+
+    - debug:
+        msg: "Remote target destination: {{ remote }} Source file: {{ local_old }}. "
+      when: local_copy.stat.exists == False
+
+    - name: Source file required to exist in local machine.
+      fail:
+        msg: "The source file {{ local_old }} does not exist."
+      when: (local_copy.stat.exists == False) and (local_old |length > 0)
+
+    - name: Copy over the old database dump.
+      copy:
+        src: "{{ local_old }}"
+        dest: "{{ remote }}"
+        owner: www
+      when: (remote_copy.stat.exists == False) and (local_old |length > 0)
+
+    - name: Install python requirements
+      shell: "source {{conda_dir}}/etc/profile.d/conda.sh &&
+      conda activate {{conda_env}} &&
+      pip install -r conf/requirements.txt"
+      args:
+        executable: /bin/bash
+        chdir: "{{ engine_dir }}"
+
+    - name: Migrate the server
+      shell: "./server-migrate.sh"
+      args:
+        executable: /bin/bash
+        chdir: "{{ engine_dir }}"
+
+    - name: Migrate over data from old to new.
+      shell: "./data-migration.sh {{ remote }}"
+      args:
+        executable: /bin/bash
+        chdir: "{{ engine_dir }}"
+

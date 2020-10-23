@@ -1,0 +1,52 @@
+{% load forum_tags %}
+
+{% if user.is_authenticated %}
+    {% counts as counts %}
+
+    <div class="ui small attached six item pointing menu" id="menu-topics">
+
+
+        <a class="item {% activate tab "myposts" %}" href="{% url 'myposts' %}">
+            <i class="comments icon"></i> My Posts
+        </a>
+
+         <a class="item {% activate tab "bookmarks" %}" href="{% url 'bookmarks' %}">
+            <i class="bookmark icon"></i> Bookmarks
+        </a>
+
+        <a class="item {% activate tab "messages" %}" href="{% url 'inbox' %}">
+
+            {% if counts.messages.count %}
+
+                <div class="ui green large label">
+                    <i class="envelope icon"></i>New Messages ({{ counts.messages.count }})
+                   </div>
+            {%  else %}
+                 <i class="envelope icon"></i> Messages
+            {% endif %}
+
+
+
+        </a>
+        <a class="item {% activate tab "myvotes" %}"
+           href="{% url 'myvotes' %}">
+
+            {% if counts.votes.count %}
+                <div class="ui pink label"><i class="heart icon"></i> New Votes ({{ counts.votes.count }})</div>
+            {%  else %}
+                <i class="heart icon"></i> Votes
+            {% endif %}
+
+        </a>
+
+        <a class="item {% activate tab "mytags" %}" href="{% url 'mytags' %}">
+            <i class="tags icon"></i> My Tags
+        </a>
+
+        <a class="item {% activate tab "following" %}" href="{% url 'following' %}">
+            <i class="eye icon"></i> Following
+        </a>
+
+    </div>
+
+{% endif %}

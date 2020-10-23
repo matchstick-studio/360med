@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Coverage report</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.ba-throttle-debounce.min.js"></script>
+    <script type="text/javascript" src="jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="jquery.hotkeys.js"></script>
+    <script type="text/javascript" src="coverage_html.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(coverage.index_ready);
+    </script>
+</head>
+<body class="indexfile">
+<div id="header">
+    <div class="content">
+        <h1>Coverage report:
+            <span class="pc_cov">69%</span>
+        </h1>
+        <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
+        <form id="filter_container">
+            <input id="filter" type="text" value="" placeholder="filter..." />
+        </form>
+    </div>
+</div>
+<div class="help_panel">
+    <img id="panel_icon" src="keybd_open.png" alt="Hide keyboard shortcuts" />
+    <p class="legend">Hot-keys on this page</p>
+    <div>
+    <p class="keyhelp">
+        <span class="key">n</span>
+        <span class="key">s</span>
+        <span class="key">m</span>
+        <span class="key">x</span>
+        <span class="key">c</span> &nbsp; change column sorting
+    </p>
+    </div>
+</div>
+<div id="index">
+    <table class="index">
+        <thead>
+            <tr class="tablehead" title="Click to sort">
+                <th class="name left headerSortDown shortkey_n">Module</th>
+                <th class="shortkey_s">statements</th>
+                <th class="shortkey_m">missing</th>
+                <th class="shortkey_x">excluded</th>
+                <th class="right shortkey_c">coverage</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr class="total">
+                <td class="name left">Total</td>
+                <td>4711</td>
+                <td>1449</td>
+                <td>0</td>
+                <td class="right" data-ratio="3262 4711">69%</td>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr class="file">
+                <td class="name left"><a href="manage_py.html">manage.py</a></td>
+                <td>13</td>
+                <td>6</td>
+                <td>0</td>
+                <td class="right" data-ratio="7 13">54%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_accounts_admin_py.html">network/accounts/admin.py</a></td>
+                <td>29</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="25 29">86%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_accounts_apps_py.html">network/accounts/apps.py</a></td>
+                <td>61</td>
+                <td>16</td>
+                <td>0</td>
+                <td class="right" data-ratio="45 61">74%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_accounts_auth_py.html">network/accounts/auth.py</a></td>
+                <td>34</td>
+                <td>23</td>
+                <td>0</td>
+                <td class="right" data-ratio="11 34">32%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_accounts_forms_py.html">network/accounts/forms.py</a></td>
+                <td>141</td>
+                <td>85</td>
+                <td>0</td>
+                <td class="right" data-ratio="56 141">40%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_accounts_models_py.html">network/accounts/models.py</a></td>
+                <td>146</td>
+                <td>18</td>
+                <td>0</td>
+                <td class="right" data-ratio="128 146">88%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_accounts_signals_py.html">network/accounts/signals.py</a></td>
+                <td>15</td>
+                <td>1</td>
+                <td>0</td>
+                <td class="right" data-ratio="14 15">93%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_accounts_tasks_py.html">network/accounts/tasks.py</a></td>
+                <td>58</td>
+                <td>32</td>
+                <td>0</td>
+                <td class="right" data-ratio="26 58">45%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_accounts_templatetags_accounts_tags_py.html">network/accounts/templatetags/accounts_tags.py</a></td>
+                <td>21</td>
+                <td>9</td>
+                <td>0</td>
+                <td class="right" data-ratio="12 21">57%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_accounts_views_py.html">network/accounts/views.py</a></td>
+                <td>224</td>
+                <td>173</td>
+                <td>0</td>
+                <td class="right" data-ratio="51 224">23%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_emailer_models_py.html">network/emailer/models.py</a></td>
+                <td>42</td>
+                <td>3</td>
+                <td>0</td>
+                <td class="right" data-ratio="39 42">93%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_emailer_sender_py.html">network/emailer/sender.py</a></td>
+                <td>62</td>
+                <td>42</td>
+                <td>0</td>
+                <td class="right" data-ratio="20 62">32%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_emailer_tasks_py.html">network/emailer/tasks.py</a></td>
+                <td>32</td>
+                <td>25</td>
+                <td>0</td>
+                <td class="right" data-ratio="7 32">22%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_ajax_py.html">network/forum/ajax.py</a></td>
+                <td>318</td>
+                <td>81</td>
+                <td>0</td>
+                <td class="right" data-ratio="237 318">75%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_api_py.html">network/forum/api.py</a></td>
+                <td>121</td>
+                <td>94</td>
+                <td>0</td>
+                <td class="right" data-ratio="27 121">22%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_apps_py.html">network/forum/apps.py</a></td>
+                <td>25</td>
+                <td>1</td>
+                <td>0</td>
+                <td class="right" data-ratio="24 25">96%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_auth_py.html">network/forum/auth.py</a></td>
+                <td>262</td>
+                <td>77</td>
+                <td>0</td>
+                <td class="right" data-ratio="185 262">71%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_awards_py.html">network/forum/awards.py</a></td>
+                <td>61</td>
+                <td>6</td>
+                <td>0</td>
+                <td class="right" data-ratio="55 61">90%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_feed_py.html">network/forum/feed.py</a></td>
+                <td>93</td>
+                <td>45</td>
+                <td>0</td>
+                <td class="right" data-ratio="48 93">52%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_forms_py.html">network/forum/forms.py</a></td>
+                <td>134</td>
+                <td>33</td>
+                <td>0</td>
+                <td class="right" data-ratio="101 134">75%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_management_commands_populate_py.html">network/forum/management/commands/populate.py</a></td>
+                <td>91</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="87 91">96%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_markdown_py.html">network/forum/markdown.py</a></td>
+                <td>223</td>
+                <td>35</td>
+                <td>0</td>
+                <td class="right" data-ratio="188 223">84%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_middleware_py.html">network/forum/middleware.py</a></td>
+                <td>91</td>
+                <td>39</td>
+                <td>0</td>
+                <td class="right" data-ratio="52 91">57%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_models_py.html">network/forum/models.py</a></td>
+                <td>234</td>
+                <td>29</td>
+                <td>0</td>
+                <td class="right" data-ratio="205 234">88%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_search_py.html">network/forum/search.py</a></td>
+                <td>153</td>
+                <td>47</td>
+                <td>0</td>
+                <td class="right" data-ratio="106 153">69%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_signals_py.html">network/forum/signals.py</a></td>
+                <td>55</td>
+                <td>5</td>
+                <td>0</td>
+                <td class="right" data-ratio="50 55">91%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_spam_py.html">network/forum/spam.py</a></td>
+                <td>196</td>
+                <td>154</td>
+                <td>0</td>
+                <td class="right" data-ratio="42 196">21%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_tasks_py.html">network/forum/tasks.py</a></td>
+                <td>65</td>
+                <td>10</td>
+                <td>0</td>
+                <td class="right" data-ratio="55 65">85%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_templatetags_forum_tags_py.html">network/forum/templatetags/forum_tags.py</a></td>
+                <td>441</td>
+                <td>153</td>
+                <td>0</td>
+                <td class="right" data-ratio="288 441">65%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_tests_test_navigation_py.html">network/forum/tests/test_navigation.py</a></td>
+                <td>35</td>
+                <td>3</td>
+                <td>0</td>
+                <td class="right" data-ratio="32 35">91%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_tests_test_post_py.html">network/forum/tests/test_post.py</a></td>
+                <td>84</td>
+                <td>8</td>
+                <td>0</td>
+                <td class="right" data-ratio="76 84">90%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_urls_py.html">network/forum/urls.py</a></td>
+                <td>19</td>
+                <td>3</td>
+                <td>0</td>
+                <td class="right" data-ratio="16 19">84%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_util_py.html">network/forum/util.py</a></td>
+                <td>47</td>
+                <td>27</td>
+                <td>0</td>
+                <td class="right" data-ratio="20 47">43%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_forum_views_py.html">network/forum/views.py</a></td>
+                <td>258</td>
+                <td>40</td>
+                <td>0</td>
+                <td class="right" data-ratio="218 258">84%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_planet_apps_py.html">network/planet/apps.py</a></td>
+                <td>13</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="11 13">85%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_planet_auth_py.html">network/planet/auth.py</a></td>
+                <td>79</td>
+                <td>61</td>
+                <td>0</td>
+                <td class="right" data-ratio="18 79">23%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_planet_models_py.html">network/planet/models.py</a></td>
+                <td>61</td>
+                <td>25</td>
+                <td>0</td>
+                <td class="right" data-ratio="36 61">59%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_planet_views_py.html">network/planet/views.py</a></td>
+                <td>13</td>
+                <td>7</td>
+                <td>0</td>
+                <td class="right" data-ratio="6 13">46%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_server_urls_py.html">network/server/urls.py</a></td>
+                <td>14</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="12 14">86%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_utils_decorators_py.html">network/utils/decorators.py</a></td>
+                <td>38</td>
+                <td>20</td>
+                <td>0</td>
+                <td class="right" data-ratio="18 38">47%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="network_utils_helpers_py.html">network/utils/helpers.py</a></td>
+                <td>14</td>
+                <td>1</td>
+                <td>0</td>
+                <td class="right" data-ratio="13 14">93%</td>
+            </tr>
+        </tbody>
+    </table>
+    <p id="no_rows">
+        No items found using the specified filter.
+    </p>
+</div>
+<div id="footer">
+    <div class="content">
+        <p>
+            <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.0.3</a>,
+            created at 2020-10-23 23:44
+        </p>
+    </div>
+</div>
+</body>
+</html>

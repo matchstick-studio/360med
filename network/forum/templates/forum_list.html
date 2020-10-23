@@ -1,0 +1,25 @@
+{% extends "forum_base.html" %}
+
+{% block content %}
+
+    <div class="ui stackable grid">
+
+        <div class="fit twelve wide content column">
+            {% block body %}
+                {% block search %}
+                    SEARCH
+                {% endblock %}
+                MAIN BODY
+            {% endblock %}
+        </div>
+
+        <div class="four wide column sidefeed">
+            {% block sidebar %}
+                SIDE BAR
+            {% endblock %}
+        </div>
+
+    </div>
+
+{% endblock %}
+
