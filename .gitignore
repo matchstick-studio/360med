@@ -10,4 +10,9 @@ __pycache__/
 *secrets*.py
 .pyc
 *.so
-
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
