@@ -87,11 +87,9 @@ class Post(models.Model):
     # Valid post types.
     TYPE_CHOICES = [
         (QUESTION, "Question"), (ANSWER, "Answer"), (COMMENT, "Comment"),
-        (JOB, "Job"), (FORUM, "Forum"), (TUTORIAL, "Tutorial"),
-        (DATA, "Data"), (PAGE, "Page"), (TOOL, "Tool"), (NEWS, "News"),
-        (BLOG, "Blog"), (BOARD, "Bulletin Board")
+        (JOB, "Job"), (FORUM, "Forum"), (NEWS, "News")
     ]
-    TOP_LEVEL = {QUESTION, JOB, FORUM, BLOG, TUTORIAL, TOOL, NEWS}
+    TOP_LEVEL = {QUESTION, FORUM, JOB, NEWS}
 
     # Possile spam states.
     SPAM, NOT_SPAM, DEFAULT, SUSPECT = range(4)

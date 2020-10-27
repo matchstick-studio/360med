@@ -112,7 +112,7 @@ class PostLongForm(forms.Form):
     title = forms.CharField(label="Post Title", max_length=200, min_length=2,
                             validators=[valid_title, english_only],
                             help_text="Enter a descriptive title to promote better answers.")
-    tag_val = forms.CharField(label="Post Tags", max_length=50, required=True, validators=[valid_tag],
+    tag_val = forms.CharField(label="Post Tags", max_length=50, required=False, validators=[valid_tag],
                               help_text="""
                               Create a new tag by typing a word then adding a comma or press ENTER or SPACE.
                               """,

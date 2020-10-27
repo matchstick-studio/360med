@@ -10,6 +10,8 @@ from django.conf import settings
 from .models import Profile, UserImage
 from . import auth, util
 
+from phonenumber_field.widgets import PhoneNumberPrefixWidget
+
 
 logger = logging.getLogger("engine")
 
@@ -117,12 +119,64 @@ class EditProfile(forms.Form):
     email = forms.CharField(label='Email', max_length=100, required=True)
     username = forms.CharField(label="Handler", max_length=100, required=True)
     location = forms.CharField(label="Location", max_length=100, required=False)
-    website = forms.URLField(label="Website", max_length=225, required=False)
-    twitter = forms.CharField(label="Twitter Id", max_length=100, required=False)
-    scholar = forms.CharField(label="Scholar", max_length=100, required=False)
 
     text = forms.CharField(widget=forms.Textarea(),min_length=2, max_length=5000, required=False,
                            help_text="Extra information about you to personalize your profile.")
+
+    gender = forms.ChoiceField(
+        required=True,
+        label="Gender",
+        choices=Profile.GENDER_CHOICES,
+        widget=forms.Select(attrs={"class": "ui dropdown"}),
+        help_text="""Choose your gender""",
+    )
+
+    alt_email_a = forms.CharField(
+        label="Alternative Email A", max_length=255, required=False
+    )
+
+    alt_email_b = forms.CharField(
+        label="Alternative Email B", max_length=255, required=False
+    )
+
+    occupation = forms.ChoiceField(
+        required=True,
+        label="Occupation",
+        choices=Profile.OCCUPATION_CHOICES,
+        widget=forms.Select(attrs={"class": "ui dropdown"}),
+        help_text="""What do you do?""",
+    )
+
+    qualifications = forms.CharField(
+        label="Qualifications",
+        max_length=100,
+        required=False,
+        help_text="""e.g MBChB, M MED OBS & GYN""",
+    )
+
+    expertise = forms.CharField(
+        label="Expertise",
+        max_length=500,
+        required=False,
+        help_text="""Your specific areas of expertise or interest""",
+        widget=forms.HiddenInput(),
+    )
+
+    affiliations = forms.CharField(
+        label="Affiliations",
+        max_length=500,
+        required=False,
+        help_text="""Institutions you are affiliated to or with""",
+        widget=forms.HiddenInput(),
+    )
+
+    phone = forms.CharField(
+        required=False,
+        initial="+256",
+        widget=PhoneNumberPrefixWidget(attrs={"placeholder": "Mobile number"}),
+        label="Phone Number",
+        help_text="If you would like to be reached by phone",
+    )
 
     message_prefs = forms.ChoiceField(required=True, label="Notifications", choices=Profile.MESSAGING_TYPE_CHOICES,
                                       widget=forms.Select(attrs={'class': "ui dropdown"}),

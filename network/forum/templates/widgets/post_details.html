@@ -18,10 +18,11 @@
             <div>{{ post.root.view_count|bignum }}</div>
             <div>View{{ post.root.view_count|pluralize }}</div>
         </div>
-
+        {% block counts %}
         {% if post.subs_count > 4 %}
-            {% subscription_label post.subs_count %}
+        {% subscription_label post.subs_count %}
         {% endif %}
+        {% endblock %}
 
     </div>
 
@@ -38,22 +39,22 @@
 
             <div class="left floated">
                 {% if post.is_toplevel %}
-                    {% post_tags post spaced=False %}
+                {% post_tags post spaced=False %}
                 {% endif %}
             </div>
 
             {% if post.high_spam_score and user.profile.is_moderator %}
-                <div class="ui simple dropdown spam">
-                    <i class="bug orange icon"></i>
-                    <div class="menu">
-                        <div class="mark item">Mark as Spam</div>
+            <div class="ui simple dropdown spam">
+                <i class="bug orange icon"></i>
+                <div class="menu">
+                    <div class="mark item">Mark as Spam</div>
 
-                        {% if post.suspect_spam %}
-                            <div class="release item">Release</div>
-                        {% endif %}
+                    {% if post.suspect_spam %}
+                    <div class="release item">Release</div>
+                    {% endif %}
 
-                    </div>
                 </div>
+            </div>
             {% endif %}
 
             <div class="right floated muted">
@@ -64,4 +65,3 @@
     </div>
 
 </div>
-

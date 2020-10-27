@@ -1,19 +1,23 @@
-:root {
-    --active-item: #fbfdef;
-    --active-item-hover: #fbfdef;
+@import url(https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap);
+
+/* :root {
+    --active-item: #f1f3f4;
+    --active-item-hover: #f1f3f4;
+} */
+
+* {
+    font-family: 'Inter', sans-serif;
 }
 
 body {
     background-color: #f8f8f9 !important;
-    padding-top: 1rem;
-    font-family: sans-serif;
     color: #333;
     line-height: 1.428571429;
-    font-size: 13px;
+    font-size: 16px;
 }
 
 body > .widen.container {
-    width: 97%;
+    width: 100%;
 }
 
 .deletelink-box{
@@ -29,11 +33,6 @@ body > .widen.container {
     width: 220px;
 }
 
-
-#menu-header .item:hover {
-    background-color: var(--active-item-hover);
-}
-
 .post .bug.icon {
     opacity: .25;
 }
@@ -46,7 +45,7 @@ body > .widen.container {
 
 #menu-header .item {
     color: #333333;
-/ / text-transform: uppercase;
+    font-size: 16px;
 
 }
 
@@ -58,8 +57,7 @@ body > .widen.container {
 
 
 #menu-header .item .icon {
-    font-size: 14px !important;
-    padding-bottom: 18px;
+    font-size: 16px !important;
 }
 
 #menu-header .item::before {
@@ -68,19 +66,18 @@ body > .widen.container {
 
 #menu-header {
     background: none;
-    background-color: #eff0ef;
+    background-color: #ffffff;
 }
 
 
 .ui.basic.search-bar.segment {
     margin: 0;
-    padding: 0 0 5px;
     border: none;
-
+    width: 400px;
 }
 
 .ui.search > .ui.input {
-    width: 50%;
+    width: 100%;
 }
 
 .ui.input > .search-input {
@@ -109,17 +106,8 @@ body > .widen.container {
     background-color: var(--active-item-hover);
 }
 
-#menu-header .item.active {
-    font-weight: bold;
-    background-color: var(--active-item);
-}
 
 .ui.pointing.menu .active.item:after {
-    background-color: var(--active-item);
-}
-
-#menu-topics .item.active {
-    font-weight: bold;
     background-color: var(--active-item);
 }
 

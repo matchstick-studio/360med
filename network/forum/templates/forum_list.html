@@ -3,8 +3,14 @@
 {% block content %}
 
     <div class="ui stackable grid">
+        
+        <div class="four wide column">
+            {% block sideblock %}
+                Sideblock menu
+            {% endblock sideblock %}
+        </div>
 
-        <div class="fit twelve wide content column">
+        <div class="fit eight wide content column">
             {% block body %}
                 {% block search %}
                     SEARCH

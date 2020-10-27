@@ -42,8 +42,9 @@ def edit_profile(request):
         return redirect("/")
     user = request.user
     initial = dict(username=user.username, email=user.email, name=user.profile.name,location=user.profile.location,
-                   website=user.profile.website, twitter=user.profile.twitter, scholar=user.profile.scholar,
-                   text=user.profile.text, my_tags=user.profile.my_tags, message_prefs=user.profile.message_prefs,
+                   gender=user.profile.gender, alt_email_a=user.profile.alt_email_a, alt_email_b=user.profile.alt_email_b, 
+                   occupation=user.profile.occupation, expertise=user.profile.expertise, affiliations=user.profile.affiliations, 
+                   phone=user.profile.phone, text=user.profile.text, my_tags=user.profile.my_tags, message_prefs=user.profile.message_prefs,
                    email_verified=user.profile.email_verified, watched_tags=user.profile.watched_tags)
 
     form = forms.EditProfile(user=user, initial=initial)
@@ -57,16 +58,23 @@ def edit_profile(request):
             email = form.cleaned_data['email']
             User.objects.filter(pk=user.pk).update(username=username, email=email)
             # Update user information in Profile object.
-            Profile.objects.filter(user=user).update(name=form.cleaned_data['name'],
-                                                     watched_tags=form.cleaned_data['watched_tags'],
-                                                     location=form.cleaned_data['location'],
-                                                     website=form.cleaned_data['website'],
-                                                     twitter=form.cleaned_data['twitter'],
-                                                     scholar=form.cleaned_data['scholar'],
-                                                     text=form.cleaned_data["text"],
-                                                     my_tags=form.cleaned_data['my_tags'],
-                                                     message_prefs=form.cleaned_data["message_prefs"],
-                                                     html=markdown(form.cleaned_data["text"]))
+            Profile.objects.filter(user=user).update(
+                name=form.cleaned_data["name"],
+                watched_tags=form.cleaned_data["watched_tags"],
+                location=form.cleaned_data["location"],
+                phone=form.cleaned_data["phone"],
+                alt_email_a=form.cleaned_data["alt_email_a"],
+                alt_email_b=form.cleaned_data["alt_email_b"],
+                gender=form.cleaned_data["gender"],
+                occupation=form.cleaned_data["occupation"],
+                qualifications=form.cleaned_data["qualifications"],
+                expertise=form.cleaned_data["expertise"],
+                affiliations=form.cleaned_data["affiliations"],
+                text=form.cleaned_data["text"],
+                my_tags=form.cleaned_data["my_tags"],
+                message_prefs=form.cleaned_data["message_prefs"],
+                html=markdown(form.cleaned_data["text"]),
+            )
 
             return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
 
