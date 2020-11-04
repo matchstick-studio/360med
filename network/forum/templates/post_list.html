@@ -7,13 +7,13 @@
     Biostar Forum
 {% endblock %}
 
-{% block sideblock %}
-
-    {% include "banners/menu-topics.html" %}
-
-{% endblock %}
-
 {% block body %}
+
+    {% block sideblock %}
+    <div class="three column">
+    {% include "banners/menu-topics.html" %}
+    </div>
+    {% endblock %}
 
     <!-- moved searchbar tag to top header position-->
     <!-- {% block search %}
@@ -34,16 +34,18 @@
             </div>
         {% endif %} -->
 
-
-        <div class="ui divided items">
+    <div class="nine wide column">
+        <div>
             {% for post in posts %}
-                {% post_details post=post user=request.user avatar=avatar %}
+            {% post_details post=post user=request.user avatar=avatar %}
             {% empty %}
-                <div class="ui warn message">
-                    No posts found.
-                </div>
+            <div class="ui warn message">
+                No posts found.
+            </div>
             {% endfor %}
         </div>
+    </div>
+
     {% endblock %}
 
 

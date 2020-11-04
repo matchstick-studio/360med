@@ -178,13 +178,8 @@ function update_post(uid, data) {
     post_users.html(data.user_line).show();
 
     cancel_inplace(post);
-
-    // Enable Mathjax on the new content.
     const content = document.createElement('p');
     content.textContent = post_content.text();
-    MathJax.typesetPromise().then(() => {
-        MathJax.typesetPromise();
-    }).catch((err) => console.log(err.message));
 
 }
 

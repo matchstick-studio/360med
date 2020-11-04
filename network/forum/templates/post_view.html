@@ -42,6 +42,20 @@
         {% post_body post=post user=request.user tree=tree %}
     </div>
 
+    <h1>Discussion</h1>
+
+    {% if post.is_toplevel and user.is_authenticated %}
+    <div class="ui selection dropdown" id="subscribe">
+        <div class="text">{% follow_label post=post %}</div>
+        <i class="caret up icon"></i>
+        <div class="menu">
+            <a class="item" data-value="messages">Follow via messages</a>
+            <a class="item" data-value="email">Follow via email</a>
+            <a class="item" data-value="unfollow">Don't follow</a>
+        </div>
+    </div>
+    {% endif %}
+
     {# Render each answer for the post #}
     {% for answer in answers %}
         <div class="ui vertical segment">
@@ -118,6 +132,9 @@
 {% endblock %}
 
 {% block sidebar %}
+
+<!-- show post user's profile card -->
+{% post_user_box target_user=post.author %}
 
     {#  Cache every hour #}
 

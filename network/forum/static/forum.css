@@ -1,16 +1,16 @@
 @import url(https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap);
 
-/* :root {
-    --active-item: #f1f3f4;
-    --active-item-hover: #f1f3f4;
-} */
+:root {
+    --active-item: rgb(130, 212, 243);
+    --active-item-hover: rgb(130, 212, 243);
+}
 
 * {
     font-family: 'Inter', sans-serif;
 }
 
 body {
-    background-color: #f8f8f9 !important;
+    background-color: #eef0f1 !important;
     color: #333;
     line-height: 1.428571429;
     font-size: 16px;
@@ -18,6 +18,10 @@ body {
 
 body > .widen.container {
     width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
 }
 
 .deletelink-box{
@@ -29,8 +33,7 @@ body > .widen.container {
     background: none;
 }
 #logo {
-    padding: 10px;
-    width: 220px;
+    width: 150px;
 }
 
 .post .bug.icon {
@@ -120,7 +123,7 @@ body > .widen.container {
     width: max-content;
 }
 
-.ui.small.label.tags-list {
+.tags-list {
     font-weight: inherit;
     font-size: small;
     padding: .4em .4em .4em .4em;
@@ -197,17 +200,21 @@ i.icon {
 }
 
 
+
 .post.comment {
     border-bottom: 0;
 }
 
-.post > .title {
-    text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.1);
-    font-size: 1.3rem;
-    font-weight: bold;
-    padding: 0.5rem 0em 0.2rem 0em;
-    margin: 0em 0em 1em 0em;
-    border-bottom: 1px solid #ececec;
+.post > a h3.title {
+    font-size: 1.5rem;
+    line-height: 1.875rem; 
+    font-weight: 700;
+    color: #222222;
+    margin-bottom: 10px;
+}
+
+.post > a h3.title:hover {
+    color: #4183c4;
 }
 
 .on {
@@ -385,6 +392,7 @@ i.icon {
     white-space: nowrap;
     width: fit-content;
     padding-right: 5px;
+    margin-top: 10px;
 }
 
 
@@ -743,8 +751,19 @@ img {
     overflow-wrap: break-word;
 }
 
-.ui.divided.items > .post.item {
-    border: none;
+.post {
+    background: rgba(255,255,255,0.8);
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 5px;
+    padding: 1em!important;
+    margin-bottom: 20px;
+}
+
+.post p {
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: normal;
+    margin-bottom: 10px;
 }
 
 .ui.divided.items > .item {
@@ -755,6 +774,7 @@ img {
 
 .ui.attached.segment {
     border: 1px solid #ECECEC;
+    background: #eff0f1;
 }
 
 .ui.attached.profile.segment {
@@ -776,9 +796,7 @@ img {
 }
 
 .ui.stat.label {
-    width: 48px;
     margin: -1.5px;
-    border-radius: 5px;
 }
 
 .number-stat {
@@ -983,3 +1001,56 @@ pre {
 
 }
 
+/* ---------------------------------- */
+/* user details card avatar 
+------------------------------------- */
+
+/*  User Details */
+.user-details-card {
+  /* padding: 20px 0px; */
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+
+.user-details-card-avatar {
+  display: inline-block;
+  position: relative;
+}
+
+.user-details-card-avatar img {
+  width: 100%;
+  border-radius: 50%;
+  vertical-align: middle;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+.user-details-card-name {
+  display: inline-block;
+  color: #333;
+}
+
+.user-details-card span {
+  font-size: 13.7px;
+  color: #888;
+}
+
+.user-details-card span span {
+  display: inline;
+  margin-left: 6px;
+  color: #afafaf;
+}
+
+@media (max-width: 768px) {
+  .user-details-card-avatar {
+    max-width: 50px;
+  }
+}
+
+.status .user-details-card-name {
+  font-size: 0.85em!important
+}
+
+.status .user-details-card-name span {
+  font-weight: 600!important;
+}

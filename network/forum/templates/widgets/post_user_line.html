@@ -3,61 +3,65 @@
 
 {% if post.author.id != post.lastedit_user.id %}
 
-    <span class="menu-tablet_small">
+
+    <!-- <span class="menu-tablet_small">
 
     {{ post.creation_date|time_ago }}
 
         <a href="{% url "user_profile" post.author.profile.uid %}">
 
             {% if avatar %}
-                <div class="ui avatar image">
-                    <img class="ui tiny centered  image thread-users" src="{% gravatar user=post.author size=80 %}">
+                <div class="user-details-card-avatar">
+                    <img src="{% gravatar user=post.author size=32 %}" alt="">
                 </div>
             {% endif %}
-            {{ post.author.profile.name|truncatechars:40 }}
+            <div class="user-details-card-name">
+                {{ post.author.profile.name|truncatechars:150 }}
+            </div>
         </a>
 
         {% user_icon user=post.author %}
 
-    </span>
-    {% if  post.lastedit_user.profile.is_valid %}
-        &bull;
-        updated
+    </span> -->
 
-        {{ post.lastedit_date|time_ago }}
+<!--{% if  post.lastedit_user.profile.is_valid %}
+&bull;
+updated
 
-        <a href="{% url "user_profile" post.lastedit_user.profile.uid %}">
+{{ post.lastedit_date|time_ago }} -->
+{% if avatar %}
+<div class="user-details-card-avatar">
+    <img src="{% gravatar user=post.author size=32 %}" alt="">
+</div>
+{% endif %}
+<a href="{% url "user_profile" post.author.profile.uid %}">
+    <div class="user-details-card-name">
+        {{ post.author.profile.name|truncatechars:150 }}
+        <span>
+            posted {{ post.creation_date|time_ago }} {% if  post.lastedit_user.profile.is_valid %}&bull; updated
+            {{ post.lastedit_date|time_ago }} {% endif %}
+        </span>
+    </div>
+</a>
 
-            {% if avatar %}
-                <div class="ui avatar image">
-                    <img class="ui tiny centered image thread-users"
-                         src="{% gravatar user=post.lastedit_user size=80 %}">
-                </div>
-            {% endif %}
-            {{ post.lastedit_user.profile.name|truncatechars:50 }}
-        </a>
-
-        {% user_icon user=post.lastedit_user %}
-    {% endif %}
+<!-- {% user_icon user=post.lastedit_user %} -->
+{% endif %}
 
 {% elif post %}
 
-    <span>
-    {{ post.lastedit_date|time_ago }}
-
-    <a href="{% url "user_profile" post.lastedit_user.profile.uid %}">
-        {% if avatar %}
-            <div class="ui avatar image">
-                <img class="ui tiny centered image thread-users" src="{% gravatar user=post.lastedit_user size=80 %}">
-            </div>
-        {% endif %}
-        {{ post.lastedit_user.profile.name|truncatechars:40 }}
-    </a>
-
-    {% user_icon user=post.lastedit_user %}
-</span>
+{% if avatar %}
+<div class="user-details-card-avatar">
+    <img src="{% gravatar user=post.lastedit_user size=32 %}" alt="">
+</div>
 {% endif %}
+<a href="{% url "user_profile" post.lastedit_user.profile.uid %}">
+    <div class="user-details-card-name">
+        {{ post.lastedit_user.profile.name|truncatechars:150 }}
+        <span>
+            posted {{ post.lastedit_date|time_ago }}
+        </span>
+    </div>
+</a>
 
-
-
-
+<!-- {% user_icon user=post.lastedit_user %} -->
+{% endif %}

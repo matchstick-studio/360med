@@ -272,11 +272,11 @@ def digest_label(context, post):
 def follow_label(context, post):
     user = context["request"].user
 
-    not_following = "not following"
+    not_following = "Don't follow"
 
     label_map = {
-        Subscription.LOCAL_MESSAGE: "following with messages",
-        Subscription.EMAIL_MESSAGE: "following via email",
+        Subscription.LOCAL_MESSAGE: "Follow with messages",
+        Subscription.EMAIL_MESSAGE: "Follow via email",
         Subscription.NO_MESSAGES: not_following,
     }
 
@@ -647,7 +647,7 @@ def time_ago(date):
     if delta < timedelta(minutes=1):
         return 'just now'
     elif delta < timedelta(hours=1):
-        unit = pluralize(delta.seconds // 60, "minute")
+        unit = pluralize(delta.seconds // 60, "min")
     elif delta < timedelta(days=1):
         unit = pluralize(delta.seconds // 3600, "hour")
     elif delta < timedelta(days=30):

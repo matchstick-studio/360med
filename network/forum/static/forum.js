@@ -291,13 +291,8 @@ function highligh_preview(form, text) {
     form.find('code').addClass('language-bash');
 
     Prism.highlightAll();
-    // Enable mathjax in preview.
     const content = document.createElement('p');
     content.textContent = text;
-    MathJax.typesetPromise().then(() => {
-        MathJax.typesetPromise();
-    }).catch((err) => console.log(err.message));
-
 
 }
 
