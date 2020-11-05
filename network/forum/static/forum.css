@@ -72,13 +72,6 @@ h1, h2, h3, h4, h5, h6 {
     background-color: #ffffff;
 }
 
-
-.ui.basic.search-bar.segment {
-    margin: 0;
-    border: none;
-    width: 400px;
-}
-
 .ui.search > .ui.input {
     width: 100%;
 }
@@ -106,7 +99,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #menu-topics .item:hover {
-    background-color: var(--active-item-hover);
+    background-color: #fbfdef;
+}
+
+#menu-topics a.item {
+    font-size: 16px;
+    line-height: 24px;
+    color: rgb(32, 36, 40)
 }
 
 
@@ -297,7 +296,7 @@ i.icon {
 
 .post > .body > .content {
     width: 100%;
-    overflow: auto;
+    /* overflow: auto; */
 }
 
 .post .actions {
@@ -760,8 +759,8 @@ img {
 }
 
 .post p {
-    font-size: 16px;
-    line-height: 22px;
+    font-size: 18px;
+    line-height: 24px;
     font-weight: normal;
     margin-bottom: 10px;
 }

@@ -1,7 +1,7 @@
 {% load forum_tags %}
 {% load static %}
 
-<div class="ui labeled evenly divided menu" id="menu-header" user-id="{{ request.user.id }}">
+<div class="ui labeled menu" id="menu-header" user-id="{{ request.user.id }}">
 
     {% block headimg %}
     <div class="header item" id="logo">
@@ -9,33 +9,35 @@
     </div>
     {% endblock %}
 
-    <div class="ui selection dropdown top right item" tabindex=0>
-        <input type="hidden" name="user">
-        <i class="dropdown icon"></i>
-        <div class="default text">Feed</div>
-        <div class="menu transition hidden" tabindex="-1">
-
-            <a class="item {% activate tab "latest" %} " href="{% url 'post_list' %}">
-                <i class="list icon"></i> Latest
-            </a>
-
-            <a class="item {% activate tab "tags" %} " href="{% url 'tags_list' %}">
-                <i class="tag icon"></i> Tags
-            </a>
+    <div class="item">
+        <div class="ui selection dropdown" tabindex=0>
+            <input type="hidden" name="user">
+            <i class="dropdown icon"></i>
+            <div class="default text">Feed</div>
+            <div class="menu transition hidden" tabindex="-1">
         
-            <a class="item {% activate tab "news" %} " href="{% url 'post_list' %}?type=news">
-                <i class="newspaper icon"></i> News
-            </a>
-            <a class="item {% activate tab "job" %} " href="{% url 'post_list' %}?type=job">
-                <i class="briefcase icon"></i> Jobs
-            </a>
-            <a class="item {% activate tab "tutorial" %} " href="{% url 'post_list' %}?type=tutorial">
-                <i class="help circle icon"></i> Tutorials
-            </a>
-            <a class="item {% activate tab "forum" %} " href="{% url 'post_list' %}?type=forum">
-                <i class="file icon"></i> Forum
-            </a>
+                <a class="item {% activate tab "latest" %} " href="{% url 'post_list' %}">
+                    <i class="list icon"></i> Latest
+                </a>
         
+                <a class="item {% activate tab "tags" %} " href="{% url 'tags_list' %}">
+                    <i class="tag icon"></i> Tags
+                </a>
+        
+                <a class="item {% activate tab "news" %} " href="{% url 'post_list' %}?type=news">
+                    <i class="newspaper icon"></i> News
+                </a>
+                <a class="item {% activate tab "job" %} " href="{% url 'post_list' %}?type=job">
+                    <i class="briefcase icon"></i> Jobs
+                </a>
+                <a class="item {% activate tab "tutorial" %} " href="{% url 'post_list' %}?type=tutorial">
+                    <i class="help circle icon"></i> Tutorials
+                </a>
+                <a class="item {% activate tab "forum" %} " href="{% url 'post_list' %}?type=forum">
+                    <i class="file icon"></i> Forum
+                </a>
+        
+            </div>
         </div>
     </div>
     
@@ -45,13 +47,14 @@
         <a class="item {% activate tab "community" %}" href="{% url 'community_list' %}">
             <i class="world icon"></i> Community
         </a>-->
-
+    
     {% search_bar %}
 
     <div class="right menu">
 
         {% if user.is_authenticated %}
-
+        {% counts as counts %}
+        
         <div class="item {% activate tab "new" %}">
             <a href="{% url 'post_create' %}">
                 <div class="ui primary basic button">
@@ -60,17 +63,17 @@
             </a>
         </div>
 
-        <a class="item" href="{% url 'inbox' %}">
-            <i class="mail icon"></i> Messages
+        <a style="margin-right:20px;" class="item" href="{% url 'inbox' %}">
+            <img style="width:25px;" src="{% static 'images/bell.svg' %}" alt="">
             {% if counts.messages.count %}
-            <span class="ui empty mini circular blue label"></span>
+            <div style="top:10%;left:90%" class="floating ui circular small blue label">{{ counts.messages.count }}</div>
             {% endif %}
         </a>
 
         <div class="ui text menu">
             <div style="margin-right: 20px;" class="user top right pointing ui dropdown item">
                 <img class="ui mini rounded image" src="{% gravatar user=user %}" alt="">
-                {{ user.profile.name }}
+                Me
                 <i class="dropdown icon"></i>
                 <div class="menu">
                     <div style="text-transform: none;" class="user header">

@@ -4,19 +4,17 @@
 {% load cache %}
 
 {% block headtitle %}
-    Biostar Forum
+    360Med Network
+{% endblock %}
+
+{% block sideblock %}
+{% include "banners/menu-topics.html" %}
 {% endblock %}
 
 {% block body %}
 
-    {% block sideblock %}
-    <div class="three column">
-    {% include "banners/menu-topics.html" %}
-    </div>
-    {% endblock %}
-
     <!-- moved searchbar tag to top header position-->
-    <!-- {% block search %}
+    {% block search %}
 
         <div class="ui horizontal basic top-menu segments">
             {% filter_dropdown %}
@@ -32,9 +30,7 @@
                     reset <i class="undo small icon"></i>
                 </a>
             </div>
-        {% endif %} -->
-
-    <div class="nine wide column">
+        {% endif %}
         <div>
             {% for post in posts %}
             {% post_details post=post user=request.user avatar=avatar %}
@@ -44,7 +40,6 @@
             </div>
             {% endfor %}
         </div>
-    </div>
 
     {% endblock %}
 

@@ -4,7 +4,13 @@
 
     <div class="ui stackable grid container">
 
-        <div class="fit twelve wide content column grid">
+        <div class="three wide column">
+            {% block sideblock %}
+            SIDE BLOCK
+            {% endblock %}
+        </div>
+
+        <div class="fit nine wide content column grid">
             {% block body %}
                 MAIN BODY
             {% endblock %}
