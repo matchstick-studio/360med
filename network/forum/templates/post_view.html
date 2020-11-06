@@ -53,7 +53,7 @@
 
     {# Render each answer for the post #}
     {% for answer in answers %}
-        <div class="ui threaded comments">
+        <div>
             {% post_body post=answer user=request.user tree=tree %}
         </div>
     {% endfor %}

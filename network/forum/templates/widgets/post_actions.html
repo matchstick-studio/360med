@@ -23,22 +23,23 @@
     {% endif %}
 
     {#  Show title on top level posts #}
-    {% if post.is_toplevel and user.is_authenticated %}
-        &bull;
-        <div class="ui dropdown" id="subscribe">
-            <div class="text">{% follow_label post=post %}</div>
-            <i class="caret up icon"></i>
-            <div class="menu">
-                <a class="item" data-value="messages">Follow via messages</a>
-                <a class="item" data-value="email">Follow via email</a>
-                <a class="item" data-value="unfollow">Don't follow</a>
-            </div>
-        </div>
-    {% endif %}
 
-    <span class="status muted user-info">
-        {% post_user_line post=post avatar=avatar %}
-    </span>
+    <!-- <span class="status muted user-info">
+        {# % post_user_line post=post avatar=avatar % #}
+    </span> -->
+
+    {% if post.is_toplevel and user.is_authenticated %}
+    &bull;
+    <div class="ui dropdown status user-info" id="subscribe">
+        <div class="text">{% follow_label post=post %}</div>
+        <i class="caret down icon"></i>
+        <div class="menu">
+            <a class="item" data-value="messages">Follow via messages</a>
+            <a class="item" data-value="email">Follow via email</a>
+            <a class="item" data-value="unfollow">Don't follow</a>
+        </div>
+    </div>
+    {% endif %}
 
 </div>
 

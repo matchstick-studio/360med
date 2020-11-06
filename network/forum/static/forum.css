@@ -424,7 +424,7 @@ i.icon {
 
 .comment {
     color: #666666;
-    background-color: #efefef;
+    background-color: rgb(242,242, 242);
     margin-bottom: 0.3em;
     padding: 3px;
     border-radius: 3px;
@@ -760,7 +760,7 @@ img {
 
 .post p {
     font-size: 18px;
-    line-height: 24px;
+    line-height: 28px;
     font-weight: normal;
     margin-bottom: 10px;
 }

@@ -747,7 +747,7 @@ def traverse_comments(request, post, tree, template_name):
 
         cont = {"post": node, 'user': request.user, 'request': request}
         html = body.render(cont)
-        collect.append(f'<div class="indent" ><div>{html}</div>')
+        collect.append(f'<div class="indent"><div class="comment">{html}</div>')
 
         for child in tree.get(node.id, []):
             if child in seen:
@@ -758,7 +758,7 @@ def traverse_comments(request, post, tree, template_name):
         collect.append(f"</div>")
 
     # this collects the comments for the post
-    collect = ['<div class="comment-list">']
+    collect = ['<div class="ui threaded comments">']
     for node in tree[post.id]:
         traverse(node, collect=collect)
     collect.append("</div>")
