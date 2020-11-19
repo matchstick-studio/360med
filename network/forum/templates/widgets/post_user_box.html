@@ -2,22 +2,21 @@
 {% load humanize %}
 {% load forum_tags %}
 
-
 <div class="ui card">
     <div class="content">
-        <a class="" href="{% url "user_profile" target_user.profile.uid %}">
-            <img class="ui circular image" src="{% gravatar user=target_user size=50 %}">
-        <div style="font-size:20px;font-weight:bold;line-height:30px;word-break:break-word" class="left aligned header">{{ target_user.profile.name|truncatechars:40 }} &bull; {% user_icon user=target_user %}</div>
-        </a>
-        <p style="color:rgb(77,87,96);font-size:16px;line-height:24px;word-break:break-word" class="lead">{{ target_user.profile.text }}</p>
-        
-        <div class="user-meta">
-            <div style="font-size:12px;font-weight:bold;line-height:18px;text-transform:uppercase;">Location</div>
-            <p>{{ target_user.profile.location|truncatechars:40 }}</p>
-            <div style="font-size:12px;font-weight:bold;line-height:18px;text-transform:uppercase;">Joined</div>
-            <p>{{ target_user.profile.date_joined|time_ago }}</p>
+        <div class="center aligned author">
+            <img class="ui image" src="{% gravatar user=target_user size=80 %}">
+        </div>
+        <div class="ui hidden divider"></div>
+        <div class="center aligned header">{{ target_user.profile.name }}</div>
+        <div class="center aligned description">
+            <p>{{ target_user.profile.text }}</p>
         </div>
     </div>
+    <div class="center aligned">
+        <button class="ui button">View full profile</button>
+    </div>
+    <div class="ui hidden divider"></div>
 </div>
 
 

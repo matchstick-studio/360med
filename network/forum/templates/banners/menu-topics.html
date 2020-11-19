@@ -4,6 +4,13 @@
     {% counts as counts %}
 
     <div style="background:transparent;border:0;box-shadow:none" class="ui vertical menu" id="menu-topics">
+    <!-- Add a check for if new user and show for 7 days -->
+        <a class="item" href="#">✍🏿 Write post</a>
+        <a class="item" href="#">🧑🏾‍🤝‍🧑🏾 Invite peers</a>
+        <a class="item" href="#">😊 Improve profile</a>
+    <!-- end to-do list -->
+
+    <div class="ui divider"></div>
 
         <a class="item {% activate tab "myposts" %}" href="{% url 'myposts' %}">
             🗒️ My Posts

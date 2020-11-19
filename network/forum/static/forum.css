@@ -703,8 +703,8 @@ img {
 
 
 .ui.segment.form-wrap {
-    box-shadow: none;
-    background: #f9f6f4;
+/*     box-shadow: none;
+    background: #f9f6f4; */
     overflow-wrap: break-word;
 }
 
@@ -753,8 +753,8 @@ img {
 .post {
     background: rgba(255,255,255,0.8);
     border: 1px solid rgb(204, 204, 204);
-    border-radius: 5px;
-    padding: 1em!important;
+    border-radius: .28571429rem;
+    padding: 1.5em!important;
     margin-bottom: 20px;
 }
 

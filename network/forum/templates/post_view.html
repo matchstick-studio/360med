@@ -49,19 +49,19 @@
         {% post_body post=post user=request.user tree=tree %}
     </div>
 
-    <h1 style="margin:0">Discussion</h1>
+    <!-- <h1 style="margin:0">Discussion</h1>
 
     {# Render each answer for the post #}
     {% for answer in answers %}
         <div>
-            {% post_body post=answer user=request.user tree=tree %}
+            {# % post_body post=answer user=request.user tree=tree % #}
         </div>
     {% endfor %}
 
     {# Display the newanswer form #}
     {% if request.user.is_authenticated and post.is_open %}
         {# Render form used to submit answers  #}
-        {% include 'forms/form_answers.html' %}
+        {# % include 'forms/form_answers.html' %# }
 
         {# Answers not displayed for non open posts  #}
     {% elif not post.is_open %}
@@ -75,7 +75,7 @@
                 <i class="sign in icon"></i>Login</a> before adding your answer.</p>
         </div>
 
-    {% endif %}
+    {% endif %} -->
 
 
     <script>

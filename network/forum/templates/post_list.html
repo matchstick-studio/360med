@@ -8,6 +8,18 @@
 {% endblock %}
 
 {% block sideblock %}
+<div class="ui horizontal list">
+    <div class="item">
+        <img class="ui circular image" src="{% gravatar user=user size=60 %}" alt="">
+        <div class="content">
+            <a href="{% url 'user_profile' user.profile.uid %}">
+                <div class="ui header">{{ user.profile.name }}</div>
+                @{{ user.username }}
+            </a>
+        </div>
+    </div>
+</div>
+
 {% include "banners/menu-topics.html" %}
 {% endblock %}
 
@@ -16,9 +28,7 @@
     <!-- moved searchbar tag to top header position-->
     {% block search %}
 
-        <div class="ui horizontal basic top-menu segments">
-            {% filter_dropdown %}
-        </div>
+        {% filter_dropdown %}
 
     {% endblock %}
 
@@ -31,7 +41,7 @@
                 </a>
             </div>
         {% endif %}
-        <div>
+        <div style="margin-top:30px">
             {% for post in posts %}
             {% post_details post=post user=request.user avatar=avatar %}
             {% empty %}

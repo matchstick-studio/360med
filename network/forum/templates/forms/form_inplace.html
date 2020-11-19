@@ -36,7 +36,7 @@
         {# Create a new comment #}
         {% if new %}
             <div class="field">
-                {% include 'widgets/textarea.html' with rows=7 %}
+                {% include 'widgets/textarea.html' with rows=2 %}
             </div>
 
         {% else %}
@@ -77,16 +77,13 @@
             </div>
         {% endif %}
 
-        <p class="muted">Tips: CTRL+ENTER to submit the form. ESC to cancel. Double-click to edit post. Markdown
-            accepted.</p>
-
         <!-- {# Preview segment #}
         <div class="ui preview segment">{{ html |safe }}</div> -->
 
         {# Submit and cancel buttons #}
         <div class="field">
             <a class="ui green button {% if new %}create{% else %}save{% endif %}">
-                <i class="check icon"></i>Save
+                <i class="check icon"></i>Post
             </a>
             <a class="ui button cancel">
                 <i class="undo icon"></i>Cancel
