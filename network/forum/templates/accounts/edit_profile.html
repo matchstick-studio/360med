@@ -6,160 +6,147 @@
 
 {% block content %}
 
-<div class="ui basic center aligned segment">
-    <h2 class="ui large header">Update Profile</h2>
+<div class="ui stackable grid">
+
+    <div class="four wide column">
+        {% include 'accounts/settings_menu.html' with active='edit_profile' %}
+    </div>
+
+    <div class="fit twelve wide column">
+
+        <h1>Update Profile</h1>
+        
+        
+        <form method="post" class="ui equal width form" action="{% url 'edit_profile' %}">
+            {{ form.media }}
+            {% csrf_token %}
+        
+            {% form_errors form %}
+        
+            <div class="fields">
+        
+                <div class="required form-field field">
+                    <label><i class="address card icon"></i> Full Name </label>
+                    {{ form.name }}
+                    <div class="muted">
+                        Displayed name
+                    </div>
+                </div>
+        
+                <div class="required form-field field">
+                    <label><i class="at icon"></i> Username</label>
+                    {{ form.username }}
+                    <div class="muted">
+                        Might be used to reference you in posts.
+                    </div>
+                </div>
+        
+            </div>
+        
+            <div class="fields">
+        
+                <div class="field">
+                    <label><i class="info icon"></i> Short bio</label>
+                    {{ form.text }}
+                    <div class="muted">
+                        {{ form.text.help_text }}
+                    </div>
+                </div>
+        
+            </div>
+        
+            <div class="fields">
+        
+                <div class="form-field field">
+                    <div class="muted">
+                        Registered email address
+                    </div>
+                    {{ form.email }}
+                    <label><i class="mobile dark icon"></i> Phone number</label>
+                    {{ form.phone }}
+                </div>
+        
+                <div class="form-field field">
+                    <label><i class="envelope icon"></i> Alternative Email A</label>
+                    {{ form.alt_email_a }}
+                    <label><i class="envelope icon"></i> Alternative Email B</label>
+                    {{ form.alt_email_b }}
+                    <div class="muted">
+                        Add one or two secondary email addresses
+                    </div>
+                </div>
+        
+            </div>
+        
+            <div class="fields">
+        
+                <div class="field">
+                    <label><i class="female icon"></i> Gender </label>
+                    {{ form.gender }}
+                </div>
+        
+                <div class="field">
+                    <label><i class="map marker alternate icon"></i> Location</label>
+                    {{ form.location }}
+                </div>
+        
+            </div>
+        
+            <div class="fields">
+        
+                <div class="field">
+                    <label><i class="stethoscope icon"></i> Qualifications </label>
+                    {{ form.qualifications }}
+                    <div class="muted">
+                        {{ form.qualifications.help_text }}
+                    </div>
+                </div>
+        
+                <div class="field">
+                    <label><i class="stethoscope icon"></i> Occupation </label>
+                    {{ form.occupation }}
+                    <div class="muted">
+                        {{ form.occupation.help_text }}
+                    </div>
+                </div>
+            </div>
+        
+            <div class="fields">
+                <div class="field">
+                    <label><i class="tags icon"></i> Areas of expertise </label>
+    
+                    {% tags_field form_field=form.expertise initial=user.profile.expertise %}
+    
+                    <div class="muted">
+                        {{ form.expertise.help_text }}
+                    </div>
+                </div>
+            </div>
+        
+            <div class="fields">
+                <div class="field">
+                    <label><i class="tags icon"></i> Affiliations </label>
+    
+                    {% tags_field form_field=form.affiliations initial=user.profile.affiliations %}
+    
+                    <div class="muted">
+                        {{ form.affiliations.help_text }}
+                    </div>
+                </div>
+            </div>
+        
+            <a class="ui button" href="{% url "user_profile" user.profile.uid %}">
+                <i class="undo icon"></i>Cancel
+            </a>
+        
+            <button type="submit" class="ui submit green button right floated">
+                <i class="save icon"></i>Save Changes
+            </button>
+        
+        </form>
+    </div>
+
 </div>
-
-
-<form method="post" class="ui equal width form" action="{% url 'edit_profile' %}">
-    {{ form.media }}
-    {% csrf_token %}
-
-    {% form_errors form %}
-
-    <div class="fields">
-
-        <div class="required form-field field">
-            <div class="ui form-wrap segment">
-                <label><i class="address card icon"></i>Full Name </label>
-                {{ form.name }}
-                <div class="muted">
-                    Displayed name
-                </div>
-            </div>
-        </div>
-
-        <div class="required form-field field">
-            <div class="ui form-wrap segment">
-                <label><i class="at icon"></i>Username</label>
-                {{ form.username }}
-                <div class="muted">
-                    Might be used to reference you in posts.
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="fields">
-
-        <div class="field">
-            <div class="ui form-wrap segment" style="display: grid">
-                <label><i class="info icon"></i>Short bio</label>
-                {{ form.text }}
-                <div class="muted">
-                    {{ form.text.help_text }}
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="fields">
-
-        <div class="form-field field">
-            <div class="ui form-wrap segment">
-                <div class="muted">
-                    Registered email address
-                </div>
-                {{ form.email }}
-                <label><i class="mobile dark icon"></i>Phone number</label>
-                {{ form.phone }}
-            </div>
-        </div>
-
-        <div class="form-field field">
-            <div class="ui form-wrap segment">
-                <label><i class="envelope icon"></i>Alternative Email A</label>
-                {{ form.alt_email_a }}
-                <label><i class="envelope icon"></i>Alternative Email B</label>
-                {{ form.alt_email_b }}
-                <div class="muted">
-                    Add one or two secondary email addresses
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="fields">
-
-        <div class="field">
-            <div class="ui form-wrap segment" style="display: grid">
-                <label><i class="female icon"></i>Gender </label>
-                {{ form.gender }}
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="ui form-wrap segment">
-                <label><i class="map marker alternate icon"></i>Location</label>
-                {{ form.location }}
-            </div>
-        </div>
-
-    </div>
-
-    <div class="fields">
-
-        <div class="field">
-            <div class="ui form-wrap segment" style="display: grid">
-                <label><i class="stethoscope icon"></i>Qualifications </label>
-                {{ form.qualifications }}
-                <div class="muted">
-                    {{ form.qualifications.help_text }}
-                </div>
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="ui form-wrap segment" style="display: grid">
-                <label><i class="stethoscope icon"></i>Occupation </label>
-                {{ form.occupation }}
-                <div class="muted">
-                    {{ form.occupation.help_text }}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="fields">
-        <div class="field">
-            <div class="ui form-wrap segment" style="display: grid">
-                <label><i class="tags icon"></i>Areas of expertise </label>
-
-                {% tags_field form_field=form.expertise initial=user.profile.expertise %}
-
-                <div class="muted">
-                    {{ form.expertise.help_text }}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="fields">
-        <div class="field">
-            <div class="ui form-wrap segment" style="display: grid">
-                <label><i class="tags icon"></i>Affiliations </label>
-
-                {% tags_field form_field=form.affiliations initial=user.profile.affiliations %}
-
-                <div class="muted">
-                    {{ form.affiliations.help_text }}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <a class="ui button" href="{% url "user_profile" user.profile.uid %}">
-        <i class="undo icon"></i>Cancel
-    </a>
-
-    <button type="submit" class="ui submit green button right floated">
-        <i class="save icon"></i>Save Changes
-    </button>
-
-</form>
 
 
 {% endblock %}

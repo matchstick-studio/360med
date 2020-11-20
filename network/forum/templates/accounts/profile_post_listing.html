@@ -3,7 +3,7 @@
 
 {% with params=request.GET.urlencode %}
     <div class="ui small compact menu no-shadow">
-        <div class="ui simple dropdown item">
+        <div class="ui dropdown item">
             <i class="{% get_icon string=limit default='all' %}"></i>
             <span class="tablet">Show</span>
             <i class="dropdown icon"></i>
@@ -15,7 +15,7 @@
                 <a class="item" href="{% url 'user_profile' target.profile.uid %}{% relative_url 'questions' 'show' params %}">
                     <i class="question mark icon"></i>questions
                 </a>
-                <a class="item" href="{% url 'user_profile' target.profile.uid %}{% relative_url 'tools' 'show' params %}">
+               <!--  <a class="item" href="{% url 'user_profile' target.profile.uid %}{% relative_url 'tools' 'show' params %}">
                     <i class="cogs icon"></i>tools
                 </a>
 
@@ -27,7 +27,7 @@
                 </a>
                 <a class="item" href="{% url 'user_profile' target.profile.uid %}{% relative_url 'tutorials' 'show' params %}">
                     <i class="help icon"></i>tutorials
-                </a>
+                </a> -->
                 <a class="item" href="{% url 'user_profile' target.profile.uid %}{% relative_url 'forum' 'show' params %}">
                     <i class="list icon"></i>forum
                 </a>

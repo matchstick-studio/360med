@@ -94,7 +94,7 @@ def edit_profile(request):
     return render(request, "accounts/edit_profile.html", context=context)
 
 
-def setup_notifications(request):
+def edit_notifications(request):
 
     if request.user.is_anonymous:
         messages.error(request, "Must be logged in to edit profile")
@@ -127,7 +127,7 @@ def setup_notifications(request):
     
     return render(request, "accounts/edit_notifications.html", context=context)
 
-def set_subscriptions(request):
+def edit_subscriptions(request):
 
     if request.user.is_anonymous:
         messages.error(request, "Must be logged in to edit profile")
@@ -156,7 +156,7 @@ def set_subscriptions(request):
 
     context = dict(user=user, form=form)
     
-    return render(request, "accounts/set_subscriptions.html", context=context)
+    return render(request, "accounts/edit_subscriptions.html", context=context)
 
 
 def listing(request):

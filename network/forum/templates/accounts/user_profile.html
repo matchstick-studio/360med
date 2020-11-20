@@ -83,32 +83,6 @@
                         <td>{{ target.profile.date_joined|time_ago }}</td>
                     </tr>
 
-                    {% if target.profile.twitter %}
-                        <tr>
-                            <td>Twitter:</td>
-                            <td>
-                                <a href="https://twitter.com/{{ target.profile.twitter }}"><i
-                                        class="twitter icon"></i>{{ target.profile.twitter }}</a>
-                            </td>
-                        </tr>
-                    {% endif %}
-
-                    {% if target.profile.scholar %}
-                        <tr>
-                            <td>Google Scholar:</td>
-                            <td>
-                                <a href="https://scholar.google.com/citations?user={{ target.profile.scholar }}"><i
-                                        class="book icon"></i>{{ target.profile.scholar }}</a>
-                            </td>
-                        </tr>
-                    {% endif %}
-                    {% if target == request.user %}
-                        <tr>
-                            <td>Notifications:</td>
-                            <td>{{ target.profile.get_message_prefs_display }}</td>
-                        </tr>
-                    {% endif %}
-
                     <tr>
                         <td>Last seen:</td>
                         <td>{{ target.profile.last_login |time_ago }}</td>
@@ -154,7 +128,7 @@
         <div class="ui top attached tabular  menu">
 
             <a class="{% activate 'posts' active %} item" href="{{ target.profile.get_absolute_url }}?active=posts">
-                <i class="list alternate outline icon"></i><span class="phone"> Posts</span>
+                <i class="list alternate outline icon"></i><span class="phone"> Posts & History</span>
             </a>
 
             <a class="{% activate 'awards' active %}  item" href="{{ target.profile.get_absolute_url }}?active=awards">

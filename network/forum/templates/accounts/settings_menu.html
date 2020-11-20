@@ -1,0 +1,13 @@
+<div class="ui vertical pointing menu">
+<a class="{% if active == 'edit_profile' %}active teal{% endif %} item" href="{% url 'edit_profile' %}">
+    Edit Profile
+</a>
+
+<a class="{% if active == 'edit_notifications' %}active teal{% endif %} item" href="{% url 'edit_notifications' %}">
+    Edit Notifications
+</a>
+
+<a class="{% if active == 'edit_subscriptions' %}active teal{% endif %} item" href="{% url 'edit_subscriptions' %}">
+    Edit Subscriptions
+</a>
+</div>
