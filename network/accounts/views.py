@@ -7,9 +7,12 @@ from django.contrib.auth import logout, login
 from django.shortcuts import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.views import (PasswordResetView, PasswordResetDoneView,
-                                       PasswordResetConfirmView, PasswordResetCompleteView,
-                                       )
+from django.contrib.auth.views import (
+    PasswordResetView,
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView,
+)
 from django.http import JsonResponse
 from django.core.exceptions import PermissionDenied, ImproperlyConfigured
 
@@ -32,30 +35,45 @@ from .tokens import account_verification_token
 from .util import now, get_uuid
 
 
-logger = logging.getLogger('engine')
+logger = logging.getLogger("engine")
 
-RATELIMIT_KEY = settings.RATELIMIT_KEY
 
 def edit_profile(request):
     if request.user.is_anonymous:
         messages.error(request, "Must be logged in to edit profile")
         return redirect("/")
     user = request.user
-    initial = dict(username=user.username, email=user.email, name=user.profile.name,location=user.profile.location,
-                   gender=user.profile.gender, alt_email_a=user.profile.alt_email_a, alt_email_b=user.profile.alt_email_b, 
-                   occupation=user.profile.occupation, expertise=user.profile.expertise, affiliations=user.profile.affiliations, 
-                   phone=user.profile.phone, text=user.profile.text, my_tags=user.profile.my_tags, message_prefs=user.profile.message_prefs,
-                   email_verified=user.profile.email_verified, watched_tags=user.profile.watched_tags)
+    initial = dict(
+        username=user.username,
+        email=user.email,
+        name=user.profile.name,
+        location=user.profile.location,
+        gender=user.profile.gender,
+        alt_email_a=user.profile.alt_email_a,
+        alt_email_b=user.profile.alt_email_b,
+        occupation=user.profile.occupation,
+        expertise=user.profile.expertise,
+        affiliations=user.profile.affiliations,
+        phone=user.profile.phone,
+        text=user.profile.text,
+        my_tags=user.profile.my_tags,
+        message_prefs=user.profile.message_prefs,
+        qualifications=user.profile.qualifications,
+        email_verified=user.profile.email_verified,
+        watched_tags=user.profile.watched_tags,
+    )
 
     form = forms.EditProfile(user=user, initial=initial)
 
     if request.method == "POST":
-        form = forms.EditProfile(data=request.POST, user=user, initial=initial, files=request.FILES)
+        form = forms.EditProfile(
+            data=request.POST, user=user, initial=initial, files=request.FILES
+        )
 
         if form.is_valid():
             # Update the email and username of User object.
             username = form.cleaned_data["username"]
-            email = form.cleaned_data['email']
+            email = form.cleaned_data["email"]
             User.objects.filter(pk=user.pk).update(username=username, email=email)
             # Update user information in Profile object.
             Profile.objects.filter(user=user).update(
@@ -79,7 +97,7 @@ def edit_profile(request):
             return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
 
     context = dict(user=user, form=form)
-    return render(request, 'accounts/edit_profile.html', context=context)
+    return render(request, "accounts/edit_profile.html", context=context)
 
 
 def listing(request):
@@ -94,14 +112,23 @@ def user_moderate(request, uid):
 
     source = request.user
     target = User.objects.filter(id=uid).first()
-    form = forms.UserModerate(source=source, target=target, request=request,
-                              initial=dict(is_spammer=target.profile.is_spammer,
-                                           action=target.profile.state))
+    form = forms.UserModerate(
+        source=source,
+        target=target,
+        request=request,
+        initial=dict(is_spammer=target.profile.is_spammer, action=target.profile.state),
+    )
     if request.method == "POST":
 
-        form = forms.UserModerate(source=source, data=request.POST, target=target, request=request,
-                                  initial=dict(is_spammer=target.profile.is_spammer,
-                                               action=target.profile.state))
+        form = forms.UserModerate(
+            source=source,
+            data=request.POST,
+            target=target,
+            request=request,
+            initial=dict(
+                is_spammer=target.profile.is_spammer, action=target.profile.state
+            ),
+        )
         if form.is_valid():
             state = form.cleaned_data.get("action", "")
             profile = Profile.objects.filter(user=target).first()
@@ -109,11 +136,13 @@ def user_moderate(request, uid):
             profile.save()
             # Log the moderation action
             log_text = f"Moderated user={target.pk}; state={target.profile.state} ( {target.profile.get_state_display()} )"
-            Logger.objects.create(user=request.user, log_text=log_text, action=Logger.MODERATING)
+            Logger.objects.create(
+                user=request.user, log_text=log_text, action=Logger.MODERATING
+            )
 
             messages.success(request, "User moderation complete.")
         else:
-            errs = ','.join([err for err in form.non_field_errors()])
+            errs = ",".join([err for err in form.non_field_errors()])
             messages.error(request, errs)
 
         return redirect(reverse("user_profile", kwargs=dict(uid=target.profile.uid)))
@@ -158,17 +187,25 @@ def user_profile(request, uid):
     active = request.GET.get("active", "posts")
 
     # Apply filter to what is shown.
-    show = request.GET.get('show', '')
+    show = request.GET.get("show", "")
 
     # User viewing profile is a moderator
-    is_mod = (request.user.is_authenticated and request.user.profile.is_moderator)
+    is_mod = request.user.is_authenticated and request.user.profile.is_moderator
 
     can_moderate = is_mod and request.user != profile.user
     show_info = is_mod or (profile.is_valid and not profile.low_rep)
 
-    context = dict(target=profile.user, active=active, debugging=settings.DEBUG, show_info=show_info,
-                   const_post=POSTS, const_project=PROJECT, can_moderate=can_moderate, show=show,
-                   tab="profile")
+    context = dict(
+        target=profile.user,
+        active=active,
+        debugging=settings.DEBUG,
+        show_info=show_info,
+        const_post=POSTS,
+        const_project=PROJECT,
+        can_moderate=can_moderate,
+        show=show,
+        tab="profile",
+    )
 
     return render(request, "accounts/user_profile.html", context)
 
@@ -187,13 +224,13 @@ def toggle_notify(request):
         msg = "Emails notifications enabled."
 
     messages.success(request, msg)
-    return redirect(reverse('user_profile', kwargs=dict(uid=user.profile.uid)))
+    return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
 
 
-@ratelimit(key=RATELIMIT_KEY, rate='10/m', block=True, method=ratelimit.UNSAFE)
+@ratelimit(key="ip", rate="10/m", block=True, method=ratelimit.UNSAFE)
 def user_signup(request):
 
-    if request.method == 'POST':
+    if request.method == "POST":
 
         form = forms.SignUpWithCaptcha(request.POST)
         if form.is_valid():
@@ -210,9 +247,13 @@ def user_signup(request):
     else:
         form = forms.SignUpWithCaptcha()
 
-    context = dict(form=form, captcha_site_key=settings.RECAPTCHA_PUBLIC_KEY,
-                   social_login=SocialApp.objects.all(), tab='signup')
-    return render(request, 'accounts/signup.html', context=context)
+    context = dict(
+        form=form,
+        captcha_site_key=settings.RECAPTCHA_PUBLIC_KEY,
+        social_login=SocialApp.objects.all(),
+        tab="signup",
+    )
+    return render(request, "accounts/signup.html", context=context)
 
 
 @login_required
@@ -221,18 +262,18 @@ def image_upload_view(request):
 
     user = request.user
 
-    if not request.method == 'POST':
+    if not request.method == "POST":
         raise PermissionDenied()
 
     if not settings.PAGEDOWN_IMAGE_UPLOAD_ENABLED:
-        raise ImproperlyConfigured('Image upload is disabled')
+        raise ImproperlyConfigured("Image upload is disabled")
 
     form = forms.ImageUploadForm(data=request.POST, files=request.FILES, user=user)
     if form.is_valid():
         url = form.save()
-        return JsonResponse({'success': True, 'url': url})
+        return JsonResponse({"success": True, "url": url})
 
-    return JsonResponse({'success': False, 'error': form.errors})
+    return JsonResponse({"success": False, "error": form.errors})
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -256,8 +297,10 @@ def debug_user(request):
     login(request, user, backend="django.contrib.auth.backends.ModelBackend")
     messages.success(request, "Login successful!")
 
-    logger.info(f"""uid={request.user.profile.uid} impersonated 
-                    uid={profile.uid}.""")
+    logger.info(
+        f"""uid={request.user.profile.uid} impersonated 
+                    uid={profile.uid}."""
+    )
 
     return redirect("/")
 
@@ -270,7 +313,7 @@ def user_logout(request):
         if form.is_valid():
             logout(request)
             messages.info(request, "You have been logged out")
-            return redirect("/")
+            return redirect("login")
 
     form = forms.LogoutForm()
 
@@ -286,14 +329,16 @@ def user_login(request):
 
         if form.is_valid():
 
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            next_url = request.POST.get('next', settings.LOGIN_REDIRECT_URL)
-            user = User.objects.filter(email__iexact=email).order_by('-id').first()
+            email = form.cleaned_data["email"]
+            password = form.cleaned_data["password"]
+            next_url = request.POST.get("next", settings.LOGIN_REDIRECT_URL)
+            user = User.objects.filter(email__iexact=email).order_by("-id").first()
             message, valid_user = validate_login(email=email, password=password)
 
             if valid_user:
-                login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+                login(
+                    request, user, backend="django.contrib.auth.backends.ModelBackend"
+                )
                 messages.success(request, "Login successful!")
                 return redirect(next_url)
             else:
@@ -329,7 +374,7 @@ def email_verify_account(request, uidb64, token):
         Profile.objects.filter(user=user).update(email_verified=True)
         login(request, user, backend="django.contrib.auth.backends.ModelBackend")
         messages.success(request, "Email verified!")
-        return redirect(reverse('user_profile', kwargs=dict(uid=user.profile.uid)))
+        return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
 
     messages.error(request, "Link is expired.")
     return redirect("/")
@@ -346,8 +391,9 @@ def external_login(request):
 
         if not user:
             name = user_email.split("@")[0]
-            user = User.objects.create(email=user_email, first_name=name,
-                                       password=str(get_uuid(16)))
+            user = User.objects.create(
+                email=user_email, first_name=name, password=str(get_uuid(16))
+            )
             user.username = name.split()[0] + str(get_uuid(8))
             user.save()
             msg = f"Signed up, <a href={reverse('password_reset')}><b> Please reset your password.</b></a>"
@@ -364,8 +410,8 @@ def external_login(request):
     return redirect("/")
 
 
-@ratelimit(key=RATELIMIT_KEY, rate='500/h')
-@ratelimit(key=RATELIMIT_KEY, rate='25/m')
+@ratelimit(key="ip", rate="500/h")
+@ratelimit(key="ip", rate="25/m")
 def password_reset(request):
 
     # if request.method == "POST":
@@ -386,34 +432,36 @@ def password_reset(request):
     #
     # # Generate and send the email.
     # email.render()
-    return PasswordResetView.as_view(template_name="accounts/password_reset_form.html",
-                                     subject_template_name="accounts/password_reset_subject.txt",
-                                     email_template_name="accounts/password_reset_email.html"
-                                     )(request=request)
+    return PasswordResetView.as_view(
+        template_name="accounts/password_reset_form.html",
+        subject_template_name="accounts/password_reset_subject.txt",
+        email_template_name="accounts/password_reset_email.html",
+    )(request=request)
 
 
-@ratelimit(key=RATELIMIT_KEY, rate='500/h')
-@ratelimit(key=RATELIMIT_KEY, rate='25/m')
+@ratelimit(key="ip", rate="500/h")
+@ratelimit(key="ip", rate="25/m")
 def password_reset_done(request):
     context = dict()
 
-    return PasswordResetDoneView.as_view(extra_context=context,
-                                         template_name="accounts/password_reset_done.html")(request=request)
+    return PasswordResetDoneView.as_view(
+        extra_context=context, template_name="accounts/password_reset_done.html"
+    )(request=request)
 
 
-@ratelimit(key=RATELIMIT_KEY, rate='500/h')
-@ratelimit(key=RATELIMIT_KEY, rate='25/m')
+@ratelimit(key="ip", rate="500/h")
+@ratelimit(key="ip", rate="25/m")
 def pass_reset_confirm(request, uidb64, token):
     context = dict()
 
-    return PasswordResetConfirmView.as_view(extra_context=context,
-                                            template_name="accounts/password_reset_confirm.html")(request=request,
-                                                                                                  uidb64=uidb64,
-                                                                                                  token=token)
+    return PasswordResetConfirmView.as_view(
+        extra_context=context, template_name="accounts/password_reset_confirm.html"
+    )(request=request, uidb64=uidb64, token=token)
 
 
 def password_reset_complete(request):
     context = dict()
 
-    return PasswordResetCompleteView.as_view(extra_context=context,
-                                             template_name="accounts/password_reset_complete.html")(request=request)
+    return PasswordResetCompleteView.as_view(
+        extra_context=context, template_name="accounts/password_reset_complete.html"
+    )(request=request)

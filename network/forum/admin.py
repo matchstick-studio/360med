@@ -1,6 +1,6 @@
 
 from django.contrib import admin
-from network.forum.models import Post, Subscription, Vote
+from network.forum.models import Post, Subscription, Vote, Space
 
 
 @admin.register(Post)
@@ -26,6 +26,12 @@ class VoteAdmin(admin.ModelAdmin):
 class SubscriptionAdmin(admin.ModelAdmin):
     search_fields = ('user__profile__name', 'user__email', 'uid')
     list_select_related = ["user", "post"]
+
+@admin.register(Space)
+class SpaceAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    ordering = ['-name']
+    search_fields = ('name', 'creator__profile_name')
 
 
 

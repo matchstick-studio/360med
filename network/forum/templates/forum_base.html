@@ -64,22 +64,20 @@
 </head>
 <body>
 
-<div class="ui inverted container widen">
+<div class="ui container">
 
     {% include 'banners/top-banner.html' %}
 
-    <span class="menus">
-        {% block topmenu %}
-        {% include "banners/menu-header.html" %}
-        {% endblock %}
-    </span>
+    {% block topmenu %}
+    {% include "banners/menu-header.html" %}
+    {% endblock %}
 
-    <span class="phone-menus">
+<!--     <span class="phone-menus">
         {% include "banners/menu-phone.html" %}
-    </span>
+    </span> -->
 
     {% block container %}
-        <div class="ui bottom attached segment">
+        <div style="margin-top:100px;">
 
             {% show_messages messages %}
 

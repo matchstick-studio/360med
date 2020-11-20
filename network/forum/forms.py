@@ -106,15 +106,15 @@ class PostLongForm(forms.Form):
 
     choices = informative_choices(choices=choices)
 
-    post_type = forms.IntegerField(label="Post Type",
+    post_type = forms.IntegerField(label="What would you like to do?",
                                    widget=forms.Select(choices=choices, attrs={'class': "ui dropdown"}),
                                    help_text="Select a post type.")
     title = forms.CharField(label="Post Title", max_length=200, min_length=2,
                             validators=[valid_title, english_only],
-                            help_text="Enter a descriptive title to promote better answers.")
-    tag_val = forms.CharField(label="Post Tags", max_length=50, required=False, validators=[valid_tag],
+                            help_text="Enter a descriptive title to encourage better engagement.")
+    tag_val = forms.CharField(label="Communities", max_length=50, required=False, validators=[valid_tag],
                               help_text="""
-                              Create a new tag by typing a word then adding a comma or press ENTER or SPACE.
+                              Choose a community or create a new tag by typing a name and pressing ENTER.
                               """,
                               widget=forms.HiddenInput())
 
@@ -152,7 +152,7 @@ class PostLongForm(forms.Form):
         """
         Take out duplicates
         """
-        tag_val = self.cleaned_data["tag_val"] or 'tag1,tag2'
+        tag_val = self.cleaned_data["tag_val"] or 'tag1, tag2 '
         tags = set([x for x in tag_val.split(",") if x])
 
         required_tags(tags)

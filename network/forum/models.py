@@ -184,7 +184,7 @@ class Post(models.Model):
     html = models.TextField(default='')
 
     # The tag value is the canonical form of the post's tags
-    tag_val = models.CharField(max_length=100, default="", blank=True)
+    tag_val = models.CharField(max_length=100, default="", blank=True, verbose_name="Community")
 
     # The tag set is built from the tag string and used only for fast filtering
     tags = TaggableManager()
@@ -333,7 +333,7 @@ class Post(models.Model):
         self.html = markdown.parse(self.content, post=self, clean=True, escape=False)
         self.tag_val = self.tag_val.replace(' ', '')
         # Default tags
-        self.tag_val = self.tag_val or "tag1,tag2"
+        self.tag_val = self.tag_val or "tag1, tag2,"
         # Set the top level state of the post.
         self.is_toplevel = self.type in Post.TOP_LEVEL
 
@@ -511,3 +511,35 @@ class Award(models.Model):
         # Set the date to current time if missing.
         self.uid = self.uid or util.get_uuid(limit=16)
         super(Award, self).save(*args, **kwargs)
+
+class Space(models.Model):
+    """ Creates spaces that users can subscribe to """
+    # Space name.
+    name = models.CharField(max_length=200, null=False, db_index=True)
+    # Space description
+    description = models.TextField()
+    # The user that originally created the space.
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    # Users following this space or contributing to it
+    users_following = models.ManyToManyField(User, related_name="following_users")
+    # Space creation date.
+    creation_date = models.DateTimeField(db_index=True)
+    # Posts assigned to space
+    posts = models.ManyToManyField(Post, related_name="space_posts")
+
+    def json_data(self):
+        data = {
+            "id": self.id,
+            "uid": self.uid,
+            "name": self.name,
+            "description": self.description,
+            "creator": self.creator,
+            "posts": self.posts,
+            "creation_date": self.creation_date,
+        }
+        return data
+
+    def get_absolute_url(self):
+        url = reverse("space_view", kwargs=dict(uid=self.root.uid))
+        return url if self.is_toplevel else "%s#%s" % (url, self.uid)
+

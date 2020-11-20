@@ -9,7 +9,7 @@
 
     <select multiple="multiple" data-value="{{ form_field.id_for_label }}" class="ui search selection dropdown tags">
 
-    <option value="">Search tags</option>
+    <option value="">Search {{ form_field.label }}</option>
 
         {% for value, is_selected in dropdown_options %}
 

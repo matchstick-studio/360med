@@ -5,9 +5,9 @@
 
     <div style="background:transparent;border:0;box-shadow:none" class="ui vertical menu" id="menu-topics">
     <!-- Add a check for if new user and show for 7 days -->
-        <a class="item" href="#">✍🏿 Write post</a>
+        <a class="item" href="{% url 'post_create' %}">✍🏿 Write post</a>
         <a class="item" href="#">🧑🏾‍🤝‍🧑🏾 Invite peers</a>
-        <a class="item" href="#">😊 Improve profile</a>
+        <a class="item" href="{% url 'edit_profile' %}">😊 Improve profile</a>
     <!-- end to-do list -->
 
     <div class="ui divider"></div>
