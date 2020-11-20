@@ -186,32 +186,6 @@ class EditProfile(forms.Form):
         help_text="If you would like to be reached by phone",
     )
 
-    message_prefs = forms.ChoiceField(
-        required=True,
-        label="Notifications",
-        choices=Profile.MESSAGING_TYPE_CHOICES,
-        widget=forms.Select(attrs={"class": "ui dropdown"}),
-        help_text="""Default mode sends notifications using local messages.""",
-    )
-    my_tags = forms.CharField(
-        label="My tags",
-        max_length=500,
-        required=False,
-        help_text="""
-                              Add a tag by typing a word then adding a comma or press ENTER or SPACE.
-                              """,
-        widget=forms.HiddenInput(),
-    )
-    watched_tags = forms.CharField(
-        label="Watched tags",
-        max_length=50,
-        required=False,
-        help_text="""
-                              Add a tag by typing a word then adding a comma or press ENTER or SPACE.
-                              """,
-        widget=forms.HiddenInput(),
-    )
-
     def __init__(self, user, *args, **kwargs):
 
         self.user = user
@@ -253,16 +227,6 @@ class EditProfile(forms.Form):
         affiliations = self.cleaned_data["affiliations"]
         affiliations = ",".join(list(set(affiliations.split(","))))
         return validate_tags(tags=affiliations)
-
-    def clean_my_tags(self):
-        my_tags = self.cleaned_data["my_tags"]
-        my_tags = ",".join(list(set(my_tags.split(","))))
-        return validate_tags(tags=my_tags)
-
-    def clean_watched_tags(self):
-        watched_tags = self.cleaned_data["watched_tags"]
-        watched_tags = ",".join(list(set(watched_tags.split(","))))
-        return validate_tags(tags=watched_tags)
 
 
 class LoginForm(forms.Form):
@@ -359,3 +323,54 @@ class ImageUploadForm(forms.Form):
         userimg.image.save(image.name, image, save=True)
 
         return userimg.image.url
+
+
+class NotificationsForm(forms.Form):
+
+    message_prefs = forms.ChoiceField(
+        required=True,
+        label="Notifications",
+        choices=Profile.MESSAGING_TYPE_CHOICES,
+        widget=forms.Select(attrs={"class": "ui dropdown"}),
+        help_text="""Default mode sends notifications using local messages.""",
+    )
+
+    watched_tags = forms.CharField(
+        label="Watched tags",
+        max_length=50,
+        required=False,
+        help_text="""
+                              Add a tag by typing a word then adding a comma or press ENTER or SPACE.
+                              """,
+        widget=forms.HiddenInput(),
+    )
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(NotificationsForm, self).__init__(*args, **kwargs)
+
+    def clean_watched_tags(self):
+        watched_tags = self.cleaned_data["watched_tags"]
+        watched_tags = ",".join(list(set(watched_tags.split(","))))
+        return validate_tags(tags=watched_tags)
+
+class SubscriptionsForm(forms.Form):
+
+    my_tags = forms.CharField(
+        label="My tags",
+        max_length=500,
+        required=False,
+        help_text="""
+                              Add a tag by typing a word then adding a comma or press ENTER or SPACE.
+                              """,
+        widget=forms.HiddenInput(),
+    )
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(SubscriptionsForm, self).__init__(*args, **kwargs)
+
+    def clean_my_tags(self):
+        my_tags = self.cleaned_data["my_tags"]
+        my_tags = ",".join(list(set(my_tags.split(","))))
+        return validate_tags(tags=my_tags)

@@ -151,20 +151,6 @@
         </div>
     </div>
 
-    <div class="fields">
-
-        <div class="field">
-            <div class="ui form-wrap segment" style="display: grid">
-                <label><i class="bell icon"></i>Notifications </label>
-                {{ form.message_prefs }}
-                <div class="muted">
-                    {{ form.message_prefs.help_text }}
-                </div>
-            </div>
-        </div>
-
-    </div>
-
     <a class="ui button" href="{% url "user_profile" user.profile.uid %}">
         <i class="undo icon"></i>Cancel
     </a>
@@ -172,8 +158,6 @@
     <button type="submit" class="ui submit green button right floated">
         <i class="save icon"></i>Save Changes
     </button>
-
-
 
 </form>
 
