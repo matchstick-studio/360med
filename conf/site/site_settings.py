@@ -10,7 +10,7 @@ from network.settings import *
 
 #from themes.bioconductor.settings import *
 
-#from network.forum.settings import *
+from network.forum.settings import *
 
 
 logger = logging.getLogger("network")
