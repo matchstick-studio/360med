@@ -5,7 +5,7 @@ LOCAL_OLD_DB := data/old-biostar-database.sql.gz
 # Github repository to use in the playbooks.
 REPO := https://github.com/matchstick-studio/360med.git
 
-USER := root
+USER := matchstick
 
 # Target host must be set.
 ifndef TARGET
