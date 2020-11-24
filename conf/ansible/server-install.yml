@@ -76,6 +76,12 @@
         state: directory
         mode: 0755
 
+    - name: Make the conf directory
+      file:
+        path: "{{ engine_dir }}/conf/run"
+        state: directory
+        mode: 0755
+
     - name: Initialize local secrets
       copy:
         content: ""

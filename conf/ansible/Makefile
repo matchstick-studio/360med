@@ -13,7 +13,7 @@ $(error TARGET parameter must be set)
 endif
 
 setup:
-	ansible-playbook -i hosts.ini -l ${TARGET} server-setup.yml --extra-vars "repo=${REPO} username=${USER}"
+	ansible-playbook -i hosts.ini -l ${TARGET} server-setup.yml --extra-vars "repo=${REPO} username=${USER} ansible_sudo_pass=ultimate012"
 
 install:
 	ansible-playbook -i hosts.ini -l ${TARGET} server-install.yml  --extra-vars "repo=${REPO} username=${USER}"
