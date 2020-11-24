@@ -26,6 +26,7 @@ html2text
 toml
 whitenoise
 hjson
+psycopg2-binary
 langdetect
 django-phonenumber-field[phonenumberslite]
 Babel==2.8.0 # https://pypi.org/project/Babel/

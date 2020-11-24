@@ -41,7 +41,7 @@ SITE_ID = 1
 HTTP_PORT = ''
 PROTOCOL = 'http'
 
-ALLOWED_HOSTS = [SITE_DOMAIN]
+ALLOWED_HOSTS = ['143.110.145.225', '127.0.0.1','360med.org','test.360med.org']
 
 DATABASE_NAME = "biostar-database"
 
