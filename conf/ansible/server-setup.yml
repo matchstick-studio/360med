@@ -72,9 +72,9 @@
         group: www
         mode: 0755
       with_items:
-        #- "{{ src_dir }}"
-        #- "{{ bin_dir }}"
-        #- "{{ ref_dir }}"
+        - "{{ src_dir }}"
+        - "{{ bin_dir }}"
+        - "{{ ref_dir }}"
         - "{{ engine_dir }}"
         - "{{ logs_dir }}"
 
