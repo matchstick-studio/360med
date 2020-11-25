@@ -9,9 +9,9 @@ engine_git:  "{{ repo | default('https://github.com/matchstick-studio/360med.git
 engine_dir:  "{{ main_dir | default('/export/www/biostar-central') }}"
 
 # File structure for bioinformatics tools.
-bin_dir: "/export/bin"
-src_dir: "/export/src"
-ref_dir: "/export/refs"
+#bin_dir: "/export/bin"
+#src_dir: "/export/src"
+#ref_dir: "/export/refs"
 logs_dir: "/export/www/biostar-central/export/logs" # for some reason this wasn't getting created by nginx so this is manual.
 
 # Default django settings to be used.
