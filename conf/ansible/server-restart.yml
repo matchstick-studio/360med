@@ -8,7 +8,7 @@
       become: yes
       service:
         name: supervisor
-        state: reloaded
+        state: restarted
 
     - name: Restart nginx
       become: yes
