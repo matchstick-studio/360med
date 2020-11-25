@@ -11,7 +11,6 @@ from network.forum.models import User,Profile
 from django.conf import settings
 import bleach
 
-SITE = Site.objects.filter(id=settings.SITE_ID).first()
 SITE_NAME = settings.SITE_NAME
 
 FEED_COUNT = 25
@@ -46,8 +45,7 @@ class PostBase(Feed):
     description = "description"
 
     def item_title(self, item):
-        title = item.title if item.is_question else f"{item.get_type_display()}: {item.title}"
-        return title
+        return item.title
 
     def item_description(self, item):
         return reduce_html(item.content)
@@ -145,4 +143,3 @@ class UserFeed(PostBase):
         ids = split(text)
         posts = Post.objects.filter(author__id__in=ids).order_by('-creation_date')
         return posts[:FEED_COUNT]
-

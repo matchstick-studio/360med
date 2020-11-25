@@ -41,7 +41,7 @@ SITE_ID = 1
 HTTP_PORT = ''
 PROTOCOL = 'http'
 
-ALLOWED_HOSTS = ['143.110.145.225', '127.0.0.1','360med.org','test.360med.org']
+ALLOWED_HOSTS = [SITE_DOMAIN]
 
 DATABASE_NAME = "biostar-database"
 
@@ -65,7 +65,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 try:
     # Attempts to load site secrets.
-    from .site_secrets import *
+    from conf.run.site_secrets import *
 
     logger.info("Imported settings from .site_secrets")
 except ImportError as exc:
