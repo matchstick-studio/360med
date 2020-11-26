@@ -19,10 +19,6 @@
                 <a class="item {% activate tab "latest" %} " href="{% url 'post_list' %}">
                     <i class="list icon"></i> Discussions
                 </a>
-
-               <!--  <a class="item {% activate tab "forum" %} " href="{% url 'post_list' %}?type=forum">
-                    <i class="file icon"></i> Discussions
-                </a> -->
         
                 <a class="item {% activate tab "events" %} " href="{% url 'post_list' %}?type=event">
                     <i class="newspaper icon"></i> Events
@@ -30,6 +26,11 @@
                 <a class="item {% activate tab "job" %} " href="{% url 'post_list' %}?type=job">
                     <i class="briefcase icon"></i> Jobs
                 </a>
+
+                <a class="item {% activate tab "planet" %} " href="{% url 'blog_list' %}">
+                    <i class="file icon"></i> News
+                </a>
+
                <!--  <a class="item {% activate tab "tutorial" %} " href="{% url 'post_list' %}?type=tutorial">
                     <i class="help circle icon"></i> Tutorials
                 </a> -->

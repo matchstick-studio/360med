@@ -26,13 +26,13 @@
             {% if counts.votes.count %}
                 👍 Votes <div class="ui violet left pointing label">{{ counts.votes.count }}</div>
             {%  else %}
-                👍 Votes
+                👍 My Votes
             {% endif %}
 
         </a>
 
         <a class="item {% activate tab "mytags" %}" href="{% url 'mytags' %}">
-            🏷️ Your Spaces
+            🏷️ My Spaces
         </a>
 
         <a class="item {% activate tab "following" %}" href="{% url 'following' %}">
