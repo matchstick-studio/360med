@@ -13,29 +13,26 @@
         <div class="ui selection dropdown" tabindex=0>
             <input type="hidden" name="user">
             <i class="dropdown icon"></i>
-            <div class="default text">Feed</div>
+            <div class="default text">Latest</div>
             <div class="menu transition hidden" tabindex="-1">
         
                 <a class="item {% activate tab "latest" %} " href="{% url 'post_list' %}">
-                    <i class="list icon"></i> Latest
+                    <i class="list icon"></i> Discussions
                 </a>
+
+               <!--  <a class="item {% activate tab "forum" %} " href="{% url 'post_list' %}?type=forum">
+                    <i class="file icon"></i> Discussions
+                </a> -->
         
-                <a class="item {% activate tab "tags" %} " href="{% url 'tags_list' %}">
-                    <i class="tag icon"></i> Tags
-                </a>
-        
-                <a class="item {% activate tab "news" %} " href="{% url 'post_list' %}?type=news">
-                    <i class="newspaper icon"></i> News
+                <a class="item {% activate tab "events" %} " href="{% url 'post_list' %}?type=event">
+                    <i class="newspaper icon"></i> Events
                 </a>
                 <a class="item {% activate tab "job" %} " href="{% url 'post_list' %}?type=job">
                     <i class="briefcase icon"></i> Jobs
                 </a>
-                <a class="item {% activate tab "tutorial" %} " href="{% url 'post_list' %}?type=tutorial">
+               <!--  <a class="item {% activate tab "tutorial" %} " href="{% url 'post_list' %}?type=tutorial">
                     <i class="help circle icon"></i> Tutorials
-                </a>
-                <a class="item {% activate tab "forum" %} " href="{% url 'post_list' %}?type=forum">
-                    <i class="file icon"></i> Forum
-                </a>
+                </a> -->
         
             </div>
         </div>
@@ -51,6 +48,10 @@
     {% search_bar %}
 
     <div class="right menu">
+
+        <a class="item {% activate tab "tags" %} " href="{% url 'tags_list' %}">
+            <i class="tag icon"></i> Spaces
+        </a>
 
         {% if user.is_authenticated %}
         {% counts as counts %}

@@ -297,6 +297,14 @@ function highligh_preview(form, text) {
 }
 
 $(document).ready(function () {
+    /* make messages dismissable */
+    $('.message .close')
+        .on('click', function () {
+            $(this)
+                .closest('.message')
+                .transition('fade')
+                ;
+        });
 
     $('.spam').dropdown({on: 'hover'});
     $('.spam .mark.item').click(function (event) {

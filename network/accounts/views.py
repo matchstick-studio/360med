@@ -74,7 +74,6 @@ def edit_profile(request):
             # Update user information in Profile object.
             Profile.objects.filter(user=user).update(
                 name=form.cleaned_data["name"],
-                watched_tags=form.cleaned_data["watched_tags"],
                 location=form.cleaned_data["location"],
                 phone=form.cleaned_data["phone"],
                 alt_email_a=form.cleaned_data["alt_email_a"],

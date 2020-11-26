@@ -30,13 +30,14 @@ RATELIMIT_KEY = settings.RATELIMIT_KEY
 
 # Valid post values as they correspond to database post types.
 POST_TYPE_MAPPER = dict(
-    question=Post.QUESTION,
-    job=Post.JOB,
-    tutorial=Post.TUTORIAL,
     forum=Post.FORUM,
+    event=Post.EVENT,
+    news=Post.NEWS,
+    job=Post.JOB,
     blog=Post.BLOG,
     tool=Post.TOOL,
-    news=Post.NEWS
+    question=Post.QUESTION,
+    tutorial=Post.TUTORIAL
 )
 
 LIMIT_MAP = dict(
@@ -182,7 +183,7 @@ def pages(request, fname):
 
     return render(request, 'pages.html', context=context)
 
-
+@login_required # hack to ensure post_list view is locked so users need accounts first
 @ensure_csrf_cookie
 def post_list(request, topic=None, cache_key='', extra_context=dict()):
     """

@@ -56,9 +56,9 @@ def informative_choices(choices):
     Map choices for post types to a more informative description.
     """
     mapper = {
-              Post.QUESTION: "Ask a question", Post.TUTORIAL: "Share a Tutorial",
-              Post.JOB: "Post a Job Opening", Post.FORUM: "Start a Discussion",
-              Post.TOOL: "Share a Tool", Post.NEWS: "Announce News"
+              Post.QUESTION: "Ask a question", Post.TUTORIAL: "Share a tutorial",
+              Post.JOB: "Post a job", Post.FORUM: "Start a discussion",
+              Post.TOOL: "Share a tool", Post.NEWS: "Announce news", Post.EVENT: "Add an event"
               }
     new_choices = []
     for c in choices:
@@ -112,9 +112,9 @@ class PostLongForm(forms.Form):
     title = forms.CharField(label="Post Title", max_length=200, min_length=2,
                             validators=[valid_title, english_only],
                             help_text="Enter a descriptive title to encourage better engagement.")
-    tag_val = forms.CharField(label="Communities", max_length=50, required=False, validators=[valid_tag],
+    tag_val = forms.CharField(label="Spaces (optional)", max_length=50, required=False, validators=[valid_tag],
                               help_text="""
-                              Choose a community or create a new tag by typing a name and pressing ENTER.
+                              Choose a specific community for your post.
                               """,
                               widget=forms.HiddenInput())
 

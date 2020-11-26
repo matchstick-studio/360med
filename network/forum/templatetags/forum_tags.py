@@ -495,6 +495,7 @@ def get_post_list(target, request, show=None):
     show_map = dict(
         questions=Post.QUESTION,
         tools=Post.TOOL,
+        events=Post.EVENT,
         news=Post.NEWS,
         blogs=Post.BLOG,
         tutorials=Post.TUTORIAL,
@@ -517,6 +518,8 @@ def get_post_list(target, request, show=None):
 
 @register.inclusion_tag("widgets/feed_default.html")
 def default_feed(user):
+
+    recent_events = Post.objects
 
     recent_votes = Vote.objects.filter(
         post__status=Post.OPEN, post__root__status=Post.OPEN
@@ -767,6 +770,8 @@ def post_boxclass(root_type, answer_count, root_has_accepted):
         style = "tool"
     elif root_type == Post.FORUM:
         style = "forum"
+    elif root_type == Post.EVENT:
+        style = "event"
     elif root_type == Post.NEWS:
         style = "news"
     else:

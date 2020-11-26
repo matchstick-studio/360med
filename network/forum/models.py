@@ -82,14 +82,14 @@ class Post(models.Model):
                       (DELETED, "Deleted")]
 
     # Question types. Answers should be listed before comments.
-    QUESTION, ANSWER, JOB, FORUM, PAGE, BLOG, COMMENT, DATA, TUTORIAL, BOARD, TOOL, NEWS = range(12)
+    QUESTION, ANSWER, JOB, FORUM, PAGE, EVENT, BLOG, COMMENT, DATA, TUTORIAL, BOARD, TOOL, NEWS = range(13)
 
     # Valid post types.
     TYPE_CHOICES = [
-        (QUESTION, "Question"), (ANSWER, "Answer"), (COMMENT, "Comment"),
-        (JOB, "Job"), (FORUM, "Forum"), (NEWS, "News")
+        (FORUM, "Forum"), (QUESTION, "Question"), (EVENT, "Event"), (JOB, "Job"),
+        (ANSWER, "Answer"), (COMMENT, "Comment"),
     ]
-    TOP_LEVEL = {QUESTION, FORUM, JOB, NEWS}
+    TOP_LEVEL = {FORUM, EVENT, JOB}
 
     # Possile spam states.
     SPAM, NOT_SPAM, DEFAULT, SUSPECT = range(4)
@@ -184,7 +184,7 @@ class Post(models.Model):
     html = models.TextField(default='')
 
     # The tag value is the canonical form of the post's tags
-    tag_val = models.CharField(max_length=100, default="", blank=True, verbose_name="Community")
+    tag_val = models.CharField(max_length=100, default="", blank=True, verbose_name="Spaces")
 
     # The tag set is built from the tag string and used only for fast filtering
     tags = TaggableManager()

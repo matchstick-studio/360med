@@ -187,9 +187,7 @@ class EditProfile(forms.Form):
     )
 
     def __init__(self, user, *args, **kwargs):
-
         self.user = user
-
         super(EditProfile, self).__init__(*args, **kwargs)
 
     def clean_username(self):
@@ -339,8 +337,7 @@ class NotificationsForm(forms.Form):
         label="Watched tags",
         max_length=50,
         required=False,
-        help_text="""
-                              Add a tag by typing a word then adding a comma or press ENTER or SPACE.
+        help_text="""Add a tag by typing a word then adding a comma or press ENTER or SPACE.
                               """,
         widget=forms.HiddenInput(),
     )
@@ -360,8 +357,7 @@ class SubscriptionsForm(forms.Form):
         label="My tags",
         max_length=500,
         required=False,
-        help_text="""
-                              Add a tag by typing a word then adding a comma or press ENTER or SPACE.
+        help_text="""Add a tag by typing a word then adding a comma or press ENTER or SPACE.
                               """,
         widget=forms.HiddenInput(),
     )
