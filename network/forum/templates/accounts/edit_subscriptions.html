@@ -17,7 +17,7 @@
         <h1>Edit Subscriptions</h1>
 
 
-        <form method="post" class="ui equal width form" action="{% url 'edit_profile' %}">
+        <form method="post" class="ui equal width form" action="{% url 'edit_subscriptions' user.pk %}">
             {{ form.media }}
             {% csrf_token %}
 

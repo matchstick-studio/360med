@@ -386,7 +386,7 @@ def tags_field(context, form_field, initial=""):
 
     # Get currently selected tags from the post or request
     selected_list = initial.split(",") if initial else []
-    field = form_field.name
+    field = form_field
     dropdown_options = get_dropdown_options(field=field, selected_list=selected_list)
 
     context = dict(

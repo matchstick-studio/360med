@@ -1,79 +1,63 @@
 {% extends "forum_base.html" %}
+{% load static %}
 {% load forum_tags %}
 {% load socialaccount %}
 {% block headtitle %}Login{% endblock %}
 
+{% block topmenu %}
+
+{% endblock %}
+
 {% block content %}
 
-    {% if  social_login %}
-        <div class="ui segment inputcolor socialbox">
-            <div class="ui header">
-                <i class="universal access icon"></i> Automatic Login
-            </div>
+<div class="ui middle aligned grid">
 
-            <p>
-                Click the link below to log in or sign up automatically:
-            </p>
+    <div class="column">
 
-           <div class="ui large relaxed icon list">
-                {% for provider in social_login.iterator %}
-                    <a class="item" href="{% provider_login_url provider.provider %}">
-                        <i class="{{ provider.name|lower }} large icon"></i>
-                        <div class="middle aligned content"> {{ provider.name|title }}</div>
-
-                    </a>
-                {% endfor %}
-            </div>
-
-            <p>
-                Social login is used for authentication only.
-            </p>
-        </div>
-    {% endif %}
-
-    <form class="ui form" method="post" action="{% url 'login' %}">
-
-        <div class="ui segment inputcolor socialbox">
-
-            <div class="ui header">
-                <i class="user icon"></i> Email Login
-            </div>
-
-            {% csrf_token %}
-
-            {{ form.errors }}
-
-            <div class="field">
-                <label>Email</label>
-                {{ form.email }}
-            </div>
-
-            <div class="field">
-                <label>Password</label>
-                {{ form.password }}
-            </div>
-
-            <div class="field">
-                <button class="ui primary button" type="submit">
-                    <i class="sign in icon"></i>Log In
-                </button>
-
-                <a class="ui right floated button" href="#" onclick="window.history.back()">
-                    <i class="chevron left icon"></i>Back
-                </a>
-            </div>
-
+        <div class="ui image header" id="logo">
+            <a href="/"><img class="ui image" src="{% static "images/logo.png" %}"></a>
         </div>
 
+        <form class="ui large form" method="post" action="{% url 'login' %}">
 
-    </form>
+            <div class="ui error message">
+                {{ form.errors }}
+            </div>
 
-    <div class="ui center aligned basic segment">
+            <div class="ui basic segment">
+
+                <div class="ui large header">
+                    Welcome back
+                </div>
+
+                {% csrf_token %}
+
+                <div class="field">
+                    <label>Email</label>
+                    {{ form.email }}
+                </div>
+
+                <div class="field">
+                    <label>Password</label>
+                    {{ form.password }}
+                    <a href="{% url 'password_reset' %}"><i class="question circle icon"></i>Forgot your password?</a>
+                </div>
+
+                <div class="field">
+                    <button class="ui large right floated primary button" type="submit">
+                        <i class="sign in icon"></i>Log In
+                    </button>
+                </div>
+
+            </div>
 
 
-        <a href="{% url 'password_reset' %}"><i class="question circle icon"></i>Forgot your password?</a>
-        &bull; <a class="" href="{% url 'signup' %}"><i class="add user icon"></i>Sign up with email</a>
-    </div>
+        </form>
+
+        <div class="ui center aligned basic segment">
+            Don't have an account? <a class="" href="{% url 'signup' %}">Sign up here</a>
+        </div>
+</div>
 
 
 

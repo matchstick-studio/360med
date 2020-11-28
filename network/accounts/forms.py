@@ -69,6 +69,22 @@ class SignUpForm(forms.Form):
         min_length=2,
     )
 
+    occupation = forms.ChoiceField(
+        required=True,
+        label="Occupation",
+        choices=Profile.OCCUPATION_CHOICES,
+        widget=forms.Select(attrs={"class": "ui dropdown"}),
+        help_text="""What do you do?""",
+    )
+
+    expertise = forms.CharField(
+        label="Expertise",
+        max_length=500,
+        required=False,
+        help_text="""Your specific areas of expertise or interest""",
+        widget=forms.HiddenInput(),
+    )
+
     def clean_password2(self):
 
         password1 = self.cleaned_data.get("password1")
@@ -84,11 +100,19 @@ class SignUpForm(forms.Form):
             raise forms.ValidationError("This email is already being used.")
         return data
 
+    def clean_expert_areas(self):
+        expertise = self.cleaned_data["expertise"]
+        expertise = ",".join(list(set(expertise.split(","))))
+        return validate_tags(tags=expertise)
+
     def save(self):
 
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password1")
-        name = email.split("@")[0]
+        """ name = email.split("@")[0] """
+        name = self.cleaned_data.get("name")
+        occupation = self.cleaned_data.get("occupation")
+        expertise = self.cleaned_data["expertise"]
         user = User.objects.create(email=email, first_name=name)
         user.set_password(password)
         user.save()
@@ -108,13 +132,6 @@ class SignUpWithCaptcha(SignUpForm):
 
 class LogoutForm(forms.Form):
     pass
-
-
-def validate_tags(tags):
-    my_tags = tags.split(",")
-    if len(my_tags) > MAX_TAGS:
-        return forms.ValidationError("Maximum number of tags reached.")
-    return tags
 
 
 class EditProfile(forms.Form):
@@ -147,27 +164,11 @@ class EditProfile(forms.Form):
         label="Alternative Email B", max_length=255, required=False
     )
 
-    occupation = forms.ChoiceField(
-        required=True,
-        label="Occupation",
-        choices=Profile.OCCUPATION_CHOICES,
-        widget=forms.Select(attrs={"class": "ui dropdown"}),
-        help_text="""What do you do?""",
-    )
-
     qualifications = forms.CharField(
         label="Qualifications",
         max_length=100,
         required=False,
         help_text="""e.g MBChB, M MED OBS & GYN""",
-    )
-
-    expertise = forms.CharField(
-        label="Expertise",
-        max_length=500,
-        required=False,
-        help_text="""Your specific areas of expertise or interest""",
-        widget=forms.HiddenInput(),
     )
 
     affiliations = forms.CharField(
@@ -215,11 +216,6 @@ class EditProfile(forms.Form):
             )
 
         return cleaned_data
-
-    def clean_expert_areas(self):
-        expertise = self.cleaned_data["expertise"]
-        expertise = ",".join(list(set(expertise.split(","))))
-        return validate_tags(tags=expertise)
 
     def clean_affiliations(self):
         affiliations = self.cleaned_data["affiliations"]
@@ -321,6 +317,12 @@ class ImageUploadForm(forms.Form):
         userimg.image.save(image.name, image, save=True)
 
         return userimg.image.url
+
+def validate_tags(tags):
+    my_tags = tags.split(",")
+    if len(my_tags) > MAX_TAGS:
+        return forms.ValidationError("Maximum number of tags reached.")
+    return tags
 
 
 class NotificationsForm(forms.Form):

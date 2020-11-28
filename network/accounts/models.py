@@ -208,7 +208,7 @@ class Profile(models.Model):
         self.uid = self.uid or util.get_uuid(8)
         self.html = self.html or mistune.markdown(self.text)
         self.max_upload_size = self.max_upload_size or self.set_upload_size()
-        self.name = self.name or self.user.first_name or self.user.email.split("@")[0]
+        """ self.name = self.name or self.user.first_name or self.user.email.split("@")[0] """
         self.date_joined = self.date_joined or now()
         self.last_login = self.last_login or now()  # - timedelta(days=1)
         super(Profile, self).save(*args, **kwargs)

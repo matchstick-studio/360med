@@ -3,11 +3,11 @@
     Edit Profile
 </a>
 
-<a class="{% if active == 'edit_notifications' %}active teal{% endif %} item" href="{% url 'edit_notifications' %}">
+<a class="{% if active == 'edit_notifications' %}active teal{% endif %} item" href="{% url 'edit_notifications' user.pk %}">
     Edit Notifications
 </a>
 
-<a class="{% if active == 'edit_subscriptions' %}active teal{% endif %} item" href="{% url 'edit_subscriptions' %}">
+<a class="{% if active == 'edit_subscriptions' %}active teal{% endif %} item" href="{% url 'edit_subscriptions' user.pk %}">
     Edit Subscriptions
 </a>
 </div>

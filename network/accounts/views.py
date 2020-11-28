@@ -93,12 +93,15 @@ def edit_profile(request):
     return render(request, "accounts/edit_profile.html", context=context)
 
 
-def edit_notifications(request):
+def edit_notifications(request, pk):
 
     if request.user.is_anonymous:
         messages.error(request, "Must be logged in to edit profile")
         return redirect("/")
+
     user = request.user
+    target = User.objects.filter(pk=user.pk).first()
+
     initial = dict(
       message_prefs=user.profile.message_prefs,
       watched_tags=user.profile.watched_tags,
@@ -111,27 +114,33 @@ def edit_notifications(request):
             data=request.POST, user=user, initial=initial
         )
         if form.is_valid():
-            username = form.cleaned_data["username"]
-            email = form.cleaned_data["email"]
-            User.objects.filter(pk=user.pk).update(username=username, email=email)
-            # Update user information in Profile object.
-            Profile.objects.filter(user=user).update(
-                message_prefs=form.cleaned_data["message_prefs"],
-                watched_tags=form.cleaned_data["my_tags"],
-            )
+            message_prefs=form.cleaned_data["message_prefs"]
+            watched_tags=form.cleaned_data["watched_tags"]
 
-            return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
+            profile = Profile.objects.filter(user=target).first()
+            profile.message_prefs = message_prefs
+            profile.watched_tags = watched_tags
+            profile.save()
+
+            messages.success(request, "Notification settings updated.")
+        else:
+            errs = ",".join([err for err in form.non_field_errors()])
+            messages.error(request, errs)
+
+        return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
 
     context = dict(user=user, form=form)
     
     return render(request, "accounts/edit_notifications.html", context=context)
 
-def edit_subscriptions(request):
+def edit_subscriptions(request, pk):
 
     if request.user.is_anonymous:
         messages.error(request, "Must be logged in to edit profile")
         return redirect("/")
     user = request.user
+    target = User.objects.filter(pk=user.pk).first()
+
     initial = dict(
       my_tags=user.profile.my_tags,
     )
@@ -139,21 +148,23 @@ def edit_subscriptions(request):
     form = forms.SubscriptionsForm(user=user, initial=initial)
 
     if request.method == "POST":
-        form = forms.NotificationsForm(
+        form = forms.SubscriptionsForm(
             data=request.POST, user=user, initial=initial
         )
         if form.is_valid():
-            username = form.cleaned_data["username"]
-            email = form.cleaned_data["email"]
-            User.objects.filter(pk=user.pk).update(username=username, email=email)
-            # Update user information in Profile object.
-            Profile.objects.filter(user=user).update(
-                my_tags=form.cleaned_data["my_tags"],
-            )
+            my_tags=form.cleaned_data["my_tags"]
+            profile = Profile.objects.filter(user=target).first()
+            profile.my_tags = my_tags
+            profile.save()
+            messages.success(request, "Subscription settings updated.")
+        
+        else:
+            errs = ",".join([err for err in form.non_field_errors()])
+            messages.error(request, errs)
 
-            return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
+        return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
 
-    context = dict(user=user, form=form)
+    context = dict(form=form, user=user)
     
     return render(request, "accounts/edit_subscriptions.html", context=context)
 

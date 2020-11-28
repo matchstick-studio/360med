@@ -17,7 +17,7 @@
         <h1>Edit Notifications</h1>
 
 
-        <form method="post" class="ui equal width form" action="{% url 'edit_profile' %}">
+        <form method="post" class="ui equal width form" action="{% url 'edit_notifications' user.pk %}">
             {{ form.media }}
             {% csrf_token %}
 

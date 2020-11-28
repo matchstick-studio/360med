@@ -1,80 +1,86 @@
 {% extends "forum_base.html" %}
+{% load static %}
 {% load forum_tags %}
 {% load accounts_tags %}
-{% load socialaccount %}
-{% block headtitle %}Welcome{% endblock %}
+{% block headtitle %}Join the 360Med Network{% endblock %}
+
+{% block topmenu %}
+
+{% endblock %}
 
 
 {% block content %}
 
-        {% show_messages messages %}
+    <div class="ui middle aligned grid">
 
-     {% if  social_login %}
-        <div class="ui segment inputcolor socialbox">
-            <div class="ui header">
-                <i class="universal access icon"></i> Automated Signup
+        <div class="column">
+
+            <div class="ui image header" id="logo">
+                <a href="/"><img class="ui image" src="{% static "images/logo.png" %}"></a>
             </div>
 
-            <p>
-                Select one of the providers to sign up automatically:
-            </p>
+            {% show_messages messages %}
 
-            <div class="ui large relaxed icon list">
-                {% for provider in social_login.iterator %}
-                    <a class="item" href="{% provider_login_url provider.provider %}">
-                        <i class="{{ provider.name|lower }} large icon"></i>
-                        <div class="middle aligned content"> {{ provider.name|title }}</div>
-
-                    </a>
-                {% endfor %}
+            <div class="ui large header">
+                Create your profile
             </div>
-            <p>
-                Social login is used for authentication only.
-            </p>
-        </div>
-    {% endif %}
 
-        <form method="post" class="ui form attached fluid" action="{% url 'signup' %}">
-            <div class="ui segment inputcolor socialbox">
-
-                <div class="ui header" >
-                     <i class="mail icon"></i> Email Signup
-                </div>
-
+            Already on 360Med Network? <a class="" href="{% url 'login' %}">Sign in</a>
+            
+            <form method="post" class="ui large form attached fluid" action="{% url 'signup' %}">
+            
                 {% form_errors form %}
                 <div class="ui basic segment">
-
+            
                     {% csrf_token %}
-                     <div class="field">
-                          <label>Email</label>
-                          {{ form.email }}
-                     </div>
-
-                     <div class="field">
-                          <label>Password</label>
-                          {{ form.password1 }}
-                     </div>
-
-                     <div class="field">
-                          <label>Password Confirmation</label>
-                          {{ form.password2 }}
-                     </div>
-
-                    {% if form.captcha %}
-                        <div class="field">
-                            <label>Captcha</label>
-                            {{form.captcha}}
+            
+                    <div class="required field">
+                        <label>Full name</label>
+                        {{ form.name }}
+                    </div>
+            
+                    <div class="required field">
+                        <label>Email</label>
+                        {{ form.email }}
+                    </div>
+            
+                    <div class="two fields">
+                        <div class="required field">
+                            <label>{{ form.occupation.label }}</label>
+                            {{ form.occupation }}
                         </div>
+            
+                        <div class="field">
+                            <label>Speciality</label>
+                            {% tags_field form_field=form.expertise %}
+                        </div>
+                    </div>
+            
+                    <div class="two fields">
+                        <div class="required field">
+                            <label>Password</label>
+                            {{ form.password1 }}
+                        </div>
+            
+                        <div class="required field">
+                            <label>Confirm Password</label>
+                            {{ form.password2 }}
+                        </div>
+                    </div>
+            
+                    {% if form.captcha %}
+                    <div class="field">
+                        <label>Captcha</label>
+                        {{form.captcha}}
+                    </div>
                     {% endif %}
-
-                    <button type="submit" class="ui primary button"><i class="check icon"></i>Sign up</button>
-                    <a class="ui right floated button" href="/"><i class="cancel icon"></i>Cancel</a>
-
+            
+                    <button type="submit" class="ui large right floated primary button"><i class="check icon"></i>Sign up</button>
+            
                 </div>
+            </form>
 
-            </div>
-        </form>
-
-
+        </div>
+    </div>
 
 {% endblock %}

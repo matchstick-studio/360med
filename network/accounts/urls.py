@@ -25,8 +25,8 @@ account_patterns = [
     path(r'profile/<str:uid>/', views.user_profile, name="user_profile"),
 
     path(r'edit/profile/', views.edit_profile, name='edit_profile'),
-    path(r'edit/notifications/', views.edit_notifications, name='edit_notifications'),
-     path(r'edit/subscriptions/', views.edit_subscriptions, name='edit_subscriptions'),
+    path(r'edit/notifications/<int:pk>/', views.edit_notifications, name='edit_notifications'),
+     path(r'edit/subscriptions/<int:pk>/', views.edit_subscriptions, name='edit_subscriptions'),
     path(r'toggle/notify/', views.toggle_notify, name='toggle_notify'),
     path(r'logout/', views.user_logout, name="logout"),
 
@@ -37,9 +37,6 @@ account_patterns = [
 
     # External url login
     path(r'external/', views.external_login, name="external"),
-
-    # Used for 3rd party logins.
-    path("social/", include('allauth.urls')),
 
 ]
 

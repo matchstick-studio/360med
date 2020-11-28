@@ -76,7 +76,11 @@
     </span> -->
 
     {% block container %}
+        {% if user.is_authenticated %}
         <div style="margin-top:100px;">
+        {% else %}
+        <div style="margin-top: 50px;">
+        {% endif %}
 
             {% show_messages messages %}
 
