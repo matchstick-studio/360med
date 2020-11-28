@@ -1114,3 +1114,7 @@ pre {
   }
 }
 /* end of responsive classes for semantic UI */
+
+.ui.feed>.event>.content .summary {
+    font-weight: 400;
+}

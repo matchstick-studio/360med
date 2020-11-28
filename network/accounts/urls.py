@@ -22,6 +22,7 @@ account_patterns = [
     path(r'moderate/<int:uid>/', views.user_moderate, name="user_moderate"),
     path(r'login/', views.user_login, name="login"),
     path(r'signup/', views.user_signup, name="signup"),
+    path(r'verification/<int:pk>/', views.user_verification, name="verification"),
     path(r'profile/<str:uid>/', views.user_profile, name="user_profile"),
 
     path(r'edit/profile/', views.edit_profile, name='edit_profile'),

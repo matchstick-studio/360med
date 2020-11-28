@@ -1,7 +1,7 @@
 
 Hello {{ user.profile.name }}!
 
-We believe that this post does not fit the main topic of this site as it is not a bioinformatics question.
+We believe that this post does not fit the main topic of this site as it is not a "medical" question.
 
 For this reason we have closed your question. This allows us to keep the site focused on the topics that the community can help with.
 

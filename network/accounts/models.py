@@ -58,6 +58,15 @@ class UserImage(models.Model):
         default=None, blank=True, upload_to=image_path, max_length=MAX_FIELD_LEN
     )
 
+class UserVerification(models.Model):
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    # Image file path, relative to MEDIA_ROOT
+    licence_img = models.ImageField(
+        default=None, blank=True, upload_to=image_path, max_length=MAX_FIELD_LEN
+    )
+    licence = models.CharField(max_length=100, blank=True, null=True)
+    date_submitted = models.DateTimeField(auto_now_add=True, max_length=255, null=True)
+
 
 class Profile(models.Model):
     NEW, TRUSTED, SUSPENDED, BANNED, SPAMMER = range(5)
@@ -164,7 +173,7 @@ class Profile(models.Model):
     # The number of new messages for the user.
     new_messages = models.IntegerField(default=0, db_index=True)
 
-    # The last visit by the user.
+    # The date the user joined.
     date_joined = models.DateTimeField(auto_now_add=True, max_length=255)
 
     # User provided location.
@@ -192,6 +201,8 @@ class Profile(models.Model):
 
     # The state of the user email verfication.
     email_verified = models.BooleanField(default=False)
+
+    med_verified = models.BooleanField(default=False)
 
     # Automatic notification
     notify = models.BooleanField(default=False)

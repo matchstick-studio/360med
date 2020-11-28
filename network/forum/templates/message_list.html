@@ -6,44 +6,59 @@
     Messages
 {% endblock %}
 
-{% block body %}
-
-<div class="center-text">
-{% pages objs=all_messages %}
-</div>
-
-<table class="ui very basic striped table">
-    <tbody>
-        {% for message in all_messages %}
-                <tr class="message">
-                    <td class="{{ message.css }}">
-                      <div class="item">
-                        <div class="content">
-                            {{ message.sent_date|timesince }} ago <a href="{{message.sender.profile.get_absolute_url}}">{{message.sender.profile.name }}</a> wrote
-                            :{{ message.body.html|safe }}
-                        </div>
-                      </div>
-                    </td>
-                </tr>
-        {% empty %}
-        <div class="ui message">No messages</div>
-        {% endfor %}
-    </tbody>
-</table>
-
-{#  this will reset the user unread messages #}
-{% toggle_unread user=request.user %}
-
-<div class="center-text">
-{% pages objs=all_messages %}
-</div>
-
-
+{% block sideblock %}
 {% endblock %}
 
-{% block sidebar %}
+{% block content %}
 
-    {% custom_feed feed_type='messages' objs=all_messages title='Messages by'%}
+<!-- <div class="center-text">
+{% pages objs=all_messages %}
+</div> -->
+
+<div class="ui stackable grid">
+    <div class="ten wide column">
+        <h1 class="ui large header">
+            Notifications
+        </h1>
+        
+        <div class="ui divider"></div>
+        
+        <div class="ui large feed">
+            {% for message in all_messages %}
+            <div class="event">
+                <div class="label">
+                    <img src="{% gravatar user=message.sender size=50 %}">
+                </div>
+                <div class="content">
+                    <div class="summary">
+                        <a class="user" href="{{message.sender.profile.get_absolute_url}}">
+                            {{message.sender.profile.name }}
+                        </a> wrote
+                        <div class="date">
+                            {{ message.sent_date|timesince }} ago
+                        </div>
+                        <div class="extra text">
+                            {{ message.body.html|safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui divider"></div>
+            {% empty %}
+            <div class="ui message">No messages</div>
+            {% endfor %}
+        </div>
+        {#  this will reset the user unread messages #}
+        {% toggle_unread user=request.user %}
+        
+        <div class="center-text">
+            {% pages objs=all_messages %}
+        </div>
+    </div>
+    <div class="six wide column sidefeed">
+        {% custom_feed feed_type='messages' objs=all_messages title='Messages by'%}
+    </div>
+</div>
 
 
 {% endblock %}

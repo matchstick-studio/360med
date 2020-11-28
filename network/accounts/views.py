@@ -1,6 +1,5 @@
 import logging
 from mistune import markdown
-from allauth.socialaccount.models import SocialApp
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import logout, login
@@ -30,7 +29,7 @@ from ratelimit.decorators import ratelimit
 from . import forms, tasks
 from .auth import validate_login, send_verification_email
 from .const import *
-from .models import User, Profile, Message, Logger
+from .models import User, Profile, UserVerification, Message, Logger
 from .tokens import account_verification_token
 from .util import now, get_uuid
 
@@ -311,7 +310,8 @@ def user_signup(request):
             tasks.verification_email.spool(user=user)
             messages.info(request, msg)
 
-            return redirect("/")
+            # so rather than just send people to the homepage post-reg, we need them to fill another form to validate their info
+            return redirect(reverse("verification", kwargs=dict(pk=user.pk))) # was "/"
 
     else:
         form = forms.SignUpWithCaptcha()
@@ -319,10 +319,37 @@ def user_signup(request):
     context = dict(
         form=form,
         captcha_site_key=settings.RECAPTCHA_PUBLIC_KEY,
-        social_login=SocialApp.objects.all(),
         tab="signup",
     )
     return render(request, "accounts/signup.html", context=context)
+
+def user_verification(request, pk):
+    
+    user = request.user
+    target = User.objects.filter(pk=user.pk).first()
+
+    form = forms.VerificationForm(user=user)
+
+    if request.method == "POST":
+        form = forms.VerificationForm(data=request.POST, user=user)
+        if form.is_valid():
+            licence=form.cleaned_data["licence"]
+            licence_img=form.cleaned_data["licence_img"]
+            verification = UserVerification.objects.filter(user=target).first()
+            verification.licence = licence
+            verification.licence_img = licence_img
+            verification.save()
+            messages.success(request, "Your details have been uploaded. You will have full access once they have been verified.")
+        
+        else:
+            errs = ",".join([err for err in form.non_field_errors()])
+            messages.error(request, errs)
+
+        return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
+
+    context = dict(form=form, user=user)
+    
+    return render(request, "accounts/verify_account.html", context=context)
 
 
 @login_required
@@ -415,7 +442,7 @@ def user_login(request):
 
         messages.error(request, mark_safe(form.errors))
 
-    context = dict(form=form, tab="login", social_login=SocialApp.objects.all())
+    context = dict(form=form, tab="login")
     return render(request, "accounts/login.html", context=context)
 
 

@@ -6,7 +6,7 @@ from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 from django.contrib.auth.models import User
 from django.conf import settings
-from .models import Profile, UserImage
+from .models import Profile, UserImage, UserVerification
 from . import auth, util
 
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
@@ -372,3 +372,19 @@ class SubscriptionsForm(forms.Form):
         my_tags = self.cleaned_data["my_tags"]
         my_tags = ",".join(list(set(my_tags.split(","))))
         return validate_tags(tags=my_tags)
+
+class VerificationForm(forms.Form):
+    licence_img = forms.ImageField(
+        required=True,
+        validators=[FileExtensionValidator(allowed_extensions=IMG_EXTENTIONS)],
+    )
+    licence = forms.CharField(
+        label="Licence Number", 
+        max_length=100, 
+        required=True, 
+        help_text="The number assigned to you by the national Medical Practitioners Association")
+
+    def __init__(self, user=None, *args, **kwargs):
+
+        self.user = user
+        super(VerificationForm, self).__init__(*args, **kwargs)
