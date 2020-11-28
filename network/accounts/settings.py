@@ -60,11 +60,6 @@ MESSAGES_PER_PAGE = 5
 RECAPTCHA_PUBLIC_KEY = ""
 RECAPTCHA_PRIVATE_KEY = ""
 
-# Django allauth settings.
-SOCIALACCOUNT_EMAIL_VERIFICATION = None
-SOCIALACCOUNT_EMAIL_REQUIRED = False
-SOCIALACCOUNT_QUERY_EMAIL = True
-
 
 # Other settings
 ACCOUNT_AUTHENTICATION_METHOD = "email"
@@ -80,8 +75,6 @@ ACCOUNT_USER_MODEL_EMAIL_FIELD = "email"
 LOGIN_REDIRECT_URL = "/"
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 
-SOCIALACCOUNT_ADAPTER = "network.accounts.adapter.SocialAccountAdapter"
-
 ACCOUNTS_APPS = [
 
     # Accounts configuration.
@@ -90,9 +83,6 @@ ACCOUNTS_APPS = [
     # Allauth templates come last.
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.github',
 ]
 
 # Should the server look up locations in a task.
@@ -103,22 +93,3 @@ INSTALLED_APPS = DEFAULT_APPS + ACCOUNTS_APPS + EMAILER_APP + PAGEDOWN_APP
 AUTHENTICATION_BACKENDS += ["allauth.account.auth_backends.AuthenticationBackend"]
 
 ROOT_URLCONF = 'network.accounts.urls'
-
-# List of social login clients tuples.
-# ( name, client_id, secret )
-
-# Default clients redirect to localhost.
-# Default clients may not be operational. See the
-# django allauth documentation on how to set them up.
-
-#
-# Callback example settings:
-#
-# http://localhost:8000/accounts/social/google/login/callback/
-# http://localhost:8000/accounts/social/github/login/callback/
-#
-SOCIAL_CLIENTS = [
-
-    # ("Google", "A", "B"),
-    # ("GitHub", "A", "B")
-]

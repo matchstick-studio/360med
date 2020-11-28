@@ -20,51 +20,6 @@ class AccountsConfig(AppConfig):
 def init_app(sender, **kwargs):
     init_site()
     init_users()
-    init_social()
-
-
-def init_social():
-    """Initialize social account providers."""
-
-    from allauth.socialaccount.models import SocialApp
-    from allauth.socialaccount.providers import registry
-    from django.contrib.sites.models import Site
-
-    # Populate the provider map based existing apps.
-    providers = dict()
-    for provider in registry.get_list():
-        providers[provider.name] = provider
-
-    # Create social apps as needed.
-    for client in settings.SOCIAL_CLIENTS:
-
-        name, client_id, client_secret = client
-
-        # Check the app for existence.
-        app = SocialApp.objects.filter(name=name)
-
-        # Update the id and secrets to apply any changes that might have been made.
-        if app.exists():
-            SocialApp.objects.filter(name=name).update(client_id=client_id, secret=client_secret)
-            continue
-
-        # Create a new social app.
-        logger.info(f"Creating social social app: {name}")
-
-        # Identify the social app.
-        provider = providers.get(name)
-
-        if not provider:
-            logger.error(f"Invalid provider name: {name}")
-            continue
-
-        # Create the provider here.
-        site = Site.objects.filter(domain=settings.SITE_DOMAIN).first()
-
-        app = SocialApp.objects.create(provider=provider.id, client_id=client_id, name=name,
-                                       secret=client_secret)
-        app.sites.add(site)
-        app.save()
 
 
 def init_users():
