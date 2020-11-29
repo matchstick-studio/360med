@@ -63,6 +63,7 @@
         repo: "{{ engine_git }}"
         dest: "{{ engine_dir }}"
         update: yes
+        force: yes
 
     - name: Link directory to the home
       file:
