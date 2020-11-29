@@ -5,13 +5,13 @@
     <div class="ui stackable grid">
 
         <div class="three wide column">
+            {% include 'banners/top-banner.html' %}
             {% block sideblock %}
             SIDE BLOCK
             {% endblock %}
         </div>
 
         <div class="nine wide column">
-            {% include 'banners/top-banner.html' %}
             {% block body %}
                 MAIN BODY
             {% endblock %}

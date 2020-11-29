@@ -44,7 +44,8 @@ def edit_profile(request):
     initial = dict(
         username=user.username,
         email=user.email,
-        name=user.profile.name,
+        first_name=user.first_name,
+        last_name=user.last_name,
         location=user.profile.location,
         gender=user.profile.gender,
         alt_email_a=user.profile.alt_email_a,
@@ -69,10 +70,11 @@ def edit_profile(request):
             # Update the email and username of User object.
             username = form.cleaned_data["username"]
             email = form.cleaned_data["email"]
-            User.objects.filter(pk=user.pk).update(username=username, email=email)
+            first_name = form.cleaned_data["first_name"]
+            last_name = form.cleaned_data["last_name"]
+            User.objects.filter(pk=user.pk).update(username=username, email=email, first_name=first_name, last_name=last_name)
             # Update user information in Profile object.
             Profile.objects.filter(user=user).update(
-                name=form.cleaned_data["name"],
                 location=form.cleaned_data["location"],
                 phone=form.cleaned_data["phone"],
                 alt_email_a=form.cleaned_data["alt_email_a"],
@@ -311,7 +313,7 @@ def user_signup(request):
             messages.info(request, msg)
 
             # so rather than just send people to the homepage post-reg, we need them to fill another form to validate their info
-            return redirect(reverse("verification", kwargs=dict(pk=user.pk))) # was "/"
+            return redirect(reverse("verification")) # was "/"
 
     else:
         form = forms.SignUpWithCaptcha()
@@ -323,7 +325,7 @@ def user_signup(request):
     )
     return render(request, "accounts/signup.html", context=context)
 
-def user_verification(request, pk):
+def user_verification(request):
 
     if request.user.is_anonymous:
         messages.error(request, "Must be logged in to edit profile")
@@ -331,27 +333,26 @@ def user_verification(request, pk):
     
     user = request.user
 
-    form = forms.VerificationForm()
-
     if request.method == "POST":
-        form = forms.VerificationForm(request.POST, request.FILES)
+        form = forms.VerificationForm(user, request.POST, request.FILES)
         if form.is_valid():
-            form.save(commit=False)
-            form.user = user
-            form.save()
+            verification = form.save()
             log_text = f"Verification data submitted for user={user.pk}; handle={user.profile.uid} ( {user.profile.name} )"
             Logger.objects.create(
                 user=request.user, log_text=log_text, action=Logger.VERIFY
             )
             messages.success(request, "Your details have been uploaded. You will have full access once they have been verified.")
 
+            return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
+
         else:
             errs = ",".join([err for err in form.non_field_errors()])
             messages.error(request, errs)
 
-        return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
+    else:
+        form = forms.VerificationForm(user=user)
 
-    context = dict(form=form)
+    context = dict(user=user, form=form)
     
     return render(request, "accounts/verify_account.html", context=context)
 

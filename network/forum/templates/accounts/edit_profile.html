@@ -23,14 +23,16 @@
         
             {% form_errors form %}
         
-            <div class="fields">
+            <div class="three fields">
         
                 <div class="required form-field field">
-                    <label><i class="address card icon"></i> Full Name </label>
-                    {{ form.name }}
-                    <div class="muted">
-                        Displayed name
-                    </div>
+                    <label>First Name </label>
+                    {{ form.first_name }}
+                </div>
+
+                <div class="required form-field field">
+                    <label>Last Name </label>
+                    {{ form.last_name }}
                 </div>
         
                 <div class="required form-field field">

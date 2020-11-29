@@ -140,7 +140,8 @@ class LogoutForm(forms.Form):
 
 
 class EditProfile(forms.Form):
-    name = forms.CharField(label="Name", max_length=100, required=True)
+    first_name = forms.CharField(label="First Name", max_length=100, required=True)
+    last_name = forms.CharField(label="Last Name", max_length=100, required=True)
     email = forms.CharField(label="Email", max_length=100, required=True, disabled=True)
     username = forms.CharField(label="Handler", max_length=100, required=True)
     location = forms.CharField(label="Location", max_length=100, required=False)
@@ -174,6 +175,22 @@ class EditProfile(forms.Form):
         max_length=100,
         required=False,
         help_text="""e.g MBChB, M MED OBS & GYN""",
+    )
+
+    occupation = forms.ChoiceField(
+        required=True,
+        label="Occupation",
+        choices=Profile.OCCUPATION_CHOICES,
+        widget=forms.Select(attrs={"class": "ui dropdown"}),
+        help_text="""What do you do?""",
+    )
+
+    expertise = forms.CharField(
+        label="Expertise",
+        max_length=500,
+        required=False,
+        help_text="""Your specific areas of expertise or interest""",
+        widget=forms.HiddenInput(),
     )
 
     affiliations = forms.CharField(
@@ -378,7 +395,28 @@ class SubscriptionsForm(forms.Form):
         my_tags = ",".join(list(set(my_tags.split(","))))
         return validate_tags(tags=my_tags)
 
-class VerificationForm(forms.ModelForm):
-   class Meta:
-       model = UserVerification
-       fields = '__all__'
+class VerificationForm(forms.Form):
+
+    licence = forms.CharField(
+    max_length=100,
+    required=True,
+    help_text="""As it appears on your licence""",
+    )
+
+    licence_img = forms.ImageField(
+    required=False,
+    validators=[FileExtensionValidator(allowed_extensions=IMG_EXTENTIONS)],
+    )
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(VerificationForm, self).__init__(*args, **kwargs)
+
+    def save(self):
+        licence = self.cleaned_data.get("licence")
+        licence_img = self.cleaned_data.get("licence_img")
+        verification = UserVerification.objects.create(licence=licence, licence_img=licence_img)
+        verification.user = self.user
+        verification.save()
+
+        return verification

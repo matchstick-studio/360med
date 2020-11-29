@@ -11,9 +11,9 @@
 
 {% block content %}
 
-<div class="ui middle aligned grid">
+<div class="ui stackable grid">
 
-    <div class="column">
+    <div class="twelve wide column">
 
         <div class="ui image header" id="logo">
             <a href="/"><img class="ui image" src="{% static "images/logo.png" %}"></a>
@@ -25,15 +25,16 @@
             Verify that you are a Africa-based clinician
         </div>
         <p>To maintain integrity of the 360Med Community and ensure better engagement, we require all our users to be verified as medical practitioners. Choose one of the following methods to get verified. We’ll update your status within 48 hours.</p>
-        <div class="muted">
-            If you decide to skip this step, you will have very limited access to the full features of the community.
-        </div>
 
         <a class="ui cancel button" href="/">
             <i class="undo icon"></i>Skip verification
         </a>
 
-        <form method="post" class="ui large form attached fluid" action="">
+        <div class="muted">
+            If you decide to skip this step, you will have very limited access to the full features of the community.
+        </div>
+
+        <form method="post" class="ui large form attached fluid" enctype="multipart/form-data">
             {% csrf_token %}
             
             {% form_errors form %}
