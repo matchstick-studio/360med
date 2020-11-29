@@ -324,30 +324,34 @@ def user_signup(request):
     return render(request, "accounts/signup.html", context=context)
 
 def user_verification(request, pk):
+
+    if request.user.is_anonymous:
+        messages.error(request, "Must be logged in to edit profile")
+        return redirect("/")
     
     user = request.user
-    target = User.objects.filter(pk=user.pk).first()
 
-    form = forms.VerificationForm(user=user)
+    form = forms.VerificationForm()
 
     if request.method == "POST":
-        form = forms.VerificationForm(data=request.POST, user=user)
+        form = forms.VerificationForm(request.POST, request.FILES)
         if form.is_valid():
-            licence=form.cleaned_data["licence"]
-            licence_img=form.cleaned_data["licence_img"]
-            verification = UserVerification.objects.filter(user=target).first()
-            verification.licence = licence
-            verification.licence_img = licence_img
-            verification.save()
+            form.save(commit=False)
+            form.user = user
+            form.save()
+            log_text = f"Verification data submitted for user={user.pk}; handle={user.profile.uid} ( {user.profile.name} )"
+            Logger.objects.create(
+                user=request.user, log_text=log_text, action=Logger.VERIFY
+            )
             messages.success(request, "Your details have been uploaded. You will have full access once they have been verified.")
-        
+
         else:
             errs = ",".join([err for err in form.non_field_errors()])
             messages.error(request, errs)
 
         return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
 
-    context = dict(form=form, user=user)
+    context = dict(form=form)
     
     return render(request, "accounts/verify_account.html", context=context)
 

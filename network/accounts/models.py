@@ -336,10 +336,11 @@ class Profile(models.Model):
 
 class Logger(models.Model):
     # Put in delte
-    MODERATING, CREATION, EDIT, LOGIN, LOGOUT, BROWSING = range(6)
+    MODERATING, VERIFY, CREATION, EDIT, LOGIN, LOGOUT, BROWSING = range(7)
 
     ACTIONS_CHOICES = [
         (MODERATING, "Preformed a moderation action."),
+        (VERIFY, "Added verification data"),
         (CREATION, "Created an object."),
         (EDIT, "Edited an object."),
         (LOGIN, "Logged in to the site."),

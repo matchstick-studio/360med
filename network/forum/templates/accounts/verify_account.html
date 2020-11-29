@@ -29,16 +29,15 @@
             If you decide to skip this step, you will have very limited access to the full features of the community.
         </div>
 
-        <a class="ui cancel button" href="">
+        <a class="ui cancel button" href="/">
             <i class="undo icon"></i>Skip verification
         </a>
 
         <form method="post" class="ui large form attached fluid" action="">
-        
+            {% csrf_token %}
+            
             {% form_errors form %}
             <div class="ui basic segment">
-        
-                {% csrf_token %}
         
                 <div class="required field">
                     <label>Licence Number/ID</label>

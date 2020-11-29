@@ -33,15 +33,25 @@
                 <div class="ui basic segment">
             
                     {% csrf_token %}
-            
-                    <div class="required field">
-                        <label>Full name</label>
-                        {{ form.name }}
+
+                    <div class="two fields">
+                        <div class="required field">
+                            <label>{{ form.first_name.label }}</label>
+                            {{ form.first_name }}
+                        </div>
+                    
+                        <div class="required field">
+                            <label>{{ form.last_name.label }}</label>
+                            {{ form.last_name }}
+                        </div>
                     </div>
             
                     <div class="required field">
-                        <label>Email</label>
+                        <label>Email Address</label>
                         {{ form.email }}
+                        <div class="muted">
+                            Your work email would be perfect
+                        </div>
                     </div>
             
                     <div class="two fields">

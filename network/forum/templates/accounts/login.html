@@ -19,10 +19,6 @@
 
         <form class="ui large form" method="post" action="{% url 'login' %}">
 
-            <div class="ui error message">
-                {{ form.errors }}
-            </div>
-
             <div class="ui basic segment">
 
                 <div class="ui large header">
@@ -30,6 +26,11 @@
                 </div>
 
                 {% csrf_token %}
+
+                <div class="ui error message">
+                    {{ form.errors }}
+                </div>
+
 
                 <div class="field">
                     <label>Email</label>

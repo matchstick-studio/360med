@@ -1,1 +1,12 @@
-{# This fragment gets inserted above all content #}
+{% if user.profile.med_verified == False %}
+<div class="ui negative message">
+    <i class="close icon"></i>
+    <div class="header">
+        Verify your account.
+    </div>
+    <p>Your account will be limited until you finish verification</p>
+    <a class="ui negative button" href="{% url 'verification' user.pk %}">
+        <i class="check icon"></i>Get verified
+    </a>
+</div>
+{% endif %}

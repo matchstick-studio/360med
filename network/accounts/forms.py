@@ -40,10 +40,14 @@ def check_size(fobj, maxsize=0.3, field=None):
 
 class SignUpForm(forms.Form):
 
-    name = forms.CharField(
+    first_name = forms.CharField(
         max_length=30, 
-        label="Full Name",
-        help_text="Provide your full names"
+        label="First Name",
+    )
+
+    last_name = forms.CharField(
+        max_length=30, 
+        label="Last Name"
     )
 
     password1 = forms.CharField(
@@ -109,11 +113,12 @@ class SignUpForm(forms.Form):
 
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password1")
-        """ name = email.split("@")[0] """
-        name = self.cleaned_data.get("name")
+        first_name = self.cleaned_data.get("first_name")
+        last_name = self.cleaned_data.get("last_name")
         occupation = self.cleaned_data.get("occupation")
         expertise = self.cleaned_data["expertise"]
-        user = User.objects.create(email=email, first_name=name)
+        name = self.cleaned_data.get("first_name") + ' ' + self.cleaned_data.get("last_name")
+        user = User.objects.create(email=email, first_name=first_name, last_name=last_name)
         user.set_password(password)
         user.save()
 
@@ -373,18 +378,7 @@ class SubscriptionsForm(forms.Form):
         my_tags = ",".join(list(set(my_tags.split(","))))
         return validate_tags(tags=my_tags)
 
-class VerificationForm(forms.Form):
-    licence_img = forms.ImageField(
-        required=True,
-        validators=[FileExtensionValidator(allowed_extensions=IMG_EXTENTIONS)],
-    )
-    licence = forms.CharField(
-        label="Licence Number", 
-        max_length=100, 
-        required=True, 
-        help_text="The number assigned to you by the national Medical Practitioners Association")
-
-    def __init__(self, user=None, *args, **kwargs):
-
-        self.user = user
-        super(VerificationForm, self).__init__(*args, **kwargs)
+class VerificationForm(forms.ModelForm):
+   class Meta:
+       model = UserVerification
+       fields = '__all__'
