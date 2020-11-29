@@ -61,7 +61,12 @@ WSGI_APPLICATION = 'conf.run.site_wsgi.application'
 
 SESSION_COOKIE_SECURE = True
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+ANYMAIL = {
+    "MAILGUN_API_KEY": '',
+    "MAILGUN_SENDER_DOMAIN": '',
+    "MAILGUN_API_URL": '',
+}
 
 try:
     # Attempts to load site secrets.
