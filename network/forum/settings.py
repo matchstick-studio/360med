@@ -140,7 +140,7 @@ MIDDLEWARE += [
 REMAP_TYPE_DISPLAY = False
 
 # Post types displayed when creating, empty list displays all types.
-ALLOWED_POST_TYPES = ["Forum","Job","Event",]
+ALLOWED_POST_TYPES = ["Forum",]
 
 
 # Import the default pagedown css first, then our custom CSS sheet
