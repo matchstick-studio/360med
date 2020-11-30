@@ -18,7 +18,7 @@ from django.shortcuts import reverse
 from network.accounts.models import Profile, Logger
 from . import util
 from .const import *
-from .models import Post, Event, Vote, PostView, Subscription
+from .models import Post, Event, Job, Vote, PostView, Subscription
 
 User = get_user_model()
 
@@ -260,6 +260,17 @@ def create_event(author, title, content, tag_val=""):
 
     event = Event.objects.create(title=title, content=content, tag_val=tag_val, author=author)
     return event
+
+def create_job(author, title, content):
+
+    # Check if a post with this content already exists.
+    job = Job.objects.filter(content=content, author=author).first()
+    if job:
+        logger.info("Job with this content already exists.")
+        return job
+
+    job = Job.objects.create(title=title, content=content, author=author)
+    return job
 
 
 def create_subscription(post, user, sub_type=None, update=False):

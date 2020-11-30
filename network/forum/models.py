@@ -635,3 +635,81 @@ class Event(models.Model):
         delta = util.now() - self.creation_date
         return delta.days
 
+class Job(models.Model):
+    "Represents a job"
+
+    # Event title.
+    title = models.CharField(max_length=200, null=False, db_index=True)
+
+    # The user that originally created the event.
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    # This is the text that the user enters.
+    content = models.TextField(default='')
+
+    # This is the  HTML that gets displayed.
+    html = models.TextField(default='')
+
+    # Location of the event
+    institution = models.CharField(max_length=200, null=False, default='', db_index=True)
+
+    # day of the event
+    apply_before = models.DateTimeField(default=timezone.now, db_index=True)
+
+    # external link to the event
+    external_link = models.URLField(default='')
+
+    # Event creation date.
+    creation_date = models.DateTimeField(db_index=True)
+
+    # What site does the event belong to.
+    site = models.ForeignKey(Site, null=True, on_delete=models.SET_NULL)
+
+    # Unique id for the event.
+    uid = models.CharField(max_length=32, unique=True, db_index=True)
+
+    def json_data(self):
+        data = {
+            'id': self.id,
+            'uid': self.uid,
+            'title': self.title,
+            'creation_date': util.datetime_to_iso(self.creation_date),
+            'author_id': self.author.id,
+            'author_uid': self.author.profile.uid,
+            'author': self.author.name,
+            'xhtml': self.html,
+            'content': self.content,
+            'institution': self.location,
+            'external_link': self.external_link,
+            'apply_before': self.event_date,
+            'url': f'{settings.PROTOCOL}://{settings.SITE_DOMAIN}{self.get_absolute_url()}',
+        }
+        return data
+
+    def num_lines(self, offset=0):
+        """
+        Return number of lines in event content
+        """
+        return len(self.content.split("\n")) + offset
+
+    def save(self, *args, **kwargs):
+
+        # Needs to be imported here to avoid circular imports.
+        from network.forum import markdown
+
+        self.creation_date = self.creation_date or util.now()
+
+        # Sanitize the event body.
+        self.html = markdown.parse(self.content, event=self, clean=True, escape=False)
+
+        # This will trigger the signals
+        super(Job, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "%s: %s (pk=%s)" % (self.title, self.pk)
+
+    @property
+    def age_in_days(self):
+        delta = util.now() - self.creation_date
+        return delta.days
+

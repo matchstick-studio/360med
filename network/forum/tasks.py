@@ -88,6 +88,11 @@ def created_event(eid):
     message(f"Created event={eid}")
     pass
 
+@spool(pass_arguments=True)
+def created_job(jid):
+    message(f"Created job={jid}")
+    pass
+
 
 #
 # This timer leads to problems as described in

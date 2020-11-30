@@ -484,6 +484,35 @@ def new_event(request):
 
     return render(request, "new_event.html", context=context)
 
+@login_required
+def new_job(request):
+    """
+    Creates a new job
+    """
+
+    form = forms.JobForm(user=request.user)
+    author = request.user
+    content = ''
+    if request.method == "POST":
+
+        form = forms.JobForm(data=request.POST, user=request.user)
+        content = form.data.get('content', '')
+        if form.is_valid():
+            # Create a new post by user
+            title = form.cleaned_data.get('title')
+            content = form.cleaned_data.get("content")
+            job = auth.create_job(title=title, content=content, author=author)
+
+            tasks.created_job.spool(jid=job.id)
+
+            return redirect(job.get_absolute_url())
+
+    # Action url for the form is the current view
+    action_url = reverse("job_create")
+    context = dict(form=form, tab="new", action_url=action_url, content=content)
+
+    return render(request, "new_job.html", context=context)
+
 
 @post_exists
 @login_required

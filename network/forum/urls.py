@@ -29,6 +29,8 @@ forum_patterns = [
 
     path('new/event/', views.new_event, name='event_create'),
 
+    path('new/job/', views.new_job, name='job_create'),
+
     path('b/list/', views.badge_list, name='badge_list'),
     path('t/list/', views.tags_list, name='tags_list'),
 

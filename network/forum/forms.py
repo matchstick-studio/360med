@@ -240,7 +240,7 @@ class EventForm(forms.Form):
 
     title = forms.CharField(label="Event Title", max_length=200, min_length=4,
                             validators=[valid_title, english_only],
-                            help_text="Enter a descriptive title to encourage better engagement.")
+                            help_text="Enter a descriptive title")
 
     location = forms.CharField(label="Location", max_length=200, min_length=4,
                             required=True,
@@ -302,6 +302,63 @@ class EventForm(forms.Form):
         required_tags(tags)
 
         return ",".join(tags)
+
+    def clean_content(self):
+        content = self.cleaned_data["content"]
+        length = len(content.replace(" ", ""))
+
+        if length < MIN_CHARS:
+            raise forms.ValidationError(f"Too short, place add more than {MIN_CHARS}")
+
+        return content
+
+class JobForm(forms.Form):
+
+    title = forms.CharField(label="Job Title", max_length=200, min_length=4,
+                            validators=[valid_title, english_only],
+                            help_text="Enter title of the position")
+
+    institution = forms.CharField(label="Institution", max_length=200, min_length=4,
+                            required=True,
+                            help_text="Specify who is hiring")
+
+    apply_before = forms.DateField(label="Apply Before",
+                            required=True,
+                            help_text="When is the deadline?",
+                            widget=forms.DateTimeInput()
+                            )
+
+    content = forms.CharField(widget=forms.Textarea,
+                              validators=[english_only],
+                              min_length=MIN_CONTENT, max_length=MAX_CONTENT, label="Job Description", strip=False)
+
+    external_link = forms.URLField(label="External Link", required=False)
+
+    def __init__(self, job=None, user=None, *args, **kwargs):
+        self.job = job
+        self.user = user
+        super(JobForm, self).__init__(*args, **kwargs)
+
+        not_trusted = self.user.is_authenticated and (not self.user.profile.trusted)
+
+        # Untrusted users get a recaptcha field
+        if settings.RECAPTCHA_PRIVATE_KEY and not_trusted:
+            self.fields["captcha"] = ReCaptchaField(widget=ReCaptchaWidget())
+
+    def edit(self):
+        """
+        Edit an existing job.
+        """
+        if self.user != self.job.author and not self.user.profile.is_moderator:
+            raise forms.ValidationError("Only the author or a moderator can edit a job.")
+        data = self.cleaned_data
+        self.job.title = data.get('title')
+        self.job.content = data.get("content")
+        self.job.apply_before = data.get('apply_before')
+        self.job.institution = data.get('institution')
+        self.job.external_link = data.get('external_link')
+        self.job.save()
+        return self.job
 
     def clean_content(self):
         content = self.cleaned_data["content"]
