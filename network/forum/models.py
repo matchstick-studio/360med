@@ -611,6 +611,9 @@ class Event(models.Model):
         """
         return len(self.content.split("\n")) + offset
 
+    def get_absolute_url(self):
+        return self.url
+
     def save(self, *args, **kwargs):
 
         # Needs to be imported here to avoid circular imports.
@@ -638,10 +641,10 @@ class Event(models.Model):
 class Job(models.Model):
     "Represents a job"
 
-    # Event title.
+    # Job title.
     title = models.CharField(max_length=200, null=False, db_index=True)
 
-    # The user that originally created the event.
+    # The user that originally created the job.
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # This is the text that the user enters.
@@ -650,22 +653,22 @@ class Job(models.Model):
     # This is the  HTML that gets displayed.
     html = models.TextField(default='')
 
-    # Location of the event
+    # Hiring institution
     institution = models.CharField(max_length=200, null=False, default='', db_index=True)
 
-    # day of the event
+    # deadline
     apply_before = models.DateTimeField(default=timezone.now, db_index=True)
 
-    # external link to the event
+    # external link to the job
     external_link = models.URLField(default='')
 
-    # Event creation date.
+    # Job creation date.
     creation_date = models.DateTimeField(db_index=True)
 
-    # What site does the event belong to.
+    # What site does the job belong to.
     site = models.ForeignKey(Site, null=True, on_delete=models.SET_NULL)
 
-    # Unique id for the event.
+    # Unique id for the job.
     uid = models.CharField(max_length=32, unique=True, db_index=True)
 
     def json_data(self):
@@ -679,18 +682,21 @@ class Job(models.Model):
             'author': self.author.name,
             'xhtml': self.html,
             'content': self.content,
-            'institution': self.location,
+            'institution': self.institution,
             'external_link': self.external_link,
-            'apply_before': self.event_date,
+            'apply_before': self.apply_before,
             'url': f'{settings.PROTOCOL}://{settings.SITE_DOMAIN}{self.get_absolute_url()}',
         }
         return data
 
     def num_lines(self, offset=0):
         """
-        Return number of lines in event content
+        Return number of lines in job description
         """
         return len(self.content.split("\n")) + offset
+
+    def get_absolute_url(self):
+        return self.url
 
     def save(self, *args, **kwargs):
 
@@ -699,8 +705,8 @@ class Job(models.Model):
 
         self.creation_date = self.creation_date or util.now()
 
-        # Sanitize the event body.
-        self.html = markdown.parse(self.content, event=self, clean=True, escape=False)
+        # Sanitize the job body.
+        self.html = markdown.parse(self.content, job=self, clean=True, escape=False)
 
         # This will trigger the signals
         super(Job, self).save(*args, **kwargs)
@@ -712,4 +718,3 @@ class Job(models.Model):
     def age_in_days(self):
         delta = util.now() - self.creation_date
         return delta.days
-

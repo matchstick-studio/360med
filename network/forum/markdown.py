@@ -399,7 +399,7 @@ def safe(callable, *args, **kwargs):
         return errmsg
 
 
-def parse(text, post=None, clean=True, escape=True, allow_rewrite=False):
+def parse(text, post=None, event=None, job=None, clean=True, escape=True, allow_rewrite=False):
     """
     Parses markdown into html.
     Expands certain patterns into HTML.
