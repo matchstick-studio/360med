@@ -18,7 +18,7 @@ from django.shortcuts import reverse
 from network.accounts.models import Profile, Logger
 from . import util
 from .const import *
-from .models import Post, Vote, PostView, Subscription
+from .models import Post, Event, Vote, PostView, Subscription
 
 User = get_user_model()
 
@@ -249,6 +249,17 @@ def create_post(author, title, content, root=None, parent=None, ptype=Post.QUEST
     post = Post.objects.create(title=title, content=content, root=root, parent=parent,
                                type=ptype, tag_val=tag_val, author=author)
     return post
+
+def create_event(author, title, content, tag_val=""):
+
+    # Check if a post with this content already exists.
+    event = Event.objects.filter(content=content, author=author).first()
+    if event:
+        logger.info("Event with this content already exists.")
+        return event
+
+    event = Event.objects.create(title=title, content=content, tag_val=tag_val, author=author)
+    return event
 
 
 def create_subscription(post, user, sub_type=None, update=False):

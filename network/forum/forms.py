@@ -8,7 +8,7 @@ from django.conf import settings
 from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 from network.accounts.models import User
-from .models import Post
+from .models import Post, Event
 from network.forum import models, auth
 
 from .const import *
@@ -236,4 +236,78 @@ class PostModForm(forms.Form):
 
         return self.cleaned_data
 
+class EventForm(forms.Form):
 
+    title = forms.CharField(label="Event Title", max_length=200, min_length=4,
+                            validators=[valid_title, english_only],
+                            help_text="Enter a descriptive title to encourage better engagement.")
+
+    location = forms.CharField(label="Location", max_length=200, min_length=4,
+                            required=True,
+                            help_text="Where will the event take place?")
+
+    event_date = forms.DateField(label="Event Date",
+                            required=True,
+                            help_text="When is the event?",
+                            widget=forms.DateTimeInput()
+                            )
+
+    tag_val = forms.CharField(label="Event tags (optional)", max_length=50, required=False, validators=[valid_tag],
+                              help_text="""
+                              Pick a tag for your event or type and hit ENTER to create one.
+                              """,
+                              widget=forms.HiddenInput())
+
+    content = forms.CharField(widget=forms.Textarea,
+                              validators=[english_only],
+                              min_length=MIN_CONTENT, max_length=MAX_CONTENT, label="Event Description", strip=False)
+
+    external_link = forms.URLField(label="External Link", required=False)
+
+    def __init__(self, event=None, user=None, *args, **kwargs):
+        self.event = event
+        self.user = user
+        super(EventForm, self).__init__(*args, **kwargs)
+
+        not_trusted = self.user.is_authenticated and (not self.user.profile.trusted)
+
+        # Untrusted users get a recaptcha field
+        if settings.RECAPTCHA_PRIVATE_KEY and not_trusted:
+            self.fields["captcha"] = ReCaptchaField(widget=ReCaptchaWidget())
+
+    def edit(self):
+        """
+        Edit an existing event.
+        """
+        if self.user != self.event.author and not self.user.profile.is_moderator:
+            raise forms.ValidationError("Only the author or a moderator can edit an event.")
+        data = self.cleaned_data
+        self.event.title = data.get('title')
+        self.event.content = data.get("content")
+        self.event.event_date = data.get('event_date')
+        self.event.location = data.get('location')
+        self.event.external_link = data.get('external_link')
+        self.event.tag_val = data.get('tag_val')
+        self.event.lastedit_user = self.user
+        self.event.save()
+        return self.event
+
+    def clean_tag_val(self):
+        """
+        Take out duplicates
+        """
+        tag_val = self.cleaned_data["tag_val"] or 'tag1, tag2 '
+        tags = set([x for x in tag_val.split(",") if x])
+
+        required_tags(tags)
+
+        return ",".join(tags)
+
+    def clean_content(self):
+        content = self.cleaned_data["content"]
+        length = len(content.replace(" ", ""))
+
+        if length < MIN_CHARS:
+            raise forms.ValidationError(f"Too short, place add more than {MIN_CHARS}")
+
+        return content

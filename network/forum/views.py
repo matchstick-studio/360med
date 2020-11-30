@@ -19,7 +19,7 @@ from taggit.models import Tag
 from network.accounts.models import Profile
 from network.forum import forms, auth, tasks, util, search
 from network.forum.const import *
-from network.forum.models import Post, Vote, Badge
+from network.forum.models import Post, Event, Vote, Badge
 
 
 User = get_user_model()
@@ -451,6 +451,38 @@ def new_post(request):
                    content=content, users_str=users_str)
 
     return render(request, "new_post.html", context=context)
+
+@login_required
+def new_event(request):
+    """
+    Creates a new event
+    """
+
+    form = forms.EventForm(user=request.user)
+    author = request.user
+    tag_val = content = ''
+    if request.method == "POST":
+
+        form = forms.EventForm(data=request.POST, user=request.user)
+        tag_val = form.data.get('tag_val')
+        content = form.data.get('content', '')
+        if form.is_valid():
+            # Create a new post by user
+            title = form.cleaned_data.get('title')
+            content = form.cleaned_data.get("content")
+            tag_val = form.cleaned_data.get('tag_val')
+            event = auth.create_event(title=title, content=content, tag_val=tag_val, author=author)
+
+            tasks.created_event.spool(eid=event.id)
+
+            return redirect(event.get_absolute_url())
+
+    # Action url for the form is the current view
+    action_url = reverse("event_create")
+    context = dict(form=form, tab="new", tag_val=tag_val, action_url=action_url,
+                   content=content)
+
+    return render(request, "new_event.html", context=context)
 
 
 @post_exists

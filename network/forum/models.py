@@ -1,4 +1,5 @@
 import logging
+from django.utils import timezone
 
 import bleach
 from django.conf import settings
@@ -542,4 +543,95 @@ class Space(models.Model):
     def get_absolute_url(self):
         url = reverse("space_view", kwargs=dict(uid=self.root.uid))
         return url if self.is_toplevel else "%s#%s" % (url, self.uid)
+
+class Event(models.Model):
+    "Represents an event"
+
+    # Event title.
+    title = models.CharField(max_length=200, null=False, db_index=True)
+
+    # The user that originally created the event.
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    # This is the text that the user enters.
+    content = models.TextField(default='')
+
+    # This is the  HTML that gets displayed.
+    html = models.TextField(default='')
+
+    # Location of the event
+    location = models.CharField(max_length=200, null=False, default='', db_index=True)
+
+    # day of the event
+    event_date = models.DateTimeField(default=timezone.now, db_index=True)
+
+    # external link to the event
+    external_link = models.URLField(default='')
+
+    # The tag value is the canonical form of the event's tags
+    tag_val = models.CharField(max_length=100, default="", blank=True, verbose_name="tags")
+
+    # The tag set is built from the tag string and used only for fast filtering
+    tags = TaggableManager()
+
+    # Event creation date.
+    creation_date = models.DateTimeField(db_index=True)
+
+    # What site does the event belong to.
+    site = models.ForeignKey(Site, null=True, on_delete=models.SET_NULL)
+
+    # Unique id for the event.
+    uid = models.CharField(max_length=32, unique=True, db_index=True)
+
+    def parse_tags(self):
+        return [tag.lower() for tag in self.tag_val.split(",") if tag]
+
+    def json_data(self):
+        data = {
+            'id': self.id,
+            'uid': self.uid,
+            'title': self.title,
+            'creation_date': util.datetime_to_iso(self.creation_date),
+            'author_id': self.author.id,
+            'author_uid': self.author.profile.uid,
+            'author': self.author.name,
+            'xhtml': self.html,
+            'content': self.content,
+            'location': self.location,
+            'external_link': self.external_link,
+            'event_date': self.event_date,
+            'tag_val': self.tag_val,
+            'url': f'{settings.PROTOCOL}://{settings.SITE_DOMAIN}{self.get_absolute_url()}',
+        }
+        return data
+
+    def num_lines(self, offset=0):
+        """
+        Return number of lines in event content
+        """
+        return len(self.content.split("\n")) + offset
+
+    def save(self, *args, **kwargs):
+
+        # Needs to be imported here to avoid circular imports.
+        from network.forum import markdown
+
+        self.creation_date = self.creation_date or util.now()
+
+        # Sanitize the event body.
+        self.html = markdown.parse(self.content, event=self, clean=True, escape=False)
+        self.tag_val = self.tag_val.replace(' ', '')
+        # Default tags
+        self.tag_val = self.tag_val or "workshop, tutorial,"
+
+        # This will trigger the signals
+        super(Event, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "%s: %s (pk=%s)" % (self.title, self.pk)
+
+    @property
+    def age_in_days(self):
+        delta = util.now() - self.creation_date
+        return delta.days
 

@@ -83,6 +83,11 @@ def created_post(pid):
     message(f"Created post={pid}")
     pass
 
+@spool(pass_arguments=True)
+def created_event(eid):
+    message(f"Created event={eid}")
+    pass
+
 
 #
 # This timer leads to problems as described in

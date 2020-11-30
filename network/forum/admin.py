@@ -1,6 +1,6 @@
 
 from django.contrib import admin
-from network.forum.models import Post, Subscription, Vote, Space
+from network.forum.models import Post, Event, Subscription, Vote, Space
 
 
 @admin.register(Post)
@@ -11,6 +11,16 @@ class PostAdmin(admin.ModelAdmin):
         (None, {'fields': ('title',)}),
         ('Attributes', {'fields': ('type', 'status', 'sticky',)}),
         ('Content', {'fields': ('content', )}),
+    )
+    search_fields = ('title', 'author__profile__name', 'uid')
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = ('uid', 'title', 'author')
+    ordering = ['title']
+    fieldsets = (
+        (None, {'fields': ('title','location','event_date')}),
+        ('Content', {'fields': ('content', 'external_link')}),
     )
     search_fields = ('title', 'author__profile__name', 'uid')
 
