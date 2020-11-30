@@ -68,7 +68,7 @@ class SignUpForm(forms.Form):
     email = forms.CharField(
         label="Email",
         strip=False,
-        widget=forms.TextInput,
+        widget=forms.TextInput(),
         max_length=254,
         min_length=2,
     )
@@ -247,9 +247,15 @@ class EditProfile(forms.Form):
 
 class LoginForm(forms.Form):
 
-    email = forms.CharField(label="Email", max_length=100)
+    email = forms.CharField(
+        label="Email", 
+        max_length=100,
+        widget=forms.TextInput(attrs={'placeholder': 'Email'})
+    )
     password = forms.CharField(
-        label="Password", max_length=100, widget=forms.PasswordInput
+        label="Password", 
+        max_length=100, 
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password'})
     )
 
 

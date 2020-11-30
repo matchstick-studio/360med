@@ -20,6 +20,41 @@
     <link rel="icon" href="{% static 'images/favicons/favicon.png' %}" type="image/x-icon" />
     {% endblock %}
 
+    {# Load JQuery. #}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    {# Load recaptcha #}
+    {% recaptcha_init %}
+
+    {#  CSS compression. #}
+    {% compress css %}
+    <link href="{% static 'semantic.min.css' %}" rel="stylesheet">
+    <link href="{% static 'prism.css' %}" rel="stylesheet">
+    <link href="{% static 'forum.css' %}{% randparam %}" rel="stylesheet">
+    {% block cssfile %}
+    {% endblock %}
+
+    {% endcompress %}
+
+    {# Javascript compression. #}
+    {% compress js %}
+    <script src="{% static 'semantic.min.js' %}"></script>
+    <script src="{% static 'prism.js' %}"></script>
+    <script src="{% static 'forum.js' %}{% randparam %}"></script>
+    <script src="{% static 'setup.js' %}{% randparam %}"></script>
+    {% block jsfile %}
+    {% endblock %}
+    {% endcompress %}
+
+    {# Optional block header content. #}
+    {% block head %}
+
+    {% endblock %}
+
+    {# Optional css header content. #}
+    {% block css %}
     <style type="text/css">
         .hidden.menu {
             display: none;
@@ -30,18 +65,14 @@
             padding: 1em 0em;
         }
     
-        .masthead .logo.item img {
-            margin-right: 1em;
-        }
-    
         .masthead .ui.menu .ui.button {
             margin-left: 0.5em;
         }
     
         .masthead h1.ui.header {
-            margin-top: 3em;
+            margin-top: 2em;
             margin-bottom: 0em;
-            font-size: 4em;
+            font-size: 3.5em;
             font-weight: normal;
         }
     
@@ -103,16 +134,21 @@
             }
     
             .secondary.pointing.menu .toc.item {
-                display: block;
+                display: inline-block;
+                padding: 0em 0em;
+            }
+            .secondary.pointing.menu div.right.item {
+                display: initial!important;
             }
     
             .masthead.segment {
-                min-height: 350px;
+                min-height: 500px;
+                padding-bottom: 50px;
             }
     
             .masthead h1.ui.header {
                 font-size: 2em;
-                margin-top: 1.5em;
+                margin-top: 2em;
             }
     
             .masthead h2 {
@@ -121,11 +157,11 @@
             }
         }
     </style>
+    {% endblock %}
 
-    {# Load JQuery. #}
+    {# Optional javascaript header content. #}
+    {% block js %}
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script>
         $(document)
             .ready(function () {
@@ -140,53 +176,14 @@
                         onBottomPassedReverse: function () {
                             $('.fixed.menu').transition('fade out');
                         }
-                    })
-                    ;
+                    });
 
                 // create sidebar and attach to menu open
                 $('.ui.sidebar')
-                    .sidebar('attach events', '.toc.item')
-                    ;
+                    .sidebar('attach events', '.toc.item');
 
-            })
-            ;
+            });
     </script>
-
-
-    {# Load recaptcha #}
-    {% recaptcha_init %}
-
-    {#  CSS compression. #}
-    {% compress css %}
-    <link href="{% static 'semantic.min.css' %}" rel="stylesheet">
-    <link href="{% static 'prism.css' %}" rel="stylesheet">
-    <link href="{% static 'forum.css' %}{% randparam %}" rel="stylesheet">
-    {% block cssfile %}
-    {% endblock %}
-
-    {% endcompress %}
-
-    {# Javascript compression. #}
-    {% compress js %}
-    <script src="{% static 'semantic.min.js' %}"></script>
-    <script src="{% static 'prism.js' %}"></script>
-    <script src="{% static 'forum.js' %}{% randparam %}"></script>
-    <script src="{% static 'setup.js' %}{% randparam %}"></script>
-    {% block jsfile %}
-    {% endblock %}
-    {% endcompress %}
-
-    {# Optional block header content. #}
-    {% block head %}
-
-    {% endblock %}
-
-    {# Optional css header content. #}
-    {% block css %}
-    {% endblock %}
-
-    {# Optional javascaript header content. #}
-    {% block js %}
 
     {% endblock %}
 
@@ -195,7 +192,7 @@
 <body class="pushable">
 
     <!-- Following Menu -->
-    <div class="ui large top fixed menu transition hidden">
+    <div class="ui large top fixed hidden menu">
         <div class="ui container">
             <a class="active item">Home</a>
             <a class="item">About</a>
@@ -204,6 +201,9 @@
             <div class="right menu">
                 <div class="item">
                     <a class="ui button">Sign in</a>
+                </div>
+                <div class="item">
+                    <a class="ui primary button">Get Started</a>
                 </div>
             </div>
         </div>
@@ -215,87 +215,120 @@
         <a class="item">About</a>
         <a class="item">Advertise</a>
         <a class="item">Contact</a>
-        <a class="item">Login</a>
-        <a class="item">Signup</a>
+        <a class="item">Sign in</a>
+        <a class="item">Get Started</a>
     </div>
 
 
     <!-- Page Contents -->
     <div class="pusher">
-        <div class="ui inverted vertical masthead segment">
+        <!--background-image:url('{% static "images/hero.jpg" %}');background-repeat:no-repeat;background-size:cover;background-position:center center;-->
+        <div style="" class="ui inverted vertical masthead center aligned segment">
 
             <div class="ui container">
-                <div class="ui large secondary pointing menu">
+                <div class="ui huge secondary inverted pointing menu">
                     <a class="toc item">
                         <i class="sidebar icon"></i>
                     </a>
+                    <a class="toc item" href="/">
+                        <img class="ui small image" src="{% static "images/logo.png" %}">
+                    </a>
                     <a class="active item">Home</a>
-                    <a class="item">Work</a>
-                    <a class="item">Company</a>
-                    <a class="item">Careers</a>
+                    <a class="item">About</a>
+                    <a class="item">Advertise</a>
+                    <a class="item">Contact</a>
                     <div class="right item">
-                        <a class="ui inverted button">Log in</a>
+                        <a class="ui inverted button" href="{% url 'signup' %}">Get Started</a>
                     </div>
                 </div>
             </div>
 
-            <div class="ui stackable middle aligned two column grid">
-                <div class="ten column">
-                    <h1 style="font-size:2.5em" class="ui inverted header">
-                        The largest networking platform for medical professionals in Africa
-                    </h1>
-                    <h2>Connect. Collaborate. Create.</h2>
+            <div class="ui text container">
+                <h1 class="ui inverted header">
+                    The largest networking platform for medical professionals in Africa
+                </h1>
+                <h3>Connect. Collaborate. Create.</h3>
+                <div class="ui divider"></div>
+                <form class="ui equal width inverted large form" method="post" action="{% url 'login' %}">
                 
-                    <a class="ui large primary button" href="{% url 'signup' %}">Get Started <i class="right arrow icon"></i></a>
-                </div>
+                    {% form_errors form %}
 
-                <div class="six column">
-                    <div class="ui segment">
-                        <form class="ui large form" method="post" action="{% url 'login' %}">
-                        
-                            <div class="ui error message">
-                                {{ form.errors }}
-                            </div>
-                        
-                            <div class="ui basic segment">
-                        
-                                <div class="ui large header">
-                                    Welcome back
-                                </div>
-                        
-                                {% csrf_token %}
-                        
-                                <div class="field">
-                                    <label>Email</label>
-                                    {{ form.email }}
-                                </div>
-                        
-                                <div class="field">
-                                    <label>Password</label>
-                                    {{ form.password }}
-                                    <a href="{% url 'password_reset' %}"><i class="question circle icon"></i>Forgot your password?</a>
-                                </div>
-                        
-                                <div class="field">
-                                    <button class="ui large right floated primary button" type="submit">
-                                        <i class="sign in icon"></i>Log In
-                                    </button>
-                                </div>
-                        
-                            </div>
-                        
-                        
-                        </form>
+                    {% csrf_token %}
+                    <div class="three fields">
+                        <div class="field">
+                            {{ form.email }}
+                        </div>
+                    
+                        <div class="field">
+                            {{ form.password }}
+                            <a href="{% url 'password_reset' %}">Forgot your password?</a>
+                        </div>
+                    
+                        <div class="field">
+
+                            <button class="fluid ui large primary submit button" type="submit">
+                                Sign In
+                            </button>
+                        </div>
                     </div>
-
-                    <div class="ui center aligned basic inverted segment">
-                        Don't have an account? <a class="" href="{% url 'signup' %}">Sign up here</a>
-                    </div>
-
-                </div>
+                </form>
+                
+                    Are you new to the 360Med Network? <a class="" href="{% url 'signup' %}">Sign up here</a>
             </div>
 
         </div>
+
+        <div class="ui stripe community vertical segment">
+        <div class="ui three column center aligned divided very relaxed stackable grid container">
+            <div class="row">
+            <div class="column">
+                <h2 class="ui header">
+                Connect
+                </h2>
+                <p>Network with colleagues, classmates and employers at leading hospitals</p>
+            </div>
+            <div class="column">
+                <h2 class="ui header">
+                Collaborate
+                </h2>
+                <p>Gain insight and secrets of the trade from the insiders within the medical profession</p>
+            </div>
+            <div class="column">
+                <h2 class="ui icon header">
+                    Create
+                </h2>
+                <p>Share knowledge with peers and work together to explore your innovative genius.</p>
+            </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="ui inverted vertical footer segment">
+            <div class="ui container">
+                <div class="ui stackable inverted divided equal height stackable grid">
+                    <div class="three wide column">
+                        <h4 class="ui inverted header">About</h4>
+                        <div class="ui inverted link list">
+                            
+                        </div>
+                    </div>
+                    <div class="three wide column">
+                        <h4 class="ui inverted header">Services</h4>
+                        <div class="ui inverted link list">
+                            
+                        </div>
+                    </div>
+                    <div class="seven wide column">
+                        <h4 class="ui inverted header">Important Information</h4>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
 </body>
 

@@ -900,11 +900,11 @@ pre {
 }
 
 
-.secondary {
+/* .secondary {
     display: none !important;
     width: fit-content;
 
-}
+} */
 
 .phone-menus {
     display: none;
