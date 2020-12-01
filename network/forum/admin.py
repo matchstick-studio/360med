@@ -16,13 +16,13 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ('uid', 'title', 'author')
+    list_display = ('uid', 'title', 'location','event_date')
     ordering = ['title']
     fieldsets = (
         (None, {'fields': ('title','location','event_date')}),
         ('Content', {'fields': ('content', 'external_link')}),
     )
-    search_fields = ('title', 'author__profile__name', 'uid')
+    search_fields = ('title',)
 
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):

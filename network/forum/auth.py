@@ -250,7 +250,7 @@ def create_post(author, title, content, root=None, parent=None, ptype=Post.QUEST
                                type=ptype, tag_val=tag_val, author=author)
     return post
 
-def create_event(author, title, content, tag_val=""):
+def create_event(author, title, content, location, event_date, external_link, tag_val=""):
 
     # Check if a post with this content already exists.
     event = Event.objects.filter(content=content, author=author).first()
@@ -258,7 +258,8 @@ def create_event(author, title, content, tag_val=""):
         logger.info("Event with this content already exists.")
         return event
 
-    event = Event.objects.create(title=title, content=content, tag_val=tag_val, author=author)
+    event = Event.objects.create(title=title, content=content, tag_val=tag_val, author=author, 
+            location=location, event_date=event_date, external_link=external_link)
     return event
 
 def create_job(author, title, content):

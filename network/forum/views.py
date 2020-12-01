@@ -2,6 +2,7 @@ import logging
 from datetime import timedelta
 from functools import wraps, lru_cache
 import os
+from django.utils import timezone
 
 from django.db import models, connections
 from django.conf import settings
@@ -141,6 +142,37 @@ def get_posts(user, topic="", tag="", order="", limit=None):
 
     return query
 
+def get_events(user, tag="", order="", limit=None):
+    """
+    Generates a post list on a topic.
+    """
+    query = Event.objects.all()
+
+    if user.is_anonymous or not user.profile.is_moderator:
+        query = query.exclude(Q(spam=Post.SPAM) | Q(status=Post.DELETED))
+    # Filter by tags if specified.
+    if tag:
+        query = query.filter(tags__name=tag.lower())
+
+    # Apply post ordering.
+    if ORDER_MAPPER.get(order):
+        ordering = ORDER_MAPPER.get(order)
+        query = query.order_by(ordering)
+    else:
+        query = query.order_by("-creation_date")
+
+    days = LIMIT_MAP.get(limit, 0)
+    # Apply time limit if required.
+    if days:
+        delta = util.now() - timedelta(days=days)
+        query = query.filter(lastedit_date__gt=delta)
+
+    # Select related information used during rendering.
+    query = query.select_related("author__profile", "lastedit_user__profile")
+
+    return query
+
+
 
 def post_search(request):
 
@@ -216,6 +248,40 @@ def post_list(request, topic=None, cache_key='', extra_context=dict()):
     context.update(extra_context)
     # Render the page.
     return render(request, template_name="post_list.html", context=context)
+
+
+@login_required # hack to ensure post_list view is locked so users need accounts first
+@ensure_csrf_cookie
+def event_list(request, cache_key='', extra_context=dict()):
+    """
+    Post listing. Filters, orders and paginates posts based on GET parameters.
+    """
+    # The user performing the request.
+    user = request.user
+
+    # Parse the GET parameters for filtering information
+    page = request.GET.get('page', 1)
+    order = request.GET.get("order", "")
+    tag = request.GET.get("tag", "")
+    limit = request.GET.get("limit", "")
+
+    # Get posts available to users.
+    events = get_events(user=user, tag=tag, order=order, limit=limit)
+
+    # Create the paginator.
+    paginator = CachedPaginator(cache_key=cache_key, object_list=events, per_page=settings.POSTS_PER_PAGE)
+
+    # Apply the post paging.
+    events = paginator.get_page(page)
+
+    # Set the active tab.
+    tab = tag
+
+    # Fill in context.
+    context = dict(events=events, tab=tab, tag=tag, order=order, limit=limit, avatar=True)
+    context.update(extra_context)
+    # Render the page.
+    return render(request, template_name="event_list.html", context=context)
 
 
 @ratelimit(key=RATELIMIT_KEY,  rate='100/m')
@@ -417,6 +483,24 @@ def post_view(request, uid):
 
     return render(request, "post_view.html", context=context)
 
+@ensure_csrf_cookie
+def event_view(request, uid):
+    "Return a detailed view for specific post"
+
+    # Get the post.
+    event = Event.objects.filter(uid=uid).first()
+
+    if not event:
+        messages.error(request, "Event does not exist.")
+        return redirect("event_list")
+
+    # user string
+    users_str = auth.get_users_str()
+
+    context = dict(event=event, users_str=users_str)
+
+    return render(request, "event_view.html", context=context)
+
 
 @login_required
 def new_post(request):
@@ -460,7 +544,8 @@ def new_event(request):
 
     form = forms.EventForm(user=request.user)
     author = request.user
-    tag_val = content = ''
+    tag_val = content = location = external_link = ''
+    event_date = timezone.now()
     if request.method == "POST":
 
         form = forms.EventForm(data=request.POST, user=request.user)
@@ -471,7 +556,11 @@ def new_event(request):
             title = form.cleaned_data.get('title')
             content = form.cleaned_data.get("content")
             tag_val = form.cleaned_data.get('tag_val')
-            event = auth.create_event(title=title, content=content, tag_val=tag_val, author=author)
+            location = form.cleaned_data.get('location','')
+            external_link = form.cleaned_data.get('external_link','')
+            event_date = form.cleaned_data.get('event_date')
+            event = auth.create_event(title=title, content=content, tag_val=tag_val, author=author,
+                    location=location, event_date=event_date, external_link=external_link)
 
             tasks.created_event.spool(eid=event.id)
 
@@ -479,8 +568,9 @@ def new_event(request):
 
     # Action url for the form is the current view
     action_url = reverse("event_create")
+    users_str = auth.get_users_str()
     context = dict(form=form, tab="new", tag_val=tag_val, action_url=action_url,
-                   content=content)
+                   content=content, users_str=users_str)
 
     return render(request, "new_event.html", context=context)
 

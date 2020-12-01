@@ -8,7 +8,7 @@ from django.conf import settings
 from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 from network.accounts.models import User
-from .models import Post, Event
+from .models import Post, Event, Job
 from network.forum import models, auth
 
 from .const import *
@@ -246,10 +246,10 @@ class EventForm(forms.Form):
                             required=True,
                             help_text="Where will the event take place?")
 
-    event_date = forms.DateField(label="Event Date",
+    event_date = forms.DateTimeField(label="Event Date",
                             required=True,
                             help_text="When is the event?",
-                            widget=forms.DateTimeInput()
+                            input_formats=['%d/%m/%Y %H:%M']
                             )
 
     tag_val = forms.CharField(label="Event tags (optional)", max_length=50, required=False, validators=[valid_tag],
@@ -262,7 +262,7 @@ class EventForm(forms.Form):
                               validators=[english_only],
                               min_length=MIN_CONTENT, max_length=MAX_CONTENT, label="Event Description", strip=False)
 
-    external_link = forms.URLField(label="External Link", required=False)
+    external_link = forms.URLField(label="External Link", required=False, help_text="Optional link with more information")
 
     def __init__(self, event=None, user=None, *args, **kwargs):
         self.event = event
@@ -296,7 +296,7 @@ class EventForm(forms.Form):
         """
         Take out duplicates
         """
-        tag_val = self.cleaned_data["tag_val"] or 'tag1, tag2 '
+        tag_val = self.cleaned_data["tag_val"]
         tags = set([x for x in tag_val.split(",") if x])
 
         required_tags(tags)
@@ -332,7 +332,7 @@ class JobForm(forms.Form):
                               validators=[english_only],
                               min_length=MIN_CONTENT, max_length=MAX_CONTENT, label="Job Description", strip=False)
 
-    external_link = forms.URLField(label="External Link", required=False)
+    external_link = forms.URLField(label="External Link", required=False, help_text="Optional link with more information")
 
     def __init__(self, job=None, user=None, *args, **kwargs):
         self.job = job

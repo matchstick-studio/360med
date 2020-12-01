@@ -553,6 +553,10 @@ class Event(models.Model):
     # The user that originally created the event.
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    # The user that last edited the event 
+    lastedit_user = models.ForeignKey(User, related_name='event_editor', null=True,
+                                      on_delete=models.CASCADE)
+
     # This is the text that the user enters.
     content = models.TextField(default='')
 
@@ -566,7 +570,7 @@ class Event(models.Model):
     event_date = models.DateTimeField(default=timezone.now, db_index=True)
 
     # external link to the event
-    external_link = models.URLField(default='')
+    external_link = models.URLField(default='', null=True, blank=True)
 
     # The tag value is the canonical form of the event's tags
     tag_val = models.CharField(max_length=100, default="", blank=True, verbose_name="tags")
@@ -576,9 +580,6 @@ class Event(models.Model):
 
     # Event creation date.
     creation_date = models.DateTimeField(db_index=True)
-
-    # What site does the event belong to.
-    site = models.ForeignKey(Site, null=True, on_delete=models.SET_NULL)
 
     # Unique id for the event.
     uid = models.CharField(max_length=32, unique=True, db_index=True)
@@ -592,8 +593,10 @@ class Event(models.Model):
             'uid': self.uid,
             'title': self.title,
             'creation_date': util.datetime_to_iso(self.creation_date),
+            'lastedit_user_id': self.lastedit_user.id,
             'author_id': self.author.id,
             'author_uid': self.author.profile.uid,
+            'lastedit_user_uid': self.lastedit_user.profile.uid,
             'author': self.author.name,
             'xhtml': self.html,
             'content': self.content,
@@ -612,14 +615,19 @@ class Event(models.Model):
         return len(self.content.split("\n")) + offset
 
     def get_absolute_url(self):
-        return self.url
+        url = reverse("event_view", kwargs=dict(uid=self.uid))
+        return "%s#%s" % (url, self.uid)
 
     def save(self, *args, **kwargs):
 
         # Needs to be imported here to avoid circular imports.
         from network.forum import markdown
 
+        self.lastedit_user = self.lastedit_user or self.author
         self.creation_date = self.creation_date or util.now()
+        self.uid = self.uid or util.get_uuid(limit=16)
+        self.location = self.location
+        self.external_link = self.external_link
 
         # Sanitize the event body.
         self.html = markdown.parse(self.content, event=self, clean=True, escape=False)
@@ -631,7 +639,7 @@ class Event(models.Model):
         super(Event, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "%s: %s (pk=%s)" % (self.title, self.pk)
+        return "%s (pk=%s)" % (self.title, self.pk)
 
     @property
     def age_in_days(self):
@@ -660,13 +668,10 @@ class Job(models.Model):
     apply_before = models.DateTimeField(default=timezone.now, db_index=True)
 
     # external link to the job
-    external_link = models.URLField(default='')
+    external_link = models.URLField(default='',null=True, blank=True)
 
     # Job creation date.
     creation_date = models.DateTimeField(db_index=True)
-
-    # What site does the job belong to.
-    site = models.ForeignKey(Site, null=True, on_delete=models.SET_NULL)
 
     # Unique id for the job.
     uid = models.CharField(max_length=32, unique=True, db_index=True)
@@ -696,7 +701,8 @@ class Job(models.Model):
         return len(self.content.split("\n")) + offset
 
     def get_absolute_url(self):
-        return self.url
+        url = reverse("job_view", kwargs=dict(uid=self.uid))
+        return "%s#%s" % (url, self.uid)
 
     def save(self, *args, **kwargs):
 
@@ -712,7 +718,7 @@ class Job(models.Model):
         super(Job, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "%s: %s (pk=%s)" % (self.title, self.pk)
+        return "%s (pk=%s)" % (self.title, self.pk)
 
     @property
     def age_in_days(self):

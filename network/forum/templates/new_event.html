@@ -11,6 +11,10 @@ New Post
 <link href="{% static 'autocomplete/at.who.css' %}" rel="stylesheet">
 <link href=" {% static 'pagedown.css' %}" type="text/css" media="all" rel="stylesheet">
 <link href="{% static 'pagedown/demo/browser/demo.css' %}" type="text/css" media="all" rel="stylesheet">
+<!-- XDSoft DateTimePicker -->
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css"
+    integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
 {% endblock %}
 
 {% block js %}
@@ -26,6 +30,9 @@ New Post
 <script src="{% static 'autocomplete/caret.js' %}"></script>
 <script src="{% static 'effects.js' %}{% randparam %}"></script>
 <script src="{% static 'inplace.js' %}{% randparam %}"></script>
+<!-- XDSoft DateTimePicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"
+    integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
 {% endblock %}
 
 {% block container %}
@@ -66,6 +73,12 @@ New Post
                             <p class="muted">{{ form.event_date.help_text }}</p>
                         </div>
 
+                    </div>
+
+                    <div class="field">
+                        <label>{{ form.external_link.label }}</label>
+                        {{ form.external_link }}
+                        <p class="muted">{{ form.external_link.help_text }}</p>
                     </div>
 
                     <div class="field">
@@ -122,4 +135,13 @@ New Post
     var users = "{{ users_str }}".split(',');
     autocomplete_users(users);
 </script>
+
+<script>
+    $(function () {
+        $("#id_event_date").datetimepicker({
+            format: 'd/m/Y H:i',
+        });
+    });
+</script>
+
 {% endblock %}
