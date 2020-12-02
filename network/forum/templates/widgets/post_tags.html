@@ -5,7 +5,7 @@
 <span class="tags {% if spaced %}spaced-tags{% else %}{% endif %}">
     {% for tag in tags %}
         {% if tag %}
-        <a class="ui tags-list trigger-highlight muted" href="{% url 'post_list' %}?tag={{ tag }}">
+        <a class="ui label tags-list trigger-highlight muted" href="{% url 'post_list' %}?tag={{ tag }}">
             #{{ tag }}
         </a>
         {% endif %}

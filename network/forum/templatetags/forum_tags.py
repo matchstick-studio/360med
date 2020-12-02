@@ -519,8 +519,6 @@ def get_post_list(target, request, show=None):
 @register.inclusion_tag("widgets/feed_default.html")
 def default_feed(user):
 
-    recent_events = Post.objects
-
     recent_votes = Vote.objects.filter(
         post__status=Post.OPEN, post__root__status=Post.OPEN
     ).prefetch_related("post")

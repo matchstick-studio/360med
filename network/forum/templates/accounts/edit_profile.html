@@ -6,6 +6,21 @@
 
 {% block content %}
 
+<style>
+
+.phone {
+    display: inline;
+}
+
+.phone.dropdown {
+    width: 40%!important;
+    min-width: 0!important;
+}
+#id_phone_1 {
+    width: 60%;
+}
+</style>
+
 <div class="ui stackable grid">
 
     <div class="four wide column">
@@ -45,39 +60,39 @@
         
             </div>
         
-            <div class="fields">
         
-                <div class="field">
-                    <label><i class="info icon"></i> Short bio</label>
-                    {{ form.text }}
-                    <div class="muted">
-                        {{ form.text.help_text }}
-                    </div>
+            <div class="field">
+                <label><i class="info icon"></i> Short bio</label>
+                {{ form.text }}
+                <div class="muted">
+                    {{ form.text.help_text }}
                 </div>
-        
             </div>
         
-            <div class="fields">
+            <div class="two fields">
         
                 <div class="form-field field">
-                    <div class="muted">
+                    <label>
                         Registered email address
-                    </div>
+                    </label>
                     {{ form.email }}
+                </div>
+
+                <div class="form-field field phone">
                     <label><i class="mobile dark icon"></i> Phone number</label>
                     {{ form.phone }}
                 </div>
-        
+            </div>
+
+            <div class="two fields">
                 <div class="form-field field">
                     <label><i class="envelope icon"></i> Alternative Email A</label>
                     {{ form.alt_email_a }}
+                </div>
+                <div class="form-field field">
                     <label><i class="envelope icon"></i> Alternative Email B</label>
                     {{ form.alt_email_b }}
-                    <div class="muted">
-                        Add one or two secondary email addresses
-                    </div>
                 </div>
-        
             </div>
         
             <div class="fields">

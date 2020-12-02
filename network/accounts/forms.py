@@ -9,7 +9,7 @@ from django.conf import settings
 from .models import Profile, UserImage, UserVerification
 from . import auth, util
 
-from phonenumber_field.widgets import PhoneNumberPrefixWidget
+from .widgets import PhoneNumberPrefixWidget
 
 logger = logging.getLogger("engine")
 
