@@ -1,0 +1,250 @@
+{% extends "forum_base.html" %}
+{% load forum_tags %}
+{% load accounts_tags %}
+
+{% block headtitle %}Edit Profile{% endblock %}
+
+{% block content %}
+
+<div class="ui stackable grid">
+
+    <div class="four wide column">
+        {% include 'accounts/settings_menu.html' with active='edit_account' %}
+    </div>
+
+    <div class="fit twelve wide column">
+
+        <h1>Account Settings</h1>
+
+        <div class="ui divider"></div>
+
+        <div class="ui basic segment">
+
+            <h2>Update Registered Email </h2>
+            
+            <form method="post" id="updateEmailForm" class="ui equal width large form protected-form" action="{% url 'update-email' %}">
+                {% csrf_token %}
+            
+                {% form_errors form %}
+            
+                <div class="form-field field">
+                    <input type="email" name="email" id="newEmailInput" placeholder="Current email: {{ user.email }}" />
+                </div>
+
+                <div class="ui error message" id="error-updateEmailForm">
+                    Please enter new email!
+                </div>
+            
+                <button id="updateEmailConfirmDialog" type="button" class="ui submit green button right floated">
+                    Update Email
+                </button>
+            
+            </form>
+        </div>
+
+        <div class="ui basic segment">
+        
+            <h2>Change Password </h2>
+
+            <form action="{% url 'update-password' %}" method="POST" class="ui large form protected-form" id="updatePasswordForm">
+                {% csrf_token %}
+                
+                    <div class="form-field field">
+                        <input type="password" name="new_password1" id="password1" class="" placeholder="Enter new password">
+                    </div>
+
+                    <div class="form-field field">
+                        <input type="password" name="new_password2" id="password2" class="" placeholder="Re-type new password">
+                    </div>
+
+                    <div class="ui error message" id="error-updatePasswordForm">
+                        Passwords must match
+                    </div>
+        
+                <button id="updatePasswordConfirmDialog" type="submit" class="ui submit green button right floated" data-target="#updatePasswordConfirmDialog">Update Password</button>
+            </form>
+
+        </div>
+        
+        <div class="ui basic segment">
+            <h3>Danger Zone</h3>
+        
+            <button id="delete_account" class="ui negative button" type="button">Delete Account</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modals -->
+
+{# Delete account confirmation modal #}
+<div class="ui tiny modal delete_account">
+    <div class="header">Delete Your Account</div>
+    <div class="content">
+        <form class="ui large form" action="{% url 'delete' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="ui negative message">
+                <i class="close icon"></i>
+                <div class="header">
+                    DANGER: You will lose everything!
+                </div>
+                <p>Are you sure about this?
+                </p>
+            </div>
+
+            {{ delete_user_form }}
+
+        </form>
+    </div>
+    <div class="actions">
+        <div class="ui negative button">Just delete it</div>
+        <div class="ui cancel button">Cancel</div>
+    </div>
+</div>
+{# End delete account modal #}
+
+{# Update email modal #}
+<div class="ui tiny modal update_email">
+    <div class="header">Confirm Email Update</div>
+    <div class="content">
+
+        <label for="password" class="form-label">Enter your password</label>
+        <input type="password" name="password" id="updateEmailPassword" form="updateEmailForm" class="form-control" placeholder="Password">
+
+    </div>
+    <div class="actions">
+        <div class="ui approve button">Cancel</div>
+        <input type="submit" class="ui positive button" form="updateEmailForm" value="Confirm">
+    </div>
+</div>
+{# End delete account modal #}
+
+{# Change password modal #}
+<div class="ui tiny modal update_password">
+    <div class="header">Confirm Password Update</div>
+    <div class="content">
+        <form class="ui large form">
+
+        <label for="old_password" class="form-label">Enter your current password</label>
+        <input type="password" name="old_password" id="updatePasswordPassword" class="form-control"
+            placeholder="Password">
+
+        </form>
+    </div>
+    <div class="actions">
+        <div class="ui approve button">Cancel</div>
+        <input type="submit" class="ui positive button" value="Update Password">
+    </div>
+</div>
+{# end change password modal #}
+
+<!-- end Modals -->
+
+<script>
+    /* update email modal */
+    $(function () {
+        $("#updateEmailConfirmDialog").click(function () {
+            $(".update_email").modal('show');
+        });
+        $(".update_email").modal({
+            closable: true
+        });
+    });
+    /* delete account confirmation modal */
+        $(function () {
+            $("#delete_account").click(function () {
+                $(".delete_account").modal('show');
+            });
+            $(".delete_account").modal({
+                closable: true
+            });
+        });
+    /* update password confirmation modal */
+        $(function () {
+            $("#updatePasswordConfirmDialog").click(function () {
+                $(".update_password").modal('show');
+            });
+            $(".update_password").modal({
+                closable: true
+            });
+        });
+
+</script>
+
+<script>
+    $(document).ready(() => {
+        // Route 'Enter' hits from input to correct buttons:
+        $('.protected-form input').keypress(function (event) {
+            if (event.keyCode === 13) {
+                var form = $(this).closest('form');
+                var btn = form.find('button[id="updatePasswordConfirmDialog"]');
+                btn.click();
+                $(btn.attr('data-target')).focus();
+                event.preventDefault();
+                return false;
+            } else {
+                $(this).removeClass('error');
+            }
+        });
+        $("#updatePasswordConfirmDialog").click(function () {
+            $(".update_password").modal('show');
+            $(this).find('input[type="password"]').focus();
+        });
+        $(".update_password").modal({
+            closable: true
+        });
+
+        // check that email was entered
+
+        $('#updateEmailForm').form({
+            fields: {
+
+                email: {
+                    identifier: 'email',
+                    rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Please enter new email'
+                    },
+                    ]
+                },
+            }
+        });
+
+        // Check that email fields match when clicking update button on change password dialog:
+       
+        $('#updatePasswordForm').form({
+            fields: {
+        
+                new_password1: {
+                    identifier: 'new_password1',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Please enter a password'
+                    },
+                    {
+                        type: 'minLength[6]',
+                        prompt: 'Your password must be at least {ruleValue} characters'
+                    }
+                    ]
+                },
+                new_password2: {
+                    identifier: 'new_password2',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Please enter the password again'
+                    },
+                    {
+                        type: 'match[new_password1]',
+                        prompt: 'Passwords must match'
+                    }
+                    ]
+                }
+            }
+        });
+    });
+
+</script>
+
+{% endblock %}

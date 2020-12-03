@@ -6,10 +6,12 @@ from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 from django.contrib.auth.models import User
 from django.conf import settings
-from .models import Profile, UserImage, UserVerification
+from .models import Profile, UserImage, UserVerification, generate_avatar
 from . import auth, util
+from django.utils.translation import ugettext_lazy as _
 
 from .widgets import PhoneNumberPrefixWidget
+from django_countries.fields import CountryField
 
 logger = logging.getLogger("engine")
 
@@ -138,12 +140,65 @@ class SignUpWithCaptcha(SignUpForm):
 class LogoutForm(forms.Form):
     pass
 
+class PasswordProtectedForm(forms.Form):
+    password = forms.CharField(
+        strip=False,
+        label=_('Enter password to confirm'),
+        widget=forms.PasswordInput(attrs={'placeholder': _('Password')})
+    )
+
+    def clean_password(self):
+        """Validate that the entered password is correct.
+        """
+        password = self.cleaned_data['password']
+        if not self.user.check_password(password):
+            raise forms.ValidationError(
+                _("The password is incorrect"),
+                code='password_incorrect'
+            )
+        return password
+
+class DeleteUserForm(PasswordProtectedForm):
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+
+    def save(self):
+        self.user.delete()
+
+
+class UpdateEmailForm(PasswordProtectedForm):
+    email = forms.EmailField(label=_('Enter your new email'))
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+
+    def save(self):
+        self.user.email = self.cleaned_data['email']
+        self.user.save()
+
+
+class DeleteAvatarForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ()
+
+    def save(self, commit=True):
+        if self.instance.avatar:
+            self.instance.avatar.delete()
+            self.instance.avatar_version += 1
+            self.instance.avatar = generate_avatar(self.instance)
+        return super().save(commit)
+
+
 
 class EditProfile(forms.Form):
     first_name = forms.CharField(label="First Name", max_length=100, required=True)
     last_name = forms.CharField(label="Last Name", max_length=100, required=True)
     email = forms.CharField(label="Email", max_length=100, required=True, disabled=True)
-    username = forms.CharField(label="Handler", max_length=100, required=True)
+    username = forms.CharField(label="Handle", max_length=100, required=True)
+    country = CountryField(_('Country')).formfield(initial='UG', widget=forms.Select(attrs={"class": "ui search dropdown"}),)
     location = forms.CharField(label="Location", max_length=100, required=False)
 
     text = forms.CharField(

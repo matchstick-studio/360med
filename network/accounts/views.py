@@ -1,4 +1,5 @@
 import logging
+import base64
 from mistune import markdown
 from django.conf import settings
 from django.contrib import messages
@@ -14,8 +15,9 @@ from django.contrib.auth.views import (
 )
 from django.http import JsonResponse
 from django.core.exceptions import PermissionDenied, ImproperlyConfigured
-
+from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST, require_GET
 from ratelimit.decorators import ratelimit
 from django.core import signing
 from django.core.paginator import Paginator
@@ -25,16 +27,41 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.safestring import mark_safe
 from ratelimit.decorators import ratelimit
 
+from django.contrib.auth.forms import PasswordChangeForm
+from django.core.files.base import ContentFile
+
 
 from . import forms, tasks
 from .auth import validate_login, send_verification_email
 from .const import *
-from .models import User, Profile, UserVerification, Message, Logger
+from .models import User, Profile, UserVerification, Message, Logger, change_avatar
 from .tokens import account_verification_token
 from .util import now, get_uuid
 
 
 logger = logging.getLogger("engine")
+
+@login_required
+@require_POST
+def update_avatar(request):
+    profile = request.user.profile
+    # Received base64 string starts with 'data:image/jpeg;base64,........'
+    # We need to use 'jpeg' as an extension and everything after base64,
+    # as the image itself:
+    fmt, imgstr = request.POST['avatar'].split(';base64')
+    ext = fmt.split('/')[-1]
+    if ext == 'svg+xml':
+        ext = 'svg'
+    img = ContentFile(base64.b64decode(imgstr), name=f'{profile.pk}.{ext}')
+    change_avatar(request.user.profile, img)
+    return redirect('user_profile')
+
+@login_required
+@require_POST
+def delete_avatar(request):
+    form = forms.DeleteAvatarForm(request.POST, instance=request.user.profile)
+    form.save()
+    return redirect('user_profile')
 
 def edit_profile(request):
     if request.user.is_anonymous:
@@ -46,6 +73,7 @@ def edit_profile(request):
         email=user.email,
         first_name=user.first_name,
         last_name=user.last_name,
+        country=user.profile.country,
         location=user.profile.location,
         gender=user.profile.gender,
         alt_email_a=user.profile.alt_email_a,
@@ -75,6 +103,7 @@ def edit_profile(request):
             User.objects.filter(pk=user.pk).update(username=username, email=email, first_name=first_name, last_name=last_name)
             # Update user information in Profile object.
             Profile.objects.filter(user=user).update(
+                country=form.cleaned_data["country"],
                 location=form.cleaned_data["location"],
                 phone=form.cleaned_data["phone"],
                 alt_email_a=form.cleaned_data["alt_email_a"],
@@ -144,6 +173,7 @@ def edit_subscriptions(request, pk):
 
     initial = dict(
       my_tags=user.profile.my_tags,
+
     )
 
     form = forms.SubscriptionsForm(user=user, initial=initial)
@@ -566,3 +596,51 @@ def password_reset_complete(request):
     return PasswordResetCompleteView.as_view(
         extra_context=context, template_name="accounts/password_reset_complete.html"
     )(request=request)
+
+# update account info
+
+def edit_account(request):
+    user = request.user
+    delete_user_form = forms.DeleteUserForm(user=user)
+    
+    return render(request, 'accounts/edit_account.html', {
+        'delete_user_form': delete_user_form
+    })
+
+# Update main email
+@login_required
+@require_POST
+def update_email(request):
+    form = forms.UpdateEmailForm(request.user, request.POST)
+    if form.is_valid():
+        form.save()
+        messages.success(request, _('Email was updated'))
+    else:
+        messages.error(request, _('Failed to update email'))
+    return redirect('user_profile')
+
+# Update password in profile section
+@login_required
+@require_POST
+def update_password(request):
+    user = request.user
+
+    form = PasswordChangeForm(request.user, request.POST)
+    if form.is_valid():
+        form.save()
+        messages.success(request, _('Password was updated'))
+    else:
+        messages.error(request, _('Failed to update password'))
+    return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
+
+# delete user account 
+@login_required
+@require_POST
+def delete_account(request):
+    form = forms.DeleteUserForm(request.user, request.POST)
+    if form.is_valid():
+        form.save()
+        return redirect('/')
+
+    messages.error(request, _('Failed to delete account'))
+    return redirect('user_profile')

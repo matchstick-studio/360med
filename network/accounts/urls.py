@@ -26,10 +26,15 @@ account_patterns = [
     path(r'profile/<str:uid>/', views.user_profile, name="user_profile"),
 
     path(r'edit/profile/', views.edit_profile, name='edit_profile'),
+    path(r'edit/account/', views.edit_account, name='edit_account'),
+    path(r'email/update/', views.update_email, name='update-email'),
+    path(r'password/update/', views.update_password, name='update-password'),
     path(r'edit/notifications/<int:pk>/', views.edit_notifications, name='edit_notifications'),
      path(r'edit/subscriptions/<int:pk>/', views.edit_subscriptions, name='edit_subscriptions'),
     path(r'toggle/notify/', views.toggle_notify, name='toggle_notify'),
     path(r'logout/', views.user_logout, name="logout"),
+
+    path('delete/', views.delete_account, name='delete'),
 
     path(r'debug/user/', views.debug_user, name="debug_user"),
 

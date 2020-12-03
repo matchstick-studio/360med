@@ -1,7 +1,9 @@
 import uuid
 import os
+import io
 from datetime import datetime, timedelta
-
+import pyavagen
+from django.core.files.base import ContentFile
 import mistune
 from django.conf import settings
 from django.shortcuts import reverse
@@ -10,6 +12,8 @@ from django.db import models
 from django.utils.timezone import utc
 from network.accounts import util
 from phonenumber_field.modelfields import PhoneNumberField
+from django_countries.fields import CountryField
+from django.utils.translation import ugettext_lazy as _
 
 
 def fixcase(name):
@@ -67,8 +71,14 @@ class UserVerification(models.Model):
     licence = models.CharField(max_length=100, blank=True, null=True)
     date_submitted = models.DateTimeField(auto_now_add=True, max_length=255, null=True)
 
+def get_avatar_full_path(instance, filename):
+    ext = filename.split('.')[-1]
+    path = f'{settings.MEDIA_PUBLIC_ROOT}/avatars'
+    name = f'{instance.pk}_{instance.avatar_version:04d}'
+    return f'{path}/{name}.{ext}'
 
 class Profile(models.Model):
+
     NEW, TRUSTED, SUSPENDED, BANNED, SPAMMER = range(5)
     STATE_CHOICES = [
         (NEW, "New"),
@@ -133,6 +143,17 @@ class Profile(models.Model):
         (LABORATORY_SCIENTIST, "Laboratory Scientist"),
     ]
 
+    DEGREE = (
+        (None, "Select your degree"),
+        ('Undergraduate', "Undergraduate"),
+        ('Bachelor', "Bachelor"),
+        ('Master', "Master"),
+        ('PhD', "PhD"),
+        ('Doctor of Sciences', "Doctor of Sciences"),
+    )
+
+    STUDENT_ROLES = ('Student', 'PhD Student')
+
     # Connection to the user.
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -156,6 +177,11 @@ class Profile(models.Model):
 
     alt_email_b = models.EmailField(max_length=MAX_TEXT_LEN, null=True, blank=True)
 
+    # degree type
+    degree = models.CharField(
+        choices=DEGREE, max_length=30, null=True,
+    )
+
     # The main occupation of the user.
     occupation = models.IntegerField(default=MEDICAL_DOCTOR, choices=OCCUPATION_CHOICES)
 
@@ -175,6 +201,9 @@ class Profile(models.Model):
 
     # The date the user joined.
     date_joined = models.DateTimeField(auto_now_add=True, max_length=255)
+
+    # user's country
+    country = CountryField(null=True)
 
     # User provided location.
     location = models.CharField(default="", max_length=255, blank=True, db_index=True)
@@ -209,6 +238,10 @@ class Profile(models.Model):
 
     # Opt-in to all messages from the site
     opt_in = models.BooleanField(default=False)
+
+    # avatar stuff
+    avatar = models.ImageField(upload_to=get_avatar_full_path, blank=True)
+    avatar_version = models.IntegerField(default=0, blank=True, editable=False)
 
     objects = ProfileManager()
 
@@ -332,6 +365,27 @@ class Profile(models.Model):
         User has a low score
         """
         return self.score <= settings.LOW_REP_THRESHOLD and not self.is_moderator
+
+def generate_avatar(profile):
+    img_io = io.BytesIO()
+    avatar = pyavagen.Avatar(
+        pyavagen.CHAR_SQUARE_AVATAR,
+        size=500,
+        string=profile.get_full_name(),
+        blur_radius=100
+    )
+    avatar.generate().save(img_io, format='PNG', quality=100)
+    img_content = ContentFile(img_io.getvalue(), f'{profile.pk}.png')
+    return img_content
+
+
+def change_avatar(profile, image_file):
+    if profile.avatar:
+        profile.avatar.delete()
+    profile.avatar_version += 1
+    profile.avatar = image_file
+    profile.save()
+    return profile
 
 
 class Logger(models.Model):

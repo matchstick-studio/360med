@@ -28,7 +28,7 @@ class PhonePrefixSelect(Select):
                 "The PhonePrefixSelect widget requires the babel package be installed."
             )
 
-        choices = [("", "Country")]
+        choices = [("", "Code")]
         language = translation.get_language() or settings.LANGUAGE_CODE
         locale = babel.Locale(translation.to_locale(language))
         if not initial:

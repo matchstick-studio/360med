@@ -83,6 +83,7 @@ ACCOUNTS_APPS = [
     # Allauth templates come last.
     'allauth',
     'allauth.account',
+    'widget_tweaks',
 ]
 
 # Should the server look up locations in a task.
