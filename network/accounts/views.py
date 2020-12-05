@@ -1,5 +1,8 @@
 import logging
 import base64
+import io
+import pyavagen
+from django.core.files.base import ContentFile
 from mistune import markdown
 from django.conf import settings
 from django.contrib import messages
@@ -28,8 +31,6 @@ from django.utils.safestring import mark_safe
 from ratelimit.decorators import ratelimit
 
 from django.contrib.auth.forms import PasswordChangeForm
-from django.core.files.base import ContentFile
-
 
 from . import forms, tasks
 from .auth import validate_login, send_verification_email
@@ -52,16 +53,17 @@ def update_avatar(request):
     ext = fmt.split('/')[-1]
     if ext == 'svg+xml':
         ext = 'svg'
-    img = ContentFile(base64.b64decode(imgstr), name=f'{profile.pk}.{ext}')
-    change_avatar(request.user.profile, img)
-    return redirect('user_profile')
+    img = ContentFile(base64.b64decode(imgstr), name=f'{profile.uid}.{ext}')
+    change_avatar(profile, img)
+    return redirect(reverse("user_profile", kwargs=dict(uid=profile.uid)))
 
 @login_required
 @require_POST
 def delete_avatar(request):
-    form = forms.DeleteAvatarForm(request.POST, instance=request.user.profile)
+    user = request.user
+    form = forms.DeleteAvatarForm(request.POST, instance=user.profile)
     form.save()
-    return redirect('user_profile')
+    return redirect(reverse("edit_account"))
 
 def edit_profile(request):
     if request.user.is_anonymous:
@@ -122,7 +124,6 @@ def edit_profile(request):
     context = dict(user=user, form=form)
     return render(request, "accounts/edit_profile.html", context=context)
 
-
 def edit_notifications(request, pk):
 
     if request.user.is_anonymous:
@@ -162,6 +163,7 @@ def edit_notifications(request, pk):
     context = dict(user=user, form=form)
     
     return render(request, "accounts/edit_notifications.html", context=context)
+    
 
 def edit_subscriptions(request, pk):
 
@@ -601,10 +603,25 @@ def password_reset_complete(request):
 
 def edit_account(request):
     user = request.user
+    profile = Profile.objects.filter(uid=user.profile.uid).first()
+    target=profile.user
+    emails_form = forms.SecondaryEmailsForm(user=user)
     delete_user_form = forms.DeleteUserForm(user=user)
+
+    if request.method == "POST":
+
+        if emails_form.is_valid():
+            emails_form.save()
+            messages.success(request, _('Secondary emails were updated'))
+        else:
+            messages.error(request, _('Failed to update emails'))
+        return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
+    
     
     return render(request, 'accounts/edit_account.html', {
-        'delete_user_form': delete_user_form
+        'delete_user_form': delete_user_form,
+        'emails_form': emails_form,
+        'target': target
     })
 
 # Update main email

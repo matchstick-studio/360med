@@ -189,6 +189,9 @@ class DeleteAvatarForm(forms.ModelForm):
             self.instance.avatar.delete()
             self.instance.avatar_version += 1
             self.instance.avatar = generate_avatar(self.instance)
+
+        # regenerate a new text-based avatar when profile is deleted.
+        self.instance.avatar = generate_avatar(self.instance)
         return super().save(commit)
 
 
@@ -217,14 +220,6 @@ class EditProfile(forms.Form):
         help_text="""Choose your gender""",
     )
 
-    alt_email_a = forms.CharField(
-        label="Alternative Email A", max_length=255, required=False
-    )
-
-    alt_email_b = forms.CharField(
-        label="Alternative Email B", max_length=255, required=False
-    )
-
     qualifications = forms.CharField(
         label="Qualifications",
         max_length=100,
@@ -238,22 +233,6 @@ class EditProfile(forms.Form):
         choices=Profile.OCCUPATION_CHOICES,
         widget=forms.Select(attrs={"class": "ui dropdown"}),
         help_text="""What do you do?""",
-    )
-
-    expertise = forms.CharField(
-        label="Expertise",
-        max_length=500,
-        required=False,
-        help_text="""Your specific areas of expertise or interest""",
-        widget=forms.HiddenInput(),
-    )
-
-    affiliations = forms.CharField(
-        label="Affiliations",
-        max_length=500,
-        required=False,
-        help_text="""Institutions you are affiliated to or with""",
-        widget=forms.HiddenInput(),
     )
 
     phone = forms.CharField(
@@ -406,6 +385,20 @@ def validate_tags(tags):
     if len(my_tags) > MAX_TAGS:
         return forms.ValidationError("Maximum number of tags reached.")
     return tags
+
+class SecondaryEmailsForm(forms.Form):
+
+    alt_email_a = forms.CharField(
+        label="Alternative Email A", max_length=255, required=False
+    )
+
+    alt_email_b = forms.CharField(
+        label="Alternative Email B", max_length=255, required=False
+    )
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(SecondaryEmailsForm, self).__init__(*args, **kwargs)
 
 
 class NotificationsForm(forms.Form):

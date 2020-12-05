@@ -182,7 +182,7 @@ LANGUAGE_DETECTION = ['en']
 STATIC_URL = '/static/'
 
 # The static root directory.
-STATIC_ROOT = join(BASE_DIR, 'export', 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'export', 'static')
 
 # Global directories for static files.
 STATICFILES_DIRS = [
@@ -194,7 +194,9 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 
 # The media root directory.
-MEDIA_ROOT = join(BASE_DIR, 'export', 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'export', 'media')
+
+MEDIA_PUBLIC_ROOT = 'public/'
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',

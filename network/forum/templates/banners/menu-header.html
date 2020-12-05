@@ -48,19 +48,21 @@
         <a class="item {% activate tab "tags" %} " href="{% url 'tags_list' %}">
             <i class="tag icon"></i> Tags
         </a>
-        
-        <div class="item {% activate tab "new" %}">
-            <a href="{% url 'post_create' %}">
-                <div class="ui primary basic button">
-                    Create Post
-                </div>
-            </a>
+     
+        <div class="ui simple dropdown item {% activate tab "new" %}">
+            Create
+            <i class="plus icon"></i>
+            <div class="menu">
+                <div class="item"><a href="{% url 'post_create' %}">Start discussion</a></div>
+                <div class="item"><a href="{% url 'event_create' %}">Create event</a></div>
+                <div class="item"><a href="{% url 'job_create' %}">Post a job</a></div>
+            </div>
         </div>
 
         {% counts as counts %}
 
         <a style="margin-right:20px;" class="item" href="{% url 'inbox' %}">
-            <img style="width:25px;" src="{% static 'images/bell.svg' %}" alt="">
+            <img style="width:20px;" src="{% static 'images/bell.svg' %}" alt="">
             {% if counts.messages.count %}
             <div style="top:10%;left:90%" class="floating ui circular small blue label">{{ counts.messages.count }}</div>
             {% endif %}
@@ -68,8 +70,9 @@
 
         <div class="ui text menu">
             <div style="margin-right: 20px;" class="user top right pointing ui dropdown item">
-                <img class="ui mini rounded image" src="{% gravatar user=user %}" alt="">
-                Me
+                <!-- show name avatar or default to gravicon. Well hedged-->
+                <img class="ui avatar image" src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% gravatar user=user %}{% endif %}" alt="">
+                <span style="margin-left:5px">Me</span>
                 <i class="dropdown icon"></i>
                 <div class="menu">
                     <div style="text-transform: none;" class="user header">
@@ -77,10 +80,10 @@
                     </div>
                     <div class="divider"></div>
                     <a class="item {% activate tab "profile" %}" href=" {% url 'user_profile' user.profile.uid %}">
-                        <i class="user icon"></i> My Profile
+                        <i class="user icon"></i> View Profile
                     </a>
                     <a class="item" href="{% url 'edit_profile' %}">
-                        <i class="settings icon"></i> User Settings
+                        <i class="settings icon"></i> Edit Profile
                     </a>
                     <div class="divider"></div>
                     <a class="item {% activate tab "logout" %}" href="{% url 'logout' %}">

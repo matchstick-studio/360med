@@ -1,121 +1,79 @@
 {% extends "forum_base.html" %}
 {% load accounts_tags %}
 {% load forum_tags %}
+
 {% block headtitle %}{{ target.profile.name }}{% endblock %}
 
 {% block content %}
 
-    <div class="ui stackable three column grid profile" data-value="{{ target.profile.id }}">
+<style>
 
-        <div class="column">
-            <div class="ui center aligned  basic segment">
-                <img class="ui centered circular image" src="{% gravatar user=target size=150 %}">
-                <div class="ui centered header">
-                    {{ target.first_name }} {{ target.last_name }}
-                    {% user_icon score=target.profile.score %}
-                </div>
-            </div>
+.profilepic {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+}
 
-            <div class="ui center aligned basic segment">
+.profilepicimg {
+    display: inline;
+    height: 100%;
+    width: auto;
+}
+</style>
 
-                {% if target == request.user %}
-                    <a class="ui mini button" href="{% url 'edit_profile' %}">
-                        <i class="write icon"></i>Edit profile
-                    </a>
-                {% endif %}
-
-                {% if can_moderate %}
-                    <div class="ui mini button orange moderate">
-                        <i class="hand paper icon"></i>
-                        Moderate
+    <div class="ui stackable grid profile" data-value="{{ target.profile.id }}">
+        <div class="row" style="background-color:#f8f8f8;">
+            <div class="sixteen wide column">
+                    {% if target.profile.avatar %}
+                    <div class="profilepic">
+                        <img class="profilepicimg" id="avatarPreview" src="{{ target.profile.avatar.url }}">
                     </div>
-                {% endif %}
-
-                {% if request.user.is_superuser and debugging %}
-                    <a class="ui mini red button" href="{% url 'debug_user' %}?uid={{ target.profile.uid }}">
-                        <i class="sign in icon"></i> Log in
-                    </a>
-                {% endif %}
-
-            </div>
-
-            <div id="mod"></div>
-        </div>
-
-        <div class="column">
-
-
-            <div class="ui center aligned basic segment">
-
-
-                <table class="ui very basic profile">
-                    <tbody>
-
-                    {% if target.profile.is_moderator %}
-                        <tr>
-                            <td>Role:</td>
-                            <td>{{ target.profile.get_role_display }}</td>
-                        </tr>
+                    <!-- image buttons here -->
+                    {% else %}
+                    <div class="profilepic">
+                        <img class="profilepicimg" src="{% gravatar user=target size=150 %}">
+                    </div>
                     {% endif %}
-
-                    <tr>
-                        <td>Status:</td>
-                        <td>{{ target.profile.get_state_display }}</td>
-                    </tr>
-
-                    <tr>
-                        <td>Handle:</td>
-                        <td><code>@{{ target.username }}</code></td>
-                    </tr>
-
-                    <tr>
-                        <td>Reputation:</td>
-                        <td>{{ target.profile.get_score }}</td>
-                    </tr>
-
-                    <tr>
-                        <td>Email:</td>
-                        <td>{{ target|show_email:request.user }}</td>
-                    </tr>
-
-                    <tr>
-                        <td>Joined:</td>
-                        <td>{{ target.profile.date_joined|time_ago }}</td>
-                    </tr>
-
-                    <tr>
-                        <td>Last seen:</td>
-                        <td>{{ target.profile.last_login |time_ago }}</td>
-                    </tr>
-                    {% if show_info %}
-                        <tr>
-                            <td>Location:</td>
-                            <td>{{ target.profile.location }}</td>
-                        </tr>
-                    {% endif %}
-                    </tbody>
-                </table>
-
-            </div>
-
-
-        </div>
-        <div class="column">
-            <div class="profile ui relaxed divided list profile">
-
-                <div class="item">
-                    <div class="content">
-
+                    <!-- update avatar buttons -->
+                    <!-- <form action="" class="avatar-update-form" method="GET" data-target="{% url 'update_avatar' %}"
+                        data-preview="#avatarPreview">
+                        {% csrf_token %}
+                        <button type="button" class="ui tiny primary network-file-input button" style="min-width: 120px;">
+                            Change image
+                            <input type="file" value="Choose file..." accept="image/*">
+                        </button>
+                    </form>
+                    
+                    <form action="{% url 'delete_avatar' %}" method="POST" class="">
+                        {% csrf_token %}
+                        <button type="submit" class="ui tiny red basic button" style="min-width: 120px;">Delete image</button>
+                    </form> -->
+                <div style="margin-top:5px;" class="ui center aligned header">
+                    <h2 style="font-size:24px;font-weight: 900">{{ target.first_name }} {{ target.last_name }}{% user_icon score=target.profile.score %}pts</h2>
+                    <div class="text content">
+                        <div class="ui horizontal bulleted list">
+                            <a class="item">
+                                @{{ target.username }}
+                            </a>
+                            <a class="item">
+                                {{ target|show_email:request.user }}
+                            </a>
+                            <a class="item">
+                                Joined {{ target.profile.date_joined|time_ago }}
+                            </a>
+                            <a class="item">
+                                <i class="{{ target.profile.country.name }} flag"></i>{{ target.profile.country.name }}
+                            </a>
+                        </div>
                         {% if show_info %}
-                            <p>{{ target.profile.html |safe }}</p>
+                        <p style="font-size:18px;font-weight: 400;padding-bottom:20px;">{{ target.profile.text |safe }}</p>
                         {% else %}
-                            <p>
-                                Profile information, website and location are not shown for new users.
-                            </p>
-                            <p>
-                                This helps us discourage the inappropriate use of our site.
-                            </p>
-
+                        <p>
+                            Profile information, website and location are not shown for new users. This helps us discourage the inappropriate use of our site.
+                        </p>
                         {% endif %}
                     </div>
                 </div>
@@ -123,27 +81,41 @@
         </div>
     </div>
 
-    <div class="ui vertical segment">
-
-        <div class="ui top attached tabular  menu">
-
-            <a class="{% activate 'posts' active %} item" href="{{ target.profile.get_absolute_url }}?active=posts">
-                <i class="list alternate outline icon"></i><span class="phone"> Posts & History</span>
-            </a>
-
-            <a class="{% activate 'awards' active %}  item" href="{{ target.profile.get_absolute_url }}?active=awards">
-                <i class="star outline icon"></i><span class="phone">Awards</span>
-            </a>
-
-        </div>
-        <div class="ui bottom attached profile segment">
-            {% if active == 'posts' %}
-
-                {% include 'accounts/profile_post_listing.html' %}
-
-            {% else %}
-                {% list_awards target=target %}
-            {% endif %}
+    <div class="ui stackable grid">
+        <div class="row">
+            <div class="four wide column">
+                <div class="ui segments">
+                    <div class="ui segment">
+                        <p>Work</p>
+                    </div>
+                    <div class="ui secondary segment">
+                        <p>Education</p>
+                    </div>
+                </div>
+            </div>
+            <div class="fit twelve wide column">
+                
+                    <div class="ui top attached tabular  menu">
+                
+                        <a class="{% activate 'posts' active %} item" href="{{ target.profile.get_absolute_url }}?active=posts">
+                            <i class="list alternate outline icon"></i><span class="phone"> Posts</span>
+                        </a>
+                
+                        <a class="{% activate 'awards' active %}  item" href="{{ target.profile.get_absolute_url }}?active=awards">
+                            <i class="star outline icon"></i><span class="phone">Awards</span>
+                        </a>
+                
+                    </div>
+                    <div class="ui bottom attached profile segment">
+                        {% if active == 'posts' %}
+                
+                        {% include 'accounts/profile_post_listing.html' %}
+                
+                        {% else %}
+                        {% list_awards target=target %}
+                        {% endif %}
+                    </div>
+            </div>
         </div>
     </div>
 

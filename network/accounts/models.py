@@ -74,7 +74,7 @@ class UserVerification(models.Model):
 def get_avatar_full_path(instance, filename):
     ext = filename.split('.')[-1]
     path = f'{settings.MEDIA_PUBLIC_ROOT}/avatars'
-    name = f'{instance.pk}_{instance.avatar_version:04d}'
+    name = f'{instance.uid}_{instance.avatar_version:04d}'
     return f'{path}/{name}.{ext}'
 
 class Profile(models.Model):
@@ -371,11 +371,11 @@ def generate_avatar(profile):
     avatar = pyavagen.Avatar(
         pyavagen.CHAR_SQUARE_AVATAR,
         size=500,
-        string=profile.get_full_name(),
+        string=profile.name,
         blur_radius=100
     )
     avatar.generate().save(img_io, format='PNG', quality=100)
-    img_content = ContentFile(img_io.getvalue(), f'{profile.pk}.png')
+    img_content = ContentFile(img_io.getvalue(), f'{profile.uid}.png')
     return img_content
 
 

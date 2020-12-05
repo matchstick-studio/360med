@@ -6,6 +6,39 @@
 
 {% block content %}
 
+<style>
+    .network-file-input {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .network-file-input input[type="file"] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .profilepic {
+        width: 150px;
+        height: 150px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 50%;
+    }
+
+    .profilepicimg {
+        display: inline;
+        height: 100%;
+        width: auto;
+        vertical-align: middle;
+        float: left;
+    }
+</style>
+
 <div class="ui stackable grid">
 
     <div class="four wide column">
@@ -17,6 +50,36 @@
         <h1>Account Settings</h1>
 
         <div class="ui divider"></div>
+
+        <div class="ui basic segment">
+        
+            <h2>Profile Picture </h2>
+        
+            {% if target.profile.avatar %}
+            <div style="display: inline-block" class="profilepic">
+                <img class="profilepicimg" id="avatarPreview" src="{{ target.profile.avatar.url }}">
+            </div>
+            <!-- image buttons here -->
+            {% else %}
+            <div class="profilepic">
+                <img class="profilepicimg" src="{% gravatar user=target size=150 %}">
+            </div>
+            {% endif %}
+            <!-- update avatar buttons -->
+                <form style="display:inline-block" action="" class="avatar-update-form" method="GET" data-target="{% url 'update_avatar' %}"
+                    data-preview="#avatarPreview">
+                    {% csrf_token %}
+                    <button type="button" class="ui mini primary network-file-input button" style="min-width: 120px;">
+                        Change image
+                        <input type="file" value="Choose file..." accept="image/*">
+                    </button>
+                </form>
+                
+                <form style="display:inline-block" action="{% url 'delete_avatar' %}" method="POST" class="">
+                    {% csrf_token %}
+                    <button type="submit" class="ui mini red basic button" style="min-width: 120px;">Delete image</button>
+                </form>
+        </div>
 
         <div class="ui basic segment">
 
@@ -37,6 +100,37 @@
             
                 <button id="updateEmailConfirmDialog" type="button" class="ui submit green button right floated">
                     Update Email
+                </button>
+            
+            </form>
+        </div>
+
+        <div class="ui basic segment">
+        
+            <h2>Secondary Emails </h2>
+
+            <form method="post" id="secondaryEmailsForm" class="ui equal width large form"
+                action="">
+                {% csrf_token %}
+            
+                {% form_errors form %}
+            
+                <div class="form-field field">
+                    <label><i class="envelope icon"></i> Alternative Email A</label>
+                    {{ emails_form.alt_email_a }}
+                </div>
+
+                <div class="form-field field">
+                    <label><i class="envelope icon"></i> Alternative Email B</label>
+                    {{ emails_form.alt_email_b }}
+                </div>
+
+                <div class="ui error message" id="error-secondaryEmails">
+                    Please enter new email!
+                </div>
+            
+                <button type="button" class="ui submit green button right floated">
+                    Save
                 </button>
             
             </form>
@@ -138,6 +232,43 @@
     </div>
 </div>
 {# end change password modal #}
+
+{# Confirm update avatar modal #}
+<div class="ui tiny modal update_avatar">
+    <div class="header">Change your profile photo</div>
+    <div class="image content">
+        <div class="ui circular image">
+            <img style="width:240px;height:240px;" id="uploadedAvatar" src="" />
+        </div>
+        <h3 class="ui header">
+            Would you like to this as your profile picture?
+        </h3>
+    </div>
+    <div class="actions">
+        <div class="ui cancel button">Cancel</div>
+        <div class="ui approve green button">Yes</div>
+    </div>
+</div>
+{# End Confirm update avatar modal #}
+
+{# Big ass file modal #}
+<div class="ui mini modal too_big_modal">
+    <div class="header">Wait a minute!</div>
+    <div class="content">
+        <h2 class="ui icon header">
+            <i class="thumbs down icon"></i>
+            <div class="content">
+                <p id="sizeWarning">
+                    Profile image size must be under 1000KB, your file is bigger than this
+                </p>
+            </div>
+        </h2>
+    </div>
+    <div class="actions">
+        <div class="ui cancel button">Ok</div>
+    </div>
+</div>
+{# End big ass file modal #}
 
 <!-- end Modals -->
 
@@ -244,6 +375,84 @@
             }
         });
     });
+
+</script>
+
+<script>
+    (function ($) {
+
+        $.fn.avatarUpdateForm = function () {
+            var form = this;  // `this` will point an `<input>` element below
+            form.find('input[type="file"]').change(function (event) {
+                // `this` is an <input type="file"> (not a jQuery object, plain DOM!)
+                var input = this;
+                if (input.files && input.files[0]) {
+                    var sizeKb = (input.files[0].size / 1024).toFixed(4);
+                    if (sizeKb > 1000) {
+                        Swal.fire({
+                            type: 'warning',
+                            text: `Profile image size must be under 1000KB, your file is ${sizeKb}KB`,
+                            customClass: {
+                                confirmButton: 'ui green button',
+                            },
+                            buttonsStyling: false
+                        });
+                    } else {
+                        var data = new FormData(form.get(0));
+                        var reader = new FileReader();
+                        reader.onload = function (re) {
+                            Swal.fire({
+                                text: 'Use this as your profile picture? Confirm that your face is front and center',
+                                imageUrl: re.target.result,
+                                imageWidth: 240,
+                                imageHeight: 240,
+                                imageAlt: 'new profile picture',
+                                animation: false,
+                                showCancelButton: true,
+                                cancelButtonText: 'No',
+                                confirmButtonText: 'Yes',
+                                customClass: {
+                                    image: 'ui circular image',
+                                    confirmButton: 'ui green button',
+                                    cancelButton: 'ui basic button',
+                                },
+                                buttonsStyling: false
+                            }).then(result => {
+                                if (result.value) {
+                                    var req = new XMLHttpRequest();
+                                    req.open("POST", form.attr('data-target'), true);
+                                    req.onload = function (xe) {
+                                        location.reload();
+                                    };
+                                    data.append('avatar', re.target.result);
+                                    data.append('csrfmiddlewaretoken', $('[name=csrfmiddlewaretoken]').val());
+                                    req.send(data);
+
+                                    // Display progress
+                                    var preview = $(form.attr('data-preview'));
+                                    preview.html(
+                                        '<div style="width: 120px; height: 120px; padding: 30px; margin: 0;">' +
+                                        '<div class="spinner-border dccn-loading-progress" ' +
+                                        'style="margin: 0; padding: 0; width: 60px; height: 60px;" role="status">' +
+                                        '<span class="sr-only">Loading...</span>' +
+                                        '</div></div>'
+                                    )
+                                } else {
+                                    $(input).val('');
+                                }
+                            });
+                        };
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+                event.preventDefault();
+            });
+        };
+
+        //////////////////////////////
+        // Associating the plugins
+        $('.avatar-update-form').avatarUpdateForm();
+    }(jQuery));
 
 </script>
 
