@@ -34,3 +34,4 @@ django-widget-tweaks>=1.4.8 # https://github.com/jazzband/django-widget-tweaks
 django-invitations
 django-countries
 pyavagen==0.3.3 # manage avatars
+django-anymail
