@@ -31,17 +31,17 @@ DEFAULT_ADMIN_PASSWORD = SECRET_KEY
 
 # Attempts to detect hostname so that automatic deployment works.
 # It is best to set it with known data.
-try:
+""" try:
     SITE_DOMAIN = requests.get('https://checkip.amazonaws.com').text.strip()
 except Exception as err:
-    SITE_DOMAIN = platform.node()
+    SITE_DOMAIN = platform.node() """
 
-
+SITE_DOMAIN = "test.360med.org"
 SITE_ID = 1
 HTTP_PORT = ''
 PROTOCOL = 'http'
 
-ALLOWED_HOSTS = [SITE_DOMAIN, 'test.360med.org','360med.org','127.0.0.1','localhost']
+ALLOWED_HOSTS = [SITE_DOMAIN,'127.0.0.1','localhost']
 
 DATABASE_NAME = "biostar-database"
 
