@@ -102,6 +102,6 @@
       become: yes
       become_user: postgres
       postgresql_db:
-        name: biostar-database
+        name: network-database
         owner: www
       no_log: true

@@ -43,7 +43,7 @@ PROTOCOL = 'http'
 
 ALLOWED_HOSTS = [SITE_DOMAIN,'127.0.0.1','localhost']
 
-DATABASE_NAME = "biostar-database"
+DATABASE_NAME = "network-database"
 
 DATABASES = {
 
