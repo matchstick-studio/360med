@@ -26,9 +26,9 @@
         <div class="ui large feed">
             {% for message in all_messages %}
             <div class="event">
-                <div class="label">
-                    <img src="{% gravatar user=message.sender size=50 %}">
-                </div>
+                <img class="ui avatar image"
+                    src="{% if message.sender.profile.avatar %}{{ message.sender.profile.avatar.url }}{% else %}{% gravatar user=message.sender size=50 %}{% endif %}"
+                    alt="">
                 <div class="content">
                     <div class="summary">
                         <a class="user" href="{{message.sender.profile.get_absolute_url}}">

@@ -8,7 +8,9 @@
                 <div class="ui relaxed list" >
                     {% for user in users %}
                        <div class="item spaced" >
-                       <img class="ui centered circular image" src="{% gravatar user=user size=30 %}">
+                        <img class="ui avatar image"
+                            src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% gravatar user=user size=30 %}{% endif %}"
+                            alt="">
                             <a href="{% url 'user_profile' user.profile.uid %}">
                                 {{user.profile.name }}
                                 {% user_icon user=user %}
