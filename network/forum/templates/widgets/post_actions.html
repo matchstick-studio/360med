@@ -5,7 +5,7 @@
 
 <div class="actions {% if post.is_toplevel %}top-level{% endif %}">
 
-    <a class="add-comment ui tiny label">{{ label }}</a>
+    <a class="add-comment ui tiny blue label">{{ label }}</a>
 
     &bull; <a href="{% url 'post_view' post.root.uid %}#{{ post.uid }}">link</a>
 
@@ -30,8 +30,8 @@
 
     {% if post.is_toplevel and user.is_authenticated %}
     &bull;
-    <div class="ui dropdown status user-info" id="subscribe">
-        <div class="text">{% follow_label post=post %}</div>
+    <div class="ui compact dropdown status user-info" id="subscribe">
+        <div style="font-size:0.875em;" class="text">{% follow_label post=post %}</div>
         <i class="caret down icon"></i>
         <div class="menu">
             <a class="item" data-value="messages">Follow via messages</a>

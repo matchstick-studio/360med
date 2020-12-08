@@ -298,6 +298,11 @@ i.icon {
     display: flow-root;
 }
 
+.post .actions a {
+    font-size: 0.875em;
+    color: #333;
+}
+
 .post .actions.top-level {
     padding-bottom: 17px;
 }
@@ -412,8 +417,18 @@ i.icon {
     margin-left: 0em;
 }
 
+.comment-list .post {
+    background: rgba(255,255,255,0.8);
+    padding: 0.5em!important;
+    margin-bottom: 10px;
+}
+
+.comment-list .post .body .voting > .score {
+    font-size: 120%;
+}
+
 .indent {
-    margin-left: 1em;
+    margin-left: 2em;
 }
 
 .comment {
@@ -441,6 +456,7 @@ i.icon {
 }
 
 .status {
+    top: -5px;
     float: right;
 }
 
@@ -742,14 +758,6 @@ img {
 
 .wrap-text {
     overflow-wrap: break-word;
-}
-
-.post {
-    background: rgba(255,255,255,0.8);
-    border: 1px solid rgb(204, 204, 204);
-    border-radius: .28571429rem;
-    padding: 1em!important;
-    margin-bottom: 20px;
 }
 
 .post p {

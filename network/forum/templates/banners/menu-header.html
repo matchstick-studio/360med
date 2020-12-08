@@ -79,7 +79,7 @@
                         <i class="{% user_icon_css user %}"></i> {{ user.profile.get_score|bignum }} pts
                     </div>
                     <div class="divider"></div>
-                    <a class="item {% activate tab "profile" %}" href=" {% url 'user_profile' user.profile.uid %}">
+                    <a class="item {% activate tab "profile" %}" href="{% url 'user_profile' user.profile.uid %}">
                         <i class="user icon"></i> View Profile
                     </a>
                     <a class="item" href="{% url 'edit_profile' %}">

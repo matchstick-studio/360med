@@ -112,9 +112,10 @@ class PostLongForm(forms.Form):
     title = forms.CharField(label="Post Title", max_length=200, min_length=2,
                             validators=[valid_title, english_only],
                             help_text="Enter a descriptive title to encourage better engagement.")
-    tag_val = forms.CharField(label="Spaces (optional)", max_length=50, required=False, validators=[valid_tag],
+    tag_val = forms.CharField(label="Tags", max_length=50, required=False, validators=[valid_tag],
                               help_text="""
-                              Choose a specific community for your post.
+                              Type to search through existing tags or create new tags by typing and adding a comma.
+                              You can add more than one tag.
                               """,
                               widget=forms.HiddenInput())
 

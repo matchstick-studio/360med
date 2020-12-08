@@ -196,7 +196,7 @@ def post_user_box(context, target_user):
 
 @register.inclusion_tag("widgets/post_actions.html", takes_context=True)
 def post_actions(
-    context, post, label="Reply", author=None, lastedit_user=None, avatar=False
+    context, post, label="Add comment", author=None, lastedit_user=None, avatar=False
 ):
     request = context["request"]
 

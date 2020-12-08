@@ -6,7 +6,7 @@
     {% for tag in tags %}
         {% if tag %}
         <a class="ui label tags-list trigger-highlight muted" href="{% url 'post_list' %}?tag={{ tag }}">
-            #{{ tag }}
+            {{ tag }}
         </a>
         {% endif %}
     {% endfor %}

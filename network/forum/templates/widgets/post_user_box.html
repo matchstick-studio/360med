@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="center aligned">
-        <button class="ui button">View full profile</button>
+        <a href="{% url 'user_profile' user.profile.uid %}" class="ui button">View full profile</a>
     </div>
     <div class="ui hidden divider"></div>
 </div>
