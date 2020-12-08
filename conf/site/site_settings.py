@@ -36,7 +36,7 @@ DEFAULT_ADMIN_PASSWORD = SECRET_KEY
 except Exception as err:
     SITE_DOMAIN = platform.node() """
 
-SITE_DOMAIN = "test.360med.org"
+SITE_DOMAIN = "157.230.182.244"
 SITE_ID = 1
 HTTP_PORT = ''
 PROTOCOL = 'http'
@@ -44,10 +44,10 @@ PROTOCOL = 'http'
 ALLOWED_HOSTS = [SITE_DOMAIN,'127.0.0.1','localhost']
 
 DATABASE_NAME = "network-database"
-DATABASE_USER = ''
-DATABASE_PASSWORD = ''
-DATABASE_HOST = ''
-DATABASE_PORT =''
+DATABASE_USER = 'network_admin'
+DATABASE_PASSWORD = 'vtta170e0lvbq3ea'
+DATABASE_HOST = 'network-database-do-user-8310054-0.b.db.ondigitalocean.com'
+DATABASE_PORT ='25060'
 
 DATABASES = {
 
