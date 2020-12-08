@@ -137,6 +137,14 @@ class SignUpWithCaptcha(SignUpForm):
             self.fields["captcha"] = ReCaptchaField(widget=ReCaptchaWidget())
 
 
+class ProfessionalForm(forms.Form):
+    """ We will add professional info and work fields here """
+    pass
+
+class EducationForm(forms.Form):
+    """ We will add education related fields here """
+    pass
+
 class LogoutForm(forms.Form):
     pass
 

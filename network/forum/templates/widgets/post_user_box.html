@@ -5,7 +5,8 @@
 <div class="ui card basic">
     <div class="content">
         <div class="center aligned author">
-            <img class="ui image" src="{% gravatar user=target_user size=80 %}">
+            <img class="ui tiny circular image"
+                src="{% if target_user.profile.avatar %}{{ target_user.profile.avatar.url }}{% else %}{% gravatar user=target_user %}{% endif %}" alt="">
         </div>
         <div class="ui hidden divider"></div>
         <div class="center aligned header">{{ target_user.profile.name }}</div>
