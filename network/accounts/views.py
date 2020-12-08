@@ -78,14 +78,9 @@ def edit_profile(request):
         country=user.profile.country,
         location=user.profile.location,
         gender=user.profile.gender,
-        alt_email_a=user.profile.alt_email_a,
-        alt_email_b=user.profile.alt_email_b,
         occupation=user.profile.occupation,
-        expertise=user.profile.expertise,
-        affiliations=user.profile.affiliations,
         phone=user.profile.phone,
         text=user.profile.text,
-        qualifications=user.profile.qualifications,
         email_verified=user.profile.email_verified,
     )
 
@@ -108,13 +103,8 @@ def edit_profile(request):
                 country=form.cleaned_data["country"],
                 location=form.cleaned_data["location"],
                 phone=form.cleaned_data["phone"],
-                alt_email_a=form.cleaned_data["alt_email_a"],
-                alt_email_b=form.cleaned_data["alt_email_b"],
                 gender=form.cleaned_data["gender"],
                 occupation=form.cleaned_data["occupation"],
-                qualifications=form.cleaned_data["qualifications"],
-                expertise=form.cleaned_data["expertise"],
-                affiliations=form.cleaned_data["affiliations"],
                 text=form.cleaned_data["text"],
                 html=markdown(form.cleaned_data["text"]),
             )

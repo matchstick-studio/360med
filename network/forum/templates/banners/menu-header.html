@@ -49,13 +49,13 @@
             <i class="tag icon"></i> Tags
         </a>
      
-        <div class="ui simple dropdown item {% activate tab "new" %}">
+        <div class="ui simple dropdown item">
             Create
             <i class="plus icon"></i>
             <div class="menu">
-                <div class="item"><a href="{% url 'post_create' %}">Start discussion</a></div>
-                <div class="item"><a href="{% url 'event_create' %}">Create event</a></div>
-                <div class="item"><a href="{% url 'job_create' %}">Post a job</a></div>
+                <a href="{% url 'post_create' %}"><div class="item">Start discussion</div></a>
+                <a href="{% url 'event_create' %}"><div class="item">Create event</div></a>
+                <a href="{% url 'job_create' %}"><div class="item">Post a job</div></a>
             </div>
         </div>
 
