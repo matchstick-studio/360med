@@ -247,7 +247,6 @@ i.icon {
     box-shadow: 0 0 0 1px #a3c293 inset, 0 0 0 0 transparent;
     border-color: #ebccd1;
 }
-
 .post > .body {
     display: flex; /* or inline-flex */
 }

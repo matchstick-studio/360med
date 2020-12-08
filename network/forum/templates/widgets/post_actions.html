@@ -41,6 +41,12 @@
     </div>
     {% endif %}
 
+    {% if not post.is_toplevel %} <!-- only show this user line on comments -->
+    <span class="status muted user-info">
+        {% post_user_line post=post avatar=avatar %}
+    </span>
+    {% endif %}
+
 </div>
 
 
