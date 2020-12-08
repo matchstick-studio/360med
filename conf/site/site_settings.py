@@ -44,16 +44,20 @@ PROTOCOL = 'http'
 ALLOWED_HOSTS = [SITE_DOMAIN,'127.0.0.1','localhost']
 
 DATABASE_NAME = "network-database"
+DATABASE_USER = ''
+DATABASE_PASSWORD = ''
+DATABASE_HOST = ''
+DATABASE_PORT =''
 
 DATABASES = {
 
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': DATABASE_NAME,
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '/var/run/postgresql/',
-        'PORT': '',
+        'USER': DATABASE_USER,
+        'PASSWORD': DATABASE_PASSWORD,
+        'HOST': DATABASE_HOST,
+        'PORT': DATABASE_PORT,
     },
 }
 
