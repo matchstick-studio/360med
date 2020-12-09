@@ -330,12 +330,14 @@ def user_signup(request):
             login(request, user, backend="django.contrib.auth.backends.ModelBackend")
             Profile.objects.filter(user=user).update(last_login=now())
             messages.success(request, "Login successful!")
-            msg = mark_safe("Signup successful!")
-            tasks.verification_email.spool(user=user)
+            msg = mark_safe("Signup successful. Also, we sent you an email. Verify your account now.")
+            tasks.verification_email.spool(user=user) # send email verification email
+    
+            # so rather than just send people to the homepage post-reg, we need them to fill another form to validate their info
+            return redirect(reverse("verification")) # was "/"
+
             messages.info(request, msg)
 
-            # so rather than just send people to the homepage post-reg, we need them to fill another form to validate their info
-            return redirect("/") # was "/"
 
     else:
         form = forms.SignUpWithCaptcha()

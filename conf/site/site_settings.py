@@ -4,7 +4,7 @@ import requests
 import logging
 import platform
 
-from network.settings import *
+# from network.settings import *
 
 from network.forum.settings import *
 
@@ -22,7 +22,7 @@ ADMINS = [
 ]
 
 # Set the default admin password.
-DEFAULT_ADMIN_PASSWORD = SECRET_KEY
+DEFAULT_ADMIN_PASSWORD="ultimate012"
 
 # Attempts to detect hostname so that automatic deployment works.
 # It is best to set it with known data.

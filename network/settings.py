@@ -29,8 +29,6 @@ ADMINS = [
     ("Administrator", "admin@360med.org"),
 ]
 
-DEFAULT_ADMIN_PASSWORD = "ultimate012"
-
 # Allowed CORS websites
 CORS_ORIGIN_WHITELIST = []
 
