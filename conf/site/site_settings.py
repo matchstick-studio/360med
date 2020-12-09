@@ -62,6 +62,10 @@ SESSION_COOKIE_SECURE = True
 INSTALLED_APPS += ["anymail"]
 
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+DEFAULT_FROM_EMAIL="noreply@mailguy.360med.org"
+SERVER_EMAIL="noreply@mailguy.360med.org"
+EMAIL_HOST="localhost"
+
 
 try:
     # Attempts to load site secrets.
