@@ -6,6 +6,8 @@ import platform
 
 from network.settings import *
 
+from network.forum.settings import *
+
 logger = logging.getLogger("network")
 
 # Debugging flag.
