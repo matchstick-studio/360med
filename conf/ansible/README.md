@@ -75,7 +75,7 @@ Or you may run the ansible playbook directly:
     
 The playbook above will clone the repository into the directory.
 
-    /export/www/biostar-central/
+    /export/www/platform/
     
 Edit the settings file located in `conf/run/site_settings.py` and change:
 

@@ -58,7 +58,7 @@
       when: conda_installed is success
       with_items: "{{conda_environments}}"
 
-    - name: Get the biostar-central software
+    - name: Get the network's software
       git:
         repo: "{{ engine_git }}"
         dest: "{{ engine_dir }}"
@@ -68,7 +68,7 @@
     - name: Link directory to the home
       file:
         src: "{{ engine_dir }}"
-        dest: "~/biostar-central"
+        dest: "~/platform"
         state: link
 
     - name: Make the spooler directory
