@@ -6,13 +6,6 @@ import platform
 
 from network.settings import *
 
-# from network.recipes.settings import *
-
-#from themes.bioconductor.settings import *
-
-from network.forum.settings import *
-
-
 logger = logging.getLogger("network")
 
 # Debugging flag.
@@ -65,7 +58,7 @@ WSGI_APPLICATION = 'conf.run.site_wsgi.application'
 
 SESSION_COOKIE_SECURE = True
 
-INSTALLED_APPS + ["anymail"]
+INSTALLED_APPS += ["anymail"]
 
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
