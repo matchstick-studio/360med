@@ -4,7 +4,7 @@ import requests
 import logging
 import platform
 
-#from network.settings import *
+from network.settings import *
 
 logger = logging.getLogger("network")
 
