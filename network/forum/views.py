@@ -215,7 +215,7 @@ def pages(request, fname):
 
     return render(request, 'pages.html', context=context)
 
-@login_required # hack to ensure post_list view is locked so users need accounts first
+#@login_required # hack to ensure post_list view is locked so users need accounts first
 @ensure_csrf_cookie
 def post_list(request, topic=None, cache_key='', extra_context=dict()):
     """

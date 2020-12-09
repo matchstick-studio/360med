@@ -335,7 +335,7 @@ def user_signup(request):
             messages.info(request, msg)
 
             # so rather than just send people to the homepage post-reg, we need them to fill another form to validate their info
-            return redirect(reverse("verification")) # was "/"
+            return redirect("/") # was "/"
 
     else:
         form = forms.SignUpWithCaptcha()
