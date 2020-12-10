@@ -4,10 +4,6 @@ import requests
 import logging
 import platform
 
-from network.settings import *
-from network.emailer.settings import *
-
-from network.account.settings import *
 from network.forum.settings import *
 
 logger = logging.getLogger("network")
