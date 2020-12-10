@@ -33,7 +33,7 @@ SITE_ID = 1
 HTTP_PORT = ''
 PROTOCOL = 'http'
 
-ALLOWED_HOSTS += [SITE_DOMAIN, "test.360med.org", "360med.org"]
+ALLOWED_HOSTS += [SITE_DOMAIN, "360med.org"]
 
 DATABASE_NAME = "network-database"
 DATABASE_USER = 'network_admin'

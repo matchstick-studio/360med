@@ -77,6 +77,12 @@
         state: directory
         mode: 0755
 
+    - name: Make the logs directory
+      file:
+        path: "{{ engine_dir }}/export/logs"
+        state: directory
+        mode: 0755
+
     - name: Make the conf directory
       file:
         path: "{{ engine_dir }}/conf/run"
