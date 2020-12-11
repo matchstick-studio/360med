@@ -55,7 +55,7 @@ updated
         alt="">
 {% endif %}
 <a href="{% url "user_profile" post.lastedit_user.profile.uid %}">
-    <div class="user-details-card-name">
+    <div>
         {{ post.lastedit_user.profile.name|truncatechars:150 }}
         <span>
             posted {{ post.lastedit_date|time_ago }}
