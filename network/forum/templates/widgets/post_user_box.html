@@ -13,9 +13,11 @@
         </div>
         <div class="ui hidden divider"></div>
         <div class="center aligned header">{{ target_user.profile.name }}</div>
+        {% if target_user.profile.position %}
         <div class="center aligned description">
-            <p>@ todo show current employment</p>
+            <p>{{ target_user.profile.position }}, {{ target_user.profile.institution }}</p>
         </div>
+        {% endif %}
     </div>
     <div class="center aligned">
         <a href="{% url 'user_profile' target_user.profile.uid %}" class="ui button">View full profile</a>

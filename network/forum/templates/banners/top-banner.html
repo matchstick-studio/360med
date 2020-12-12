@@ -1,11 +1,10 @@
-{% if user.profile.med_verified == False %}
+{% if user.profile.email_verified == False %}
 <div class="ui mini negative message">
     <i class="close icon"></i>
     <div class="header">
         Verify your account.
     </div>
-    <p>Verify your account. Your account will be limited until you finish verification.<a href="{% url 'verification' %}">
-        <i class="check icon"></i> Get verified</a>
+    <p>We sent you an email. Click the link to verify your account. Your account will be limited until you do this.
     </p>
 </div>
 {% endif %}

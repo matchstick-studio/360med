@@ -1,0 +1,35 @@
+{% extends "forum_base.html" %}
+{% load static %}
+{% load forum_tags %}
+{% load accounts_tags %}
+{% block headtitle %}Join the 360Med Network{% endblock %}
+
+{% block topmenu %}
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="ui middle aligned grid">
+
+    <div class="column">
+
+        <div class="ui image header" id="logo">
+            <a href="/"><img class="ui image" src="{% static "images/logo.png" %}"></a>
+        </div>
+
+        {% show_messages messages %}
+
+        <div class="ui large header">
+            Build your profile
+        </div>
+
+        {% block stage %}
+        <!-- stepped form goes here -->
+        {% endblock %}
+
+    </div>
+</div>
+
+{% endblock %}

@@ -35,7 +35,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from . import forms, tasks
 from .auth import validate_login, send_verification_email
 from .const import *
-from .models import User, Profile, UserVerification, Message, Logger, change_avatar
+from .models import User, Profile, Message, Logger, change_avatar
 from .tokens import account_verification_token
 from .util import now, get_uuid
 
@@ -113,6 +113,17 @@ def edit_profile(request):
 
     context = dict(user=user, form=form)
     return render(request, "accounts/edit_profile.html", context=context)
+
+@login_required
+def edit_professional(request):
+    profile = request.user.profile
+    if request.method == 'POST':
+        form = forms.ProfessionalForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+
+            return redirect('')
+            
 
 def edit_notifications(request, pk):
 
@@ -334,10 +345,9 @@ def user_signup(request):
             tasks.verification_email.spool(user=user) # send email verification email
     
             # so rather than just send people to the homepage post-reg, we need them to fill another form to validate their info
-            return redirect(reverse("verification")) # was "/"
+            return redirect('onboarding') # was "/"
 
             messages.info(request, msg)
-
 
     else:
         form = forms.SignUpWithCaptcha()
@@ -348,37 +358,6 @@ def user_signup(request):
         tab="signup",
     )
     return render(request, "accounts/signup.html", context=context)
-
-def user_verification(request):
-
-    if request.user.is_anonymous:
-        messages.error(request, "Must be logged in to edit profile")
-        return redirect("/")
-    
-    user = request.user
-
-    if request.method == "POST":
-        form = forms.VerificationForm(user, request.POST, request.FILES)
-        if form.is_valid():
-            verification = form.save()
-            log_text = f"Verification data submitted for user={user.pk}; handle={user.profile.uid} ( {user.profile.name} )"
-            Logger.objects.create(
-                user=request.user, log_text=log_text, action=Logger.VERIFY
-            )
-            messages.success(request, "Your details have been uploaded. You will have full access once they have been verified.")
-
-            return redirect(reverse("user_profile", kwargs=dict(uid=user.profile.uid)))
-
-        else:
-            errs = ",".join([err for err in form.non_field_errors()])
-            messages.error(request, errs)
-
-    else:
-        form = forms.VerificationForm(user=user)
-
-    context = dict(user=user, form=form)
-    
-    return render(request, "accounts/verify_account.html", context=context)
 
 
 @login_required
@@ -653,3 +632,51 @@ def delete_account(request):
 
     messages.error(request, _('Failed to delete account'))
     return redirect('user_profile')
+
+"""" Onboarding views """
+@login_required
+def personal(request):
+    profile = request.user.profile
+    if request.method == 'POST':
+        form = forms.PersonalForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            """ profile.avatar = generate_avatar(profile)
+            profile.save() """
+            return redirect('register-professional')
+    else:
+        form = forms.PersonalForm(instance=profile)
+    return render(request, 'onboarding/personal.html', {
+        'form': form
+    })
+
+@login_required
+def professional(request):
+    profile = request.user.profile
+    if request.method == 'POST':
+        form = forms.ProfessionalForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = forms.ProfessionalForm(instance=profile)
+    return render(request, 'onboarding/professional.html', {
+        'form': form
+    })
+
+
+@login_required
+def subscriptions(request):
+    subscriptions = request.user.subscriptions
+    if request.method == 'POST':
+        form = forms.SubscriptionsForm(request.POST, instance=subscriptions)
+        if form.is_valid():
+            form.save()
+            #request.user.has_finished_registration = True
+            request.user.save()
+            return redirect('/')
+    else:
+        form = forms.SubscriptionsForm(instance=subscriptions)
+    return render(request, 'onboarding/subscriptions.html', {
+        'form': form
+    })

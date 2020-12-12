@@ -6,11 +6,11 @@ from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 from django.contrib.auth.models import User
 from django.conf import settings
-from .models import Profile, UserImage, UserVerification, generate_avatar
+from .models import Profile, UserImage, generate_avatar
 from . import auth, util
 from django.utils.translation import ugettext_lazy as _
 
-from .widgets import PhoneNumberPrefixWidget
+from .widgets import PhoneNumberPrefixWidget, XDSoftDateTimePickerInput
 from django_countries.fields import CountryField
 
 logger = logging.getLogger("engine")
@@ -67,28 +67,10 @@ class SignUpForm(forms.Form):
         help_text="Enter the same password as before, for verification.",
     )
 
-    email = forms.CharField(
+    email = forms.EmailField(
         label="Email",
-        strip=False,
-        widget=forms.TextInput(),
         max_length=254,
         min_length=2,
-    )
-
-    occupation = forms.ChoiceField(
-        required=True,
-        label="Occupation",
-        choices=Profile.OCCUPATION_CHOICES,
-        widget=forms.Select(attrs={"class": "ui dropdown"}),
-        help_text="""What do you do?""",
-    )
-
-    expertise = forms.CharField(
-        label="Expertise",
-        max_length=500,
-        required=False,
-        help_text="""Your specific areas of expertise or interest""",
-        widget=forms.HiddenInput(),
     )
 
     def clean_password2(self):
@@ -106,19 +88,12 @@ class SignUpForm(forms.Form):
             raise forms.ValidationError("This email is already being used.")
         return data
 
-    def clean_expert_areas(self):
-        expertise = self.cleaned_data["expertise"]
-        expertise = ",".join(list(set(expertise.split(","))))
-        return validate_tags(tags=expertise)
-
     def save(self):
 
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password1")
         first_name = self.cleaned_data.get("first_name")
         last_name = self.cleaned_data.get("last_name")
-        occupation = self.cleaned_data.get("occupation")
-        expertise = self.cleaned_data["expertise"]
         name = self.cleaned_data.get("first_name") + ' ' + self.cleaned_data.get("last_name")
         user = User.objects.create(email=email, first_name=first_name, last_name=last_name)
         user.set_password(password)
@@ -136,14 +111,71 @@ class SignUpWithCaptcha(SignUpForm):
         if settings.RECAPTCHA_PRIVATE_KEY:
             self.fields["captcha"] = ReCaptchaField(widget=ReCaptchaWidget())
 
+class PersonalForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('country','location','phone','gender', 'dob')
+        widgets = {
+            'country': forms.Select(attrs={"class": "ui search dropdown"}),
+            'phone': PhoneNumberPrefixWidget(attrs={"placeholder": "Mobile number"}),
+            'gender': forms.Select(attrs={"class": "ui dropdown"}),
+            'dob': XDSoftDateTimePickerInput()
+        }
 
-class ProfessionalForm(forms.Form):
-    """ We will add professional info and work fields here """
-    pass
+class ProfessionalForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('degree', 'position', 'institution', 'occupation', 'expertise', 'affiliations', 'licence')
+        widgets = {
+            'degree': forms.Select(attrs={"class": "ui dropdown"}),
+            'occupation': forms.Select(attrs={"class": "ui dropdown"}),
+            'expertise': forms.HiddenInput(),
+            'affiliations': forms.HiddenInput()
+        }
 
-class EducationForm(forms.Form):
-    """ We will add education related fields here """
-    pass
+    def clean_expert_areas(self):
+        expertise = self.cleaned_data["expertise"]
+        expertise = ",".join(list(set(expertise.split(","))))
+        return validate_tags(tags=expertise)
+
+    def clean_affiliations(self):
+        affiliations = self.cleaned_data["affiliations"]
+        affiliations = ",".join(list(set(affiliations.split(","))))
+        return validate_tags(tags=affiliations)
+
+
+class NotificationsForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('message_prefs', 'watched_tags', 'my_tags')
+        widgets = {
+            'message_prefs': forms.Select(attrs={"class": "ui dropdown"}),
+            'watched_tags': forms.HiddenInput(),
+            'my_tags': forms.HiddenInput()
+
+        }
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(NotificationsForm, self).__init__(*args, **kwargs)
+
+    def clean_watched_tags(self):
+        watched_tags = self.cleaned_data["watched_tags"]
+        watched_tags = ",".join(list(set(watched_tags.split(","))))
+        return validate_tags(tags=watched_tags)
+
+    def clean_my_tags(self):
+        my_tags = self.cleaned_data["my_tags"]
+        my_tags = ",".join(list(set(my_tags.split(","))))
+        return validate_tags(tags=my_tags)
+
+class SubscriptionsForm(forms.Form):
+
+    """ subscribe to groups """
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(SubscriptionsForm, self).__init__(*args, **kwargs)  
 
 class LogoutForm(forms.Form):
     pass
@@ -407,78 +439,3 @@ class SecondaryEmailsForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         self.user = user
         super(SecondaryEmailsForm, self).__init__(*args, **kwargs)
-
-
-class NotificationsForm(forms.Form):
-
-    message_prefs = forms.ChoiceField(
-        required=True,
-        label="Notifications",
-        choices=Profile.MESSAGING_TYPE_CHOICES,
-        widget=forms.Select(attrs={"class": "ui dropdown"}),
-        help_text="""Default mode sends notifications using local messages.""",
-    )
-
-    watched_tags = forms.CharField(
-        label="Watched tags",
-        max_length=50,
-        required=False,
-        help_text="""Add a tag by typing a word then adding a comma or press ENTER or SPACE.
-                              """,
-        widget=forms.HiddenInput(),
-    )
-
-    def __init__(self, user, *args, **kwargs):
-        self.user = user
-        super(NotificationsForm, self).__init__(*args, **kwargs)
-
-    def clean_watched_tags(self):
-        watched_tags = self.cleaned_data["watched_tags"]
-        watched_tags = ",".join(list(set(watched_tags.split(","))))
-        return validate_tags(tags=watched_tags)
-
-class SubscriptionsForm(forms.Form):
-
-    my_tags = forms.CharField(
-        label="My tags",
-        max_length=500,
-        required=False,
-        help_text="""Add a tag by typing a word then adding a comma or press ENTER or SPACE.
-                              """,
-        widget=forms.HiddenInput(),
-    )
-
-    def __init__(self, user, *args, **kwargs):
-        self.user = user
-        super(SubscriptionsForm, self).__init__(*args, **kwargs)
-
-    def clean_my_tags(self):
-        my_tags = self.cleaned_data["my_tags"]
-        my_tags = ",".join(list(set(my_tags.split(","))))
-        return validate_tags(tags=my_tags)
-
-class VerificationForm(forms.Form):
-
-    licence = forms.CharField(
-    max_length=100,
-    required=True,
-    help_text="""As it appears on your licence""",
-    )
-
-    licence_img = forms.ImageField(
-    required=False,
-    validators=[FileExtensionValidator(allowed_extensions=IMG_EXTENTIONS)],
-    )
-
-    def __init__(self, user, *args, **kwargs):
-        self.user = user
-        super(VerificationForm, self).__init__(*args, **kwargs)
-
-    def save(self):
-        licence = self.cleaned_data.get("licence")
-        licence_img = self.cleaned_data.get("licence_img")
-        verification = UserVerification.objects.create(licence=licence, licence_img=licence_img)
-        verification.user = self.user
-        verification.save()
-
-        return verification

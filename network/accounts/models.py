@@ -2,6 +2,7 @@ import uuid
 import os
 import io
 from datetime import datetime, timedelta
+from django.utils import timezone
 import pyavagen
 from django.core.files.base import ContentFile
 import mistune
@@ -61,15 +62,6 @@ class UserImage(models.Model):
     image = models.ImageField(
         default=None, blank=True, upload_to=image_path, max_length=MAX_FIELD_LEN
     )
-
-class UserVerification(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    # Image file path, relative to MEDIA_ROOT
-    licence_img = models.ImageField(
-        default=None, blank=True, upload_to=image_path, max_length=MAX_FIELD_LEN
-    )
-    licence = models.CharField(max_length=100, blank=True, null=True)
-    date_submitted = models.DateTimeField(auto_now_add=True, max_length=255, null=True)
 
 def get_avatar_full_path(instance, filename):
     ext = filename.split('.')[-1]
@@ -170,7 +162,10 @@ class Profile(models.Model):
     role = models.IntegerField(default=READER, choices=ROLE_CHOICES)
 
     # The role of the user.
-    gender = models.IntegerField(default=MALE, choices=GENDER_CHOICES)
+    gender = models.IntegerField(default=MALE, choices=GENDER_CHOICES, blank=False)
+
+    # DOB
+    dob = models.DateTimeField(default=timezone.now, db_index=True, null=True, blank=False)
 
     # Alt email addresses (up to two)
     alt_email_a = models.EmailField(max_length=MAX_TEXT_LEN, null=True, blank=True)
@@ -179,11 +174,15 @@ class Profile(models.Model):
 
     # degree type
     degree = models.CharField(
-        choices=DEGREE, max_length=30, null=True,
+        choices=DEGREE, max_length=30, null=True, blank=False
     )
 
     # The main occupation of the user.
-    occupation = models.IntegerField(default=MEDICAL_DOCTOR, choices=OCCUPATION_CHOICES)
+    occupation = models.IntegerField(default=MEDICAL_DOCTOR, choices=OCCUPATION_CHOICES, blank=False)
+
+    position = models.CharField(max_length=MAX_NAME_LEN, null=True)
+
+    institution = models.CharField(max_length=MAX_NAME_LEN, null=True)
 
     qualifications = models.CharField(blank=True, null=True, max_length=100)
 
@@ -192,6 +191,9 @@ class Profile(models.Model):
 
     # Users select those institutions they are affiliated with
     affiliations = models.CharField(default="", max_length=MAX_TEXT_LEN, blank=True)
+
+    # licence number of medical body
+    licence = models.CharField(max_length=100, blank=False, null=True)
 
     # The date the user last logged in.
     last_login = models.DateTimeField(null=True, max_length=255, db_index=True)
@@ -203,7 +205,7 @@ class Profile(models.Model):
     date_joined = models.DateTimeField(auto_now_add=True, max_length=255)
 
     # user's country
-    country = CountryField(null=True)
+    country = CountryField(null=True, blank=False)
 
     # User provided location.
     location = models.CharField(default="", max_length=255, blank=True, db_index=True)
@@ -230,8 +232,6 @@ class Profile(models.Model):
 
     # The state of the user email verfication.
     email_verified = models.BooleanField(default=False)
-
-    med_verified = models.BooleanField(default=False)
 
     # Automatic notification
     notify = models.BooleanField(default=False)

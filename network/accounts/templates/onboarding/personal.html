@@ -1,0 +1,82 @@
+{% extends "onboarding/base.html" %}
+{% load forum_tags %}
+
+{% block stage %}
+
+<style>
+    .phone {
+        display: inline;
+    }
+
+    .phone.dropdown {
+        width: 40% !important;
+        min-width: 0 !important;
+    }
+
+    #id_phone_1 {
+        width: 60%;
+    }
+</style>
+
+<div class="ui mobile stackable bottom attached steps">
+    <div class="active step">
+        <i class="info icon"></i>
+        <div class="content">
+            <div class="title">Personal</div>
+            <div class="description">More about you</div>
+        </div>
+    </div>
+    <div class="disabled step">
+        <i class="stethoscope icon"></i>
+        <div class="content">
+            <div class="title">Professional</div>
+            <div class="description">A bit about work</div>
+        </div>
+    </div>
+</div>
+<!-- personal form -->
+<div class="ui attached segment">
+<form class="ui large form" action="" method="POST" novalidate>
+    {% form_errors form %}
+    <div class="ui basic segment">
+    
+        {% csrf_token %}
+
+        <div class="two fields">
+
+            <div class="required field">
+                <label>Date of birth</label>
+                {{ form.dob }}
+            </div>
+
+            <div class="required field">
+                <label>Gender</label>
+                {{ form.gender }}
+            </div>
+        </div>
+    
+        <div class="two fields">
+            <div class="required field">
+                <label>Country</label>
+                {{ form.country }}
+            </div>
+    
+            <div class="field">
+                <label>City</label>
+                {{ form.location }}
+            </div>
+        </div>
+
+        <div class="form-field field phone">
+            <label>Mobile Number</label>
+            {{ form.phone }}
+        </div>
+
+    </div>
+
+    <button type="submit" class="ui large right floated primary button">Next</button>
+    
+</form>
+</div>
+
+{% endblock %}

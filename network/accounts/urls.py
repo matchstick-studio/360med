@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.conf import settings
 from network.accounts import views
+from django.views.generic import RedirectView
 
 
 account_patterns = [
@@ -22,7 +23,6 @@ account_patterns = [
     path(r'moderate/<int:uid>/', views.user_moderate, name="user_moderate"),
     path(r'login/', views.user_login, name="login"),
     path(r'signup/', views.user_signup, name="signup"),
-    path(r'verification/', views.user_verification, name="verification"),
     path(r'profile/<str:uid>/', views.user_profile, name="user_profile"),
 
     path(r'edit/profile/', views.edit_profile, name='edit_profile'),
@@ -46,13 +46,19 @@ account_patterns = [
     # External url login
     path(r'external/', views.external_login, name="external"),
 
+    # onboarding
+    path('onboarding/', RedirectView.as_view(pattern_name='register-personal'),
+         name='onboarding'),
+    path('onboarding/personal/', views.personal, name='register-personal'),
+    path('onboarding/professional/', views.professional, name='register-professional'),
+    path('onboarding/subscriptions/', views.subscriptions, name='register-subscriptions'),
+
 ]
 
 
 urlpatterns = [
 
     path("", include(account_patterns)),
-
 ]
 
 if settings.PAGEDOWN_IMAGE_UPLOAD_ENABLED:

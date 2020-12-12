@@ -1,0 +1,73 @@
+{% extends "onboarding/base.html" %}
+{% load forum_tags %}
+
+{% block stage %}
+
+<div class="ui mobile stackable bottom attached steps">
+    <div class="completed step">
+        <i class="info icon"></i>
+        <div class="content">
+            <div class="title">Personal</div>
+            <div class="description">More about you</div>
+        </div>
+    </div>
+    <div class="active step">
+        <i class="stethoscope icon"></i>
+        <div class="content">
+            <div class="title">Professional</div>
+            <div class="description">A bit about work</div>
+        </div>
+    </div>
+</div>
+<!-- personal form -->
+<div class="ui attached segment">
+    <form class="ui large form" action="" method="POST" novalidate>
+        {% form_errors form %}
+        <div class="ui basic segment">
+
+            {% csrf_token %}
+
+            <div class="two fields">
+
+                <div class="required field">
+                    <label>Current Position</label>
+                    {{ form.position }}
+                </div>
+
+                <div class="required field">
+                    <label>Institution/Organisation</label>
+                    {{ form.institution }}
+                </div>
+            </div>
+
+            <div class="two fields">
+                <div class="required field">
+                    <label>Highest education level</label>
+                    {{ form.degree }}
+                </div>
+
+                <div class="required field">
+                    <label>Occupation</label>
+                    {{ form.occupation }}
+                </div>
+
+            </div>
+
+            <div class="required field">
+                <label>Licence number</label>
+                {{ form.licence }}
+                <div class="muted">
+                    Number allocated by the national medical association in your country. Will be verified!
+                </div>
+            </div>
+
+            
+
+        </div>
+
+        <button type="submit" class="ui large right floated green button">Save &amp; Update</button>
+
+    </form>
+</div>
+
+{% endblock %}
