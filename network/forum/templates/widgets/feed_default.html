@@ -31,7 +31,7 @@
     <div class="ui divider"></div>
 {% endcomment %}
 
-
+{% comment %}
     <div class="event">
         <div class="ui container">
             <b> Recent Votes </b>
@@ -63,7 +63,7 @@
                         </a>
                         </span>
 
-                        {{ profile.location }}, <span class="muted">{{ profile.last_login|time_ago }}</span>
+                        <i class="{{ profile.country.name }} flag"></i>{{ profile.country.name}}, <span class="muted">{{ profile.last_login|time_ago }}</span>
                     </div>
 
                 {% endfor %}
@@ -121,6 +121,40 @@
 
                 {% endfor %}
 
+            </div>
+        </div>
+    </div>
+
+    {% endcomment %}
+
+    <!-- show upcoming events -->
+
+    <div class="event">
+        <div class="ui container">
+            <b> Upcoming events </b>
+            <div class="ui relaxed list">
+                {% for vote in recent_votes %}
+                <div class="item spaced">
+                    <a href="{% url 'post_view' vote.post.uid %}">{{ vote.post.title }}</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- show an ad -->
+    <div class="ui medium rectangle test ad" data-text="Ad Unit 1"></div>
+
+    <!-- show available opportunities-->
+    <div class="event">
+        <div class="ui container">
+            <b> Jobs & Opportunities </b>
+            <div class="ui relaxed list">
+                {% for vote in recent_votes %}
+                <div class="item spaced">
+                    <a href="{% url 'post_view' vote.post.uid %}">{{ vote.post.title }}</a>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>

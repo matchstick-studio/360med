@@ -289,6 +289,12 @@ def latest(request):
     """
     Show latest post listing.
     """
+    # first check if user is logged in and has finished registration
+    if not request.user.is_authenticated:
+        return redirect('login')
+    elif not request.user.profile.has_finished_registration:
+        return redirect('onboarding')
+
     order = request.GET.get("order", "")
     tag = request.GET.get("tag", "")
     topic = request.GET.get("type", "")
@@ -632,3 +638,21 @@ def post_moderate(request, uid):
     context = dict(form=form, post=post)
     return render(request, "forms/form_moderate.html", context)
 
+
+@login_required
+def send_invites(request):
+
+    if request.method == "POST":
+        form = forms.InvitePeersForm(request.POST)
+        if form.is_valid():
+            form.save(request)
+            messages.success(request, "Invitation sent")
+        else:
+            messages.warning(request, "Errors while sending invitation")
+        return redirect('/')
+
+    else:
+        form = forms.InvitePeersForm()
+
+    context = dict(form=form)
+    return render(request, "invitations/invite_form.html", context)

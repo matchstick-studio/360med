@@ -1,0 +1,43 @@
+{% extends "forum_base.html" %}
+{% load accounts_tags %}
+{% load forum_tags %}
+
+{% block headtitle %}Invite Peers{% endblock %}
+
+{% block content %}
+
+<div class="ui stackable grid">
+
+    <div class="column">
+        <h1 class="ui center header">Invite Your Peers</h1>
+        <p> Dear {{ user.profile.name }},</p>
+        <p>As you already know 360Med is a closed network of practicing individuals in
+            the medical profession on the Africa Continent...Please add their details below. They will receive an email with
+            instructions.</p>
+
+
+        <form class="ui large form" action="{% url 'invite' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="two fields">
+                <div class="required field">
+                    <label>First Name</label>
+                    {{ form.first_name }}
+                </div>
+                <div class="required field">
+                    <label>Last Name</label>
+                    {{ form.last_name }}
+                </div>
+            </div>
+            <div class="required field">
+                <label>Email Address</label>
+                {{ form.email }}
+            </div>
+
+            <button type="submit" class="ui large primary right floated button">Send Invitation</button>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

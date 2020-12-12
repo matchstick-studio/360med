@@ -32,7 +32,7 @@ updated
 {% if avatar %}
     <img class="ui avatar image"
         src="{% if post.author.profile.avatar %}{{ post.author.profile.avatar.url }}{% else %}{% gravatar user=post.author size=32 %}{% endif %}"
-        alt="">
+        alt="{{ post.author.profile.name" />
 {% endif %}
 <a href="{% url "user_profile" post.author.profile.uid %}">
     <div class="user-details-card-name">
@@ -52,10 +52,10 @@ updated
 {% if avatar %}
     <img class="ui avatar image"
         src="{% if post.lastedit_user.profile.avatar %}{{ post.lastedit_user.profile.avatar.url }}{% else %}{% gravatar user=post.lastedit_user size=32 %}{% endif %}"
-        alt="">
+        alt="{{ post.lastedit_user.profile.name }}">
 {% endif %}
 <a href="{% url "user_profile" post.lastedit_user.profile.uid %}">
-    <div>
+    <div class="user-details-card-name">
         {{ post.lastedit_user.profile.name|truncatechars:150 }}
         <span>
             posted {{ post.lastedit_date|time_ago }}

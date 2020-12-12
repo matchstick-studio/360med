@@ -51,7 +51,6 @@ account_patterns = [
          name='onboarding'),
     path('onboarding/personal/', views.personal, name='register-personal'),
     path('onboarding/professional/', views.professional, name='register-professional'),
-    path('onboarding/subscriptions/', views.subscriptions, name='register-subscriptions'),
 
 ]
 

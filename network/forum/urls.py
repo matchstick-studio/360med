@@ -61,6 +61,9 @@ forum_patterns = [
     # Community urls
     path('community/', views.community_list, name='community_list'),
 
+    # invitation urls
+    path('invite/', views.send_invites, name='invite'),
+
     # Api calls
     path(r'api/traffic/', api.traffic, name='api_traffic'),
     path(r'api/user/<int:uid>/', api.user_details, name='api_user'),

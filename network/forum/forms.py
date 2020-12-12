@@ -10,6 +10,8 @@ from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 from network.accounts.models import User
 from .models import Post, Event, Job
 from network.forum import models, auth
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
 
 from .const import *
 
@@ -369,3 +371,28 @@ class JobForm(forms.Form):
             raise forms.ValidationError(f"Too short, place add more than {MIN_CHARS}")
 
         return content
+
+class InvitePeersForm(forms.Form):
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+
+    def save(self, request):
+        context = {
+            'email': self.cleaned_data['email'],
+            'sender': request.user,
+            'first_name': self.cleaned_data['first_name'],
+            'last_name': self.cleaned_data['last_name'],
+            'protocol': 'https' if request.is_secure() else "http",
+            'domain': request.get_host(),
+        }
+        html = render_to_string('invitations/invite.html', context)
+        text = render_to_string('invitations/invite.txt', context)
+        send_mail(
+            'Invitation to 360Med Network',
+            message=text,
+            html_message=html,
+            recipient_list=[self.cleaned_data['email']],
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            fail_silently=False,
+        )

@@ -239,6 +239,8 @@ class Profile(models.Model):
     # Opt-in to all messages from the site
     opt_in = models.BooleanField(default=False)
 
+    has_finished_registration = models.BooleanField(default=False, null=True)
+
     # avatar stuff
     avatar = models.ImageField(upload_to=get_avatar_full_path, blank=True)
     avatar_version = models.IntegerField(default=0, blank=True, editable=False)

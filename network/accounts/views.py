@@ -657,26 +657,12 @@ def professional(request):
         form = forms.ProfessionalForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
+            # we need to update registrations status
+            profile.has_finished_registration = True
+            profile.save()
             return redirect('/')
     else:
         form = forms.ProfessionalForm(instance=profile)
     return render(request, 'onboarding/professional.html', {
-        'form': form
-    })
-
-
-@login_required
-def subscriptions(request):
-    subscriptions = request.user.subscriptions
-    if request.method == 'POST':
-        form = forms.SubscriptionsForm(request.POST, instance=subscriptions)
-        if form.is_valid():
-            form.save()
-            #request.user.has_finished_registration = True
-            request.user.save()
-            return redirect('/')
-    else:
-        form = forms.SubscriptionsForm(instance=subscriptions)
-    return render(request, 'onboarding/subscriptions.html', {
         'form': form
     })
