@@ -38,11 +38,11 @@
 
         <div class="stats">
         
-            <a href="{% url 'post_view' post.uid %}" class="ui transparent label">{{ post.get_votecount|bignum }} Vote{{ post.get_votecount|pluralize }}</a>
+            <a href="{% url 'post_view' post.uid %}" class="ui transparent label">Upvoted {{ post.get_votecount|bignum }} time{{ post.get_votecount|pluralize }}</a>
             {% if post.reply_count > 0 %}
             <a href="{% url 'post_view' post.uid %}" class="ui transparent label bookmark">{{ post.reply_count }} Comment{{ post.reply_count|pluralize }}</a>
             {% else %}
-            <a href="{% url 'post_view' post.uid %}" class="ui transparent label bookmark">Add comment</a>
+            <a href="{% url 'post_view' post.uid %}" class="ui blue label bookmark">Add comment</a>
             <!-- <div class="ui label">{{ post.root.view_count|bignum }} View{{ post.root.view_count|pluralize }}</div>-->
             {% endif %}
             {% if post.subs_count > 4 %}

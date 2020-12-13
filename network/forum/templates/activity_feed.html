@@ -1,0 +1,18 @@
+{% extends "forum_list.html" %}
+{% load forum_tags %}
+{% load humanize %}
+{% load cache %}
+
+{% block sideblock %}
+{% endblock %}
+
+{% block body %}
+
+<div class="ui center header">
+Activity Feed
+</div>
+
+{% activity_feed user=request.user %}
+
+
+{% endblock %}

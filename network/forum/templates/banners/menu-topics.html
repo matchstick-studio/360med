@@ -24,7 +24,7 @@
            href="{% url 'myvotes' %}">
 
             {% if counts.votes.count %}
-                👍 Votes <div class="ui violet left pointing label">{{ counts.votes.count }}</div>
+                👍 Votes <div class="ui teal left pointing middle aligned label">{{ counts.votes.count }}</div>
             {%  else %}
                 👍 My Votes
             {% endif %}

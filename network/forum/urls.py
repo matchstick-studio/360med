@@ -39,6 +39,8 @@ forum_patterns = [
 
     path('b/view/<str:uid>/', views.badge_view, name='badge_view'),
 
+    path('activity', views.activity_feed, name='activity'),
+
     # Ajax calls
     path('ajax/digest/', ajax.ajax_digest, name='ajax_digest'),
     path('ajax/vote/', ajax.ajax_vote, name='vote'),

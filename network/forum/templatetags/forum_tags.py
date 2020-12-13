@@ -515,9 +515,17 @@ def get_post_list(target, request, show=None):
 
     return posts
 
-
 @register.inclusion_tag("widgets/feed_default.html")
 def default_feed(user):
+    context = dict(
+
+    )
+
+    return context
+
+
+@register.inclusion_tag("widgets/recent_activity.html")
+def activity_feed(user):
 
     recent_votes = Vote.objects.filter(
         post__status=Post.OPEN, post__root__status=Post.OPEN

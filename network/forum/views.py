@@ -148,9 +148,6 @@ def get_events(user, tag="", order="", limit=None):
     """
     query = Event.objects.all()
 
-    if user.is_anonymous or not user.profile.is_moderator:
-        query = query.exclude(Q(spam=Post.SPAM) | Q(status=Post.DELETED))
-    # Filter by tags if specified.
     if tag:
         query = query.filter(tags__name=tag.lower())
 
@@ -488,6 +485,9 @@ def post_view(request, uid):
     context = dict(post=root, tree=comment_tree, form=form, answers=answers, users_str=users_str)
 
     return render(request, "post_view.html", context=context)
+
+def activity_feed(request):
+    return render(request, "activity_feed.html")
 
 @ensure_csrf_cookie
 def event_view(request, uid):
