@@ -43,9 +43,6 @@ account_patterns = [
     # Message urls
     path(r'inbox/', views.message_list, name='inbox'),
 
-    # External url login
-    path(r'external/', views.external_login, name="external"),
-
     # onboarding
     path('onboarding/', RedirectView.as_view(pattern_name='register-personal'),
          name='onboarding'),

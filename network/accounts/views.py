@@ -483,37 +483,6 @@ def email_verify_account(request, uidb64, token):
     messages.error(request, "Link is expired.")
     return redirect("/")
 
-
-def external_login(request):
-    """Login or signup a user."""
-    payload = request.GET.get("payload", "")
-
-    try:
-        signer = signing.Signer(settings.LOGIN_PRIVATE_KEY)
-        user_email = signer.unsign(payload)
-        user = User.objects.filter(email=user_email).first()
-
-        if not user:
-            name = user_email.split("@")[0]
-            user = User.objects.create(
-                email=user_email, first_name=name, password=str(get_uuid(16))
-            )
-            user.username = name.split()[0] + str(get_uuid(8))
-            user.save()
-            msg = f"Signed up, <a href={reverse('password_reset')}><b> Please reset your password.</b></a>"
-            messages.success(request, mark_safe(msg))
-
-        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-        messages.success(request, "Logged in!")
-        return redirect("/")
-
-    except Exception as exc:
-        logger.error(f"Error:{exc}")
-        messages.error(request, "Error unsigning.")
-
-    return redirect("/")
-
-
 @ratelimit(key="ip", rate="500/h")
 @ratelimit(key="ip", rate="25/m")
 def password_reset(request):

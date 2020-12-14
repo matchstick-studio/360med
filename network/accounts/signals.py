@@ -13,6 +13,7 @@ def create_profile(sender, instance, created, raw, using, **kwargs):
     if created:
         # Set the username to a simpler form.
         username = f"{instance.first_name}-{instance.pk}" if instance.first_name else f'user-{instance.pk}'
+        # check if username exists and if it does, generate auto
         if User.objects.filter(username=username).exclude(id=instance.pk).exists():
             username = util.get_uuid(6)
 
