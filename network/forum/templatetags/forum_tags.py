@@ -23,7 +23,7 @@ from network.forum import markdown
 
 from network.accounts.models import Profile, Message
 from network.forum import const, auth
-from network.forum.models import Post, Vote, Award, Subscription
+from network.forum.models import Post, Vote, Award, Subscription, Job, Event
 
 User = get_user_model()
 
@@ -517,8 +517,19 @@ def get_post_list(target, request, show=None):
 
 @register.inclusion_tag("widgets/feed_default.html")
 def default_feed(user):
-    context = dict(
+    # Get upcoming events
+    recent_events = Event.objects.all()
+    recent_events = recent_events.order_by("-pk")[: settings.EVENT_FEED_COUNT]
 
+    # Get recently added jobs
+    recent_jobs = Job.objects.all()
+    recent_jobs = recent_jobs.order_by("-pk")[: settings.JOB_FEED_COUNT]
+
+    context = dict(
+        user=user,
+        users=[],
+        recent_events=recent_events,
+        recent_jobs=recent_jobs
     )
 
     return context

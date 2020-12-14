@@ -1,0 +1,78 @@
+{% extends "forum_list.html" %}
+{% load forum_tags %}
+{% load humanize %}
+{% load cache %}
+
+{% block headtitle %}
+360Med Network
+{% endblock %}
+
+{% block sideblock %}
+
+{% include "banners/menu-topics.html" %}
+{% endblock %}
+
+{% block body %}
+
+
+
+{% block listing %}
+{% if tag %}
+<div class="ui blue filter message">
+    Showing : <code>{{ tag }}</code> &bull;
+    <a href="{% url 'job_list' %}">
+        reset <i class="undo small icon"></i>
+    </a>
+</div>
+{% endif %}
+<div style="margin-top:30px">
+    <div class="ui divided link items">
+        {% for job in jobs %}
+        <div class="item">
+            <div class="content">
+                <a class="header" href="{% url 'job_view' job.uid %}">{{ job.title }}</a>
+                <div class="meta">
+                    <span class="cinema">{{ job.apply_before }}</span>
+                </div>
+                <div class="description">
+                    <p>
+                        {{ job.content }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="ui warn message">
+            No jobs found.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+<!-- <div class="ui page-bar segment">
+        {% pages objs=posts %}
+    </div> -->
+
+
+{% endblock %}
+
+{% block sidebar %}
+
+{% cache 60 sidebar %}
+
+{% if tab == 'following' %}
+{% custom_feed feed_type=tab objs=posts title='People you are following' %}
+{% elif tab == 'bookmarks' %}
+{% custom_feed feed_type=tab objs=posts title='People you have bookmarked' %}
+{% else %}
+{% default_feed user=request.user %}
+{% endif %}
+
+{% endcache %}
+
+
+{% endblock %}

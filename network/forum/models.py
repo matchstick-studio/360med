@@ -710,6 +710,9 @@ class Job(models.Model):
         from network.forum import markdown
 
         self.creation_date = self.creation_date or util.now()
+        self.uid = self.uid or util.get_uuid(limit=16)
+        self.institution = self.institution
+        self.external_link = self.external_link
 
         # Sanitize the job body.
         self.html = markdown.parse(self.content, job=self, clean=True, escape=False)

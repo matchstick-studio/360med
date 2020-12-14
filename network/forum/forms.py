@@ -325,10 +325,10 @@ class JobForm(forms.Form):
                             required=True,
                             help_text="Specify who is hiring")
 
-    apply_before = forms.DateField(label="Apply Before",
+    apply_before = forms.DateTimeField(label="Apply Before",
                             required=True,
                             help_text="When is the deadline?",
-                            widget=forms.DateTimeInput()
+                            input_formats=['%d/%m/%Y %H:%M']
                             )
 
     content = forms.CharField(widget=forms.Textarea,

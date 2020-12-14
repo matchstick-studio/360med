@@ -17,6 +17,8 @@ forum_patterns = [
 
     path('events', views.event_list, name='event_list'),
 
+    path('jobs', views.job_list, name='job_list'),
+
     path(r'pages/<str:fname>/', views.pages, name='pages'),
 
     path('votes/', views.myvotes, name='myvotes'),
@@ -26,6 +28,7 @@ forum_patterns = [
     path('mytags/', views.mytags, name='mytags'),
     path('p/<str:uid>/', views.post_view, name='post_view'),
     path('e/<str:uid>/', views.event_view, name='event_view'),
+    path('j/<str:uid>/', views.job_view, name='job_view'),
     path('post/search/', views.post_search, name='post_search'),
 
     path('new/post/', views.new_post, name='post_create'),

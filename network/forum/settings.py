@@ -97,6 +97,10 @@ TEMPLATES[0]['OPTIONS']['context_processors'] += [
     'network.forum.context.forum'
 ]
 
+# Sidebar things
+EVENT_FEED_COUNT = 3
+JOB_FEED_COUNT = 3
+
 VOTE_FEED_COUNT = 10
 LOCATION_FEED_COUNT = 5
 AWARDS_FEED_COUNT = 10

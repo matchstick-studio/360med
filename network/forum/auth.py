@@ -262,7 +262,7 @@ def create_event(author, title, content, location, event_date, external_link, ta
             location=location, event_date=event_date, external_link=external_link)
     return event
 
-def create_job(author, title, content):
+def create_job(author, title, institution, apply_before, content):
 
     # Check if a post with this content already exists.
     job = Job.objects.filter(content=content, author=author).first()
@@ -270,7 +270,8 @@ def create_job(author, title, content):
         logger.info("Job with this content already exists.")
         return job
 
-    job = Job.objects.create(title=title, content=content, author=author)
+    job = Job.objects.create(title=title, content=content, author=author, 
+    institution=institution, apply_before=apply_before)
     return job
 
 

@@ -20,7 +20,7 @@ from taggit.models import Tag
 from network.accounts.models import Profile
 from network.forum import forms, auth, tasks, util, search
 from network.forum.const import *
-from network.forum.models import Post, Event, Vote, Badge
+from network.forum.models import Post, Event, Job, Vote, Badge
 
 
 User = get_user_model()
@@ -169,7 +169,32 @@ def get_events(user, tag="", order="", limit=None):
 
     return query
 
+def get_jobs(user, tag="", order="", limit=None):
+    """
+    Generates a post list on a topic.
+    """
+    query = Job.objects.all()
 
+    if tag:
+        query = query.filter(tags__name=tag.lower())
+
+    # Apply post ordering.
+    if ORDER_MAPPER.get(order):
+        ordering = ORDER_MAPPER.get(order)
+        query = query.order_by(ordering)
+    else:
+        query = query.order_by("-creation_date")
+
+    days = LIMIT_MAP.get(limit, 0)
+    # Apply time limit if required.
+    if days:
+        delta = util.now() - timedelta(days=days)
+        query = query.filter(lastedit_date__gt=delta)
+
+    # Select related information used during rendering.
+    query = query.select_related("author__profile")
+
+    return query
 
 def post_search(request):
 
@@ -279,6 +304,40 @@ def event_list(request, cache_key='', extra_context=dict()):
     context.update(extra_context)
     # Render the page.
     return render(request, template_name="event_list.html", context=context)
+
+
+@login_required # hack to ensure post_list view is locked so users need accounts first
+@ensure_csrf_cookie
+def job_list(request, cache_key='', extra_context=dict()):
+    """
+    Job listing. Filters, orders and paginates jobs based on GET parameters.
+    """
+    # The user performing the request.
+    user = request.user
+
+    # Parse the GET parameters for filtering information
+    page = request.GET.get('page', 1)
+    order = request.GET.get("order", "")
+    tag = request.GET.get("tag", "")
+    limit = request.GET.get("limit", "")
+
+    # Get posts available to users.
+    jobs = get_jobs(user=user, tag=tag, order=order, limit=limit)
+
+    # Create the paginator.
+    paginator = CachedPaginator(cache_key=cache_key, object_list=jobs, per_page=settings.POSTS_PER_PAGE)
+
+    # Apply the post paging.
+    jobs = paginator.get_page(page)
+
+    # Set the active tab.
+    tab = tag
+
+    # Fill in context.
+    context = dict(jobs=jobs, tab=tab, tag=tag, order=order, limit=limit, avatar=True)
+    context.update(extra_context)
+    # Render the page.
+    return render(request, template_name="job_list.html", context=context)
 
 
 @ratelimit(key=RATELIMIT_KEY,  rate='100/m')
@@ -507,6 +566,24 @@ def event_view(request, uid):
 
     return render(request, "event_view.html", context=context)
 
+@ensure_csrf_cookie
+def job_view(request, uid):
+    "Return a detailed view for specific post"
+
+    # Get the post.
+    job = Job.objects.filter(uid=uid).first()
+
+    if not job:
+        messages.error(request, "Job does not exist.")
+        return redirect("job_list")
+
+    # user string
+    users_str = auth.get_users_str()
+
+    context = dict(job=job, users_str=users_str)
+
+    return render(request, "job_view.html", context=context)
+
 
 @login_required
 def new_post(request):
@@ -570,7 +647,7 @@ def new_event(request):
 
             tasks.created_event.spool(eid=event.id)
 
-            return redirect(event.get_absolute_url())
+            return redirect('event_list')
 
     # Action url for the form is the current view
     action_url = reverse("event_create")
@@ -589,6 +666,8 @@ def new_job(request):
     form = forms.JobForm(user=request.user)
     author = request.user
     content = ''
+    apply_before = timezone.now()
+
     if request.method == "POST":
 
         form = forms.JobForm(data=request.POST, user=request.user)
@@ -597,11 +676,13 @@ def new_job(request):
             # Create a new post by user
             title = form.cleaned_data.get('title')
             content = form.cleaned_data.get("content")
-            job = auth.create_job(title=title, content=content, author=author)
+            institution = form.cleaned_data.get('institution','')
+            apply_before = form.cleaned_data.get('apply_before')
+            job = auth.create_job(title=title, content=content, author=author, institution=institution, apply_before=apply_before)
 
             tasks.created_job.spool(jid=job.id)
 
-            return redirect(job.get_absolute_url())
+            return redirect('job_list')
 
     # Action url for the form is the current view
     action_url = reverse("job_create")

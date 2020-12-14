@@ -14,18 +14,13 @@
 
 {% block body %}
 
-    <!-- moved searchbar tag to top header position-->
-    {% block search %}
 
-        {% filter_dropdown %}
-
-    {% endblock %}
 
     {% block listing %}
         {% if tag %}
             <div class="ui blue filter message">
                 Showing : <code>{{ tag }}</code> &bull;
-                <a href="{% url 'post_list' %}">
+                <a href="{% url 'event_list' %}">
                     reset <i class="undo small icon"></i>
                 </a>
             </div>

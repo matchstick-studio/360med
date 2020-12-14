@@ -9,9 +9,9 @@
         <div class="ui container">
             <b> Upcoming events </b>
             <div class="ui relaxed list">
-                {% for event in events %}
+                {% for event in recent_events %}
                 <div class="item spaced">
-                    <a href="{% url 'post_view' vote.post.uid %}">{{ vote.post.title }}</a>
+                    <a href="{% url 'event_view' event.uid %}">{{ event.title }}</a>
                 </div>
                 {% endfor %}
             </div>
@@ -26,9 +26,9 @@
         <div class="ui container">
             <b> Jobs & Opportunities </b>
             <div class="ui relaxed list">
-                {% for job in jobs %}
+                {% for job in recent_jobs %}
                 <div class="item spaced">
-                    <a href="{% url 'post_view' vote.post.uid %}">{{ vote.post.title }}</a>
+                    <a href="{% url 'job_view' job.uid %}">{{ job.title }}</a>
                 </div>
                 {% endfor %}
             </div>
