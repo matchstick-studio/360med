@@ -32,7 +32,13 @@
     <p>Use of this site constitutes acceptance of our <a href="{% url 'pages' 'policy' %}">User Agreement and Privacy
         Policy</a>.</p>
 
-        <a href="{% url 'activity' %}">Activity Feed</a>
+        <div class="ui horizontal bulleted link list">
+            <a href="{% url 'activity' %}">Activity Feed</a>
+            <a href="{% url 'activity' %}">Tags</a>
+            <a href="{% url 'activity' %}">Badges</a>
+            <a href="{% url 'activity' %}">Community</a>
+        </div>
+        
     <div class="smaller muted">
         360Med v{{ VERSION }}
     </div>

@@ -8,6 +8,7 @@ import os
 import datetime
 from itertools import count, islice
 from datetime import timedelta
+from django.utils import timezone
 
 import bleach
 from taggit.models import Tag
@@ -518,8 +519,9 @@ def get_post_list(target, request, show=None):
 @register.inclusion_tag("widgets/feed_default.html")
 def default_feed(user):
     # Get upcoming events
-    recent_events = Event.objects.all()
-    recent_events = recent_events.order_by("-pk")[: settings.EVENT_FEED_COUNT]
+    now = timezone.now()
+    recent_events = Event.objects.filter(event_date__gte=now)
+    recent_events = recent_events.order_by("event_date")[: settings.EVENT_FEED_COUNT]
 
     # Get recently added jobs
     recent_jobs = Job.objects.all()

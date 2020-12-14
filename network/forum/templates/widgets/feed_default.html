@@ -4,35 +4,42 @@
 <div class="ui large wrap-text">
 
     <!-- show upcoming events -->
-    
+    {% if recent_events %}
     <div class="event">
         <div class="ui container">
             <b> Upcoming events </b>
-            <div class="ui relaxed list">
+            <div class="ui relaxed divided list">
                 {% for event in recent_events %}
-                <div class="item spaced">
-                    <a href="{% url 'event_view' event.uid %}">{{ event.title }}</a>
+                <div class="item">
+                    <i class="large calendar middle aligned icon"></i>
+                    <div class="content">
+                        <a href="{% url 'event_view' event.uid %}">{{ event.title }}</a>
+                        <div class="description">{{ event.event_date }}</div>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
     </div>
+    {% endif %}
     
     <!-- show an ad -->
     <div style="width:auto" class="ui medium rectangle test ad" data-text="Ad Unit 1"></div>
     
     <!-- show available opportunities-->
+    {% if recent_jobs %}
     <div class="event">
         <div class="ui container">
             <b> Jobs & Opportunities </b>
             <div class="ui relaxed list">
                 {% for job in recent_jobs %}
-                <div class="item spaced">
+                <div class="item">
                     <a href="{% url 'job_view' job.uid %}">{{ job.title }}</a>
                 </div>
                 {% endfor %}
             </div>
         </div>
     </div>
-
+    {% endif %}
+    
 </div>
