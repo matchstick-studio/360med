@@ -108,11 +108,17 @@
     <a class="item" href="/">
         <i class="grid layout icon"></i> Home
     </a>
+
     <a class="item" href="{% url 'event_list' %}">
-        <i class="calendar layout icon"></i> Events
+        <i class="calendar icon"></i> Events
     </a>
+
     <a class="item" href="/">
-        <i class="users layout icon"></i> Communities
+        <i class="users icon"></i> Communities
+    </a>
+
+    <a class="item" href="{% url 'invite' %}">
+        <i class="bullhorn icon"></i> Invite Peers
     </a>
 
     <a class="item {% activate tab "myposts" %}" href="{% url 'myposts' %}">
@@ -142,11 +148,11 @@
     </a>
 
     <a class="item" href="{% url 'edit_profile' %}">
-        <i class="settings layout icon"></i> Edit Profile
+        <i class="settings icon"></i> Edit Profile
     </a>
 
     <a class="item" href="{% url 'logout' %}">
-        <i class="sign-out layout icon"></i> Log Out
+        <i class="sign-out icon"></i> Log Out
     </a>
     
 </div>
