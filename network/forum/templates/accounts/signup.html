@@ -11,41 +11,42 @@
 
 {% block content %}
 
+<div class="ui raised text container basic segment">
     <div class="ui middle aligned grid">
-
+    
         <div class="column">
-
+    
             <div class="ui image header" id="logo">
                 <a href="/"><img class="ui image" src="{% static "images/logo.png" %}"></a>
             </div>
-
+    
             {% show_messages messages %}
-
+    
             <div class="ui large header">
                 Create your profile
             </div>
-
+    
             Already on 360Med Network? <a class="" href="{% url 'login' %}">Sign in</a>
-            
+    
             <form method="post" class="ui large form attached fluid" action="{% url 'signup' %}">
-            
+    
                 {% form_errors form %}
                 <div class="ui basic segment">
-            
+    
                     {% csrf_token %}
-
+    
                     <div class="two fields">
                         <div class="required field">
                             <label>{{ form.first_name.label }}</label>
                             {{ form.first_name }}
                         </div>
-                    
+    
                         <div class="required field">
                             <label>{{ form.last_name.label }}</label>
                             {{ form.last_name }}
                         </div>
                     </div>
-            
+    
                     <div class="required field">
                         <label>Email Address</label>
                         {{ form.email }}
@@ -53,32 +54,34 @@
                             Your work email would be perfect
                         </div>
                     </div>
-
+    
                     <div class="two fields">
                         <div class="required field">
                             <label>Password</label>
                             {{ form.password1 }}
                         </div>
-            
+    
                         <div class="required field">
                             <label>Confirm Password</label>
                             {{ form.password2 }}
                         </div>
                     </div>
-            
+    
                     {% if form.captcha %}
                     <div class="field">
                         <label>Captcha</label>
                         {{form.captcha}}
                     </div>
                     {% endif %}
-            
-                    <button type="submit" class="ui large right floated primary button"><i class="check icon"></i>Create account</button>
-            
+    
+                    <button type="submit" class="ui large right floated primary button"><i class="check icon"></i>Create
+                        account</button>
+    
                 </div>
             </form>
-
+    
         </div>
     </div>
+</div>
 
 {% endblock %}

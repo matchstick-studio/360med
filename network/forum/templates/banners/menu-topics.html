@@ -3,7 +3,7 @@
 {% if user.is_authenticated %}
     {% counts as counts %}
 
-    <div style="background:transparent;border:0;box-shadow:none" class="ui vertical menu" id="menu-topics">
+    <div style="background:transparent;border:0;box-shadow:none" class="ui vertical mobile tablet hidden menu" id="menu-topics">
     <!-- Add a check for if new user and show for 7 days -->
         <a class="item" href="{% url 'post_create' %}">✍🏿 Write post</a>
         <a class="item" href="{% url 'invite' %}">🧑🏾‍🤝‍🧑🏾 Invite peers</a>

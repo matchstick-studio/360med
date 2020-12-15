@@ -11,23 +11,20 @@
 
 {% block content %}
 
-<div class="ui middle aligned grid">
-
-    <div class="column">
-
-        <div class="ui image header" id="logo">
-            <a href="/"><img class="ui image" src="{% static "images/logo.png" %}"></a>
-        </div>
-
-        <div class="ui large header">
-            Build your profile
-        </div>
-
-        {% block stage %}
-        <!-- stepped form goes here -->
-        {% endblock %}
-
-    </div>
+<div class="ui raised text container basic segment">
+    
+            <div class="ui image header" id="logo">
+                <a href="/"><img class="ui image" src="{% static "images/logo.png" %}"></a>
+            </div>
+    
+            <div class="ui large header">
+                Build your profile
+            </div>
+    
+            {% block stage %}
+            <!-- stepped form goes here -->
+            {% endblock %}
+    
 </div>
 
 {% endblock %}

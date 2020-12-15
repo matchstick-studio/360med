@@ -1,7 +1,7 @@
 {% load forum_tags %}
 {% load static %}
 
-<div class="ui top fixed large menu" id="menu-header" user-id="{{ request.user.id }}">
+<div class="ui top fixed large menu mobile tablet hidden" id="menu-header" user-id="{{ request.user.id }}">
 
     <div class="item" id="logo">
     {% block headimg %}
@@ -95,3 +95,113 @@
 
     </div>
 </div>
+
+
+<!-- Sidebar Menu -->
+<div class="ui vertical sidebar menu left">
+    <a class="item" href="/">
+        <img class="ui small image" src="{% static "images/logo.png" %}">
+    </a>
+    
+    {% search_bar %}
+
+    <a class="item" href="/">
+        <i class="grid layout icon"></i> Home
+    </a>
+    <a class="item" href="{% url 'event_list' %}">
+        <i class="calendar layout icon"></i> Events
+    </a>
+    <a class="item" href="/">
+        <i class="users layout icon"></i> Communities
+    </a>
+
+    <a class="item {% activate tab "myposts" %}" href="{% url 'myposts' %}">
+        🗒️ My Posts
+    </a>
+    
+    <a class="item {% activate tab "bookmarks" %}" href="{% url 'bookmarks' %}">
+        🔖 Reading List
+    </a>
+    
+    <a class="item {% activate tab "myvotes" %}" href="{% url 'myvotes' %}">
+    
+        {% if counts.votes.count %}
+        👍 Votes <div class="ui teal left pointing middle aligned label">{{ counts.votes.count }}</div>
+        {%  else %}
+        👍 My Votes
+        {% endif %}
+    
+    </a>
+    
+    <a class="item {% activate tab "mytags" %}" href="{% url 'mytags' %}">
+        🏷️ My Tags
+    </a>
+    
+    <a class="item {% activate tab "following" %}" href="{% url 'following' %}">
+        🔥 Following
+    </a>
+
+    <a class="item" href="{% url 'edit_profile' %}">
+        <i class="settings layout icon"></i> Edit Profile
+    </a>
+
+    <a class="item" href="{% url 'logout' %}">
+        <i class="sign-out layout icon"></i> Log Out
+    </a>
+    
+</div>
+
+<div class="ui fixed borderless menu computer widescreen large screen hidden">
+    <a class="toc item">
+        <i class="sidebar icon"></i> Menu
+    </a>
+
+    <div class="right menu">
+
+        <div class="ui dropdown item">
+            Create new <i class="dropdown icon"></i>
+            <div class="menu">
+                <a class="item" href="{% url 'post_create' %}">
+                    <i class="conversation right floated icon"></i>
+                    Post
+                </a>
+                <a class="item" href="{% url 'event_create' %}">
+                    <i class="calendar right floated icon"></i>
+                    Event
+                </a>
+                <a class="item" href="{% url 'job_create' %}">
+                    <i class="stethoscope right floated icon"></i>
+                    Job
+                </a>
+            </div>
+        </div>
+
+        {% counts as counts %}
+        
+        <a class="item {% activate tab "inbox" %}" href="{% url 'inbox' %}">
+            <i class="icon mail"></i>
+            {% if counts.messages.count %}
+            <div style="top:10%;left:80%" class="floating ui tiny circular red label">{{ counts.messages.count }}</div>
+            {% endif %}
+        </a>
+        
+        <a class="item" href="{% url 'user_profile' user.profile.uid %}">
+            <img class="ui avatar image"
+                src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% gravatar user=user %}{% endif %}"
+                alt="">
+        </a>
+    </div>
+</div>
+
+
+<script>
+$(document)
+    .ready(function () {
+        // create sidebar and attach to menu open
+        $('.ui.sidebar')
+            .sidebar('attach events', '.toc.item')
+            ;
+
+    })
+    ;
+</script>

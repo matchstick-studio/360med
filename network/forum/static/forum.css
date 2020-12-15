@@ -18,6 +18,10 @@ body > .widen.container {
     width: 100%;
 }
 
+body.pushable>.pusher {
+    background: #eef0f1!important;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Domine', sans-serif;
 }
@@ -47,6 +51,18 @@ h1, h2, h3, h4, h5, h6 {
 #menu-header .item {
     color: #333333;
 
+}
+
+.breathe.container{
+    margin-top: 7em;
+}
+
+@media screen and (max-width:769px){
+    .breathe.container{
+    margin-top: 5em;
+    margin-left: 0em!important;
+    margin-right: 0em!important;
+    }
 }
 
 .voting .ui.button {
@@ -1050,7 +1066,7 @@ pre {
   font-weight: 600!important;
 }
 
-/* responsive classes for semantic UI */
+/* hiding responsive classes for semantic UI */
 
 /* Mobile */
 @media only screen and (max-width: 767px) {
