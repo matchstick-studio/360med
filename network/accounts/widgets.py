@@ -9,7 +9,7 @@ from phonenumbers.phonenumberutil import (
     national_significant_number,
     region_code_for_number,
 )
-from django.forms import DateTimeInput
+from django.forms import DateInput
 from phonenumber_field.phonenumber import PhoneNumber
 
 try:
@@ -101,5 +101,5 @@ class PhoneNumberInternationalFallbackWidget(TextInput):
         return super().format_value(value)
 
 
-class XDSoftDateTimePickerInput(DateTimeInput):
+class XDSoftDateTimePickerInput(DateInput):
     template_name = 'widgets/xdsoft_datetimepicker.html'

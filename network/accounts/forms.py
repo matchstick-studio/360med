@@ -119,7 +119,7 @@ class PersonalForm(forms.ModelForm):
             'country': forms.Select(attrs={"class": "ui search dropdown"}),
             'phone': PhoneNumberPrefixWidget(attrs={"placeholder": "Mobile number"}),
             'gender': forms.Select(attrs={"class": "ui dropdown"}),
-            'dob': XDSoftDateTimePickerInput()
+            'dob': XDSoftDateTimePickerInput(attrs={"placeholder": "Enter date of birth"})
         }
 
 class ProfessionalForm(forms.ModelForm):
